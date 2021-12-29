@@ -1,4 +1,4 @@
-const production = process.env.PRODUCTION
+const production = process.env.PRODUCTION == "true" ? true : false
 
 require('dotenv').config()
 const express = require("express")
