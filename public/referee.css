@@ -1,0 +1,127 @@
+html * {
+	font-family: Arial;
+	text-align: center;
+	margin: 0px;
+}
+
+body {
+	background-color: black;
+	color: white;
+}
+
+iframe {
+	width: 80vw;
+	background-color: dimgray;
+	border: 3px solid green;
+	border-radius: 10px;
+}
+
+#referee_header {
+	width: fit-content;
+	max-width: 70vw;
+	margin: 0 auto;
+	padding: 70px 10px 0 10px;
+	border-bottom: 2px solid;
+}
+
+.admin {
+	display: none;
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 80vw;
+	padding: 50px 5vw;
+	border: 1px solid gray;
+	border-radius: 10px;
+	background-color: rgba(0, 0, 0, 60%);
+	z-index: 1;
+}
+
+form {
+	display: grid;
+}
+
+label {
+	margin-bottom: 5px;
+}
+
+#tournaments {
+	position: relative;
+	min-height: 90vh;
+	z-index: 0;
+}
+
+.tournament {
+	margin: 3vw;
+	padding: 10px 30px;
+	border-left: 5px solid purple;
+	border-radius: 5px;
+}
+
+.tournament a:visited {
+	color: gray;
+}
+
+.tournament a:active {
+	color: lightblue;
+}
+
+.details {
+	width: fit-content;
+	margin: 0px auto 15px;
+	padding: 5px 0px 10px 15px;
+	border-left: 5px solid blue;
+	border-radius: 5px;
+}
+
+.t_name {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.t_date {
+	margin-top: 5px;
+}
+
+.matches {
+	display: inline-block;
+	width: 80vw;
+}
+
+.match {
+	display: inline-flex;
+	margin: 10px;
+	padding: 10px;
+	border-left: 5px solid green;
+	border-radius: 5px;
+}
+
+.m_name {
+	font-weight: bold;
+	margin-bottom: 7px;
+}
+
+.m_name a {
+	color: #369;
+}
+
+.flag {
+	margin-left: 5px;
+	max-width: 30px;
+	vertical-align: sub;
+}
+
+.username {
+	margin-right: 5px;
+	color: royalblue;
+}
+
+.tournament form {
+	display: block;
+	margin-top: 20px;
+}
+
+.tournament iframe {
+	height: 40px;
+}

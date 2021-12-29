@@ -1,0 +1,70 @@
+/* why not just steal from https://www.w3schools.com/Css/css_dropdowns.asp */
+
+html {
+	scroll-padding-top: 57px;
+}
+
+#menu {
+	position: fixed;
+	width: 100vw;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #2b2a33;
+	border-bottom: 1px solid white;
+	z-index: 3;
+}
+
+#menu > li {
+	float: left;
+}
+
+.menu-button {
+	display: inline-block;
+	color: mediumorchid;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	background-color: #1b2a33;
+}
+
+#menu li a:hover, .dropdown:hover .dropbtn {
+	color: magenta;
+}
+
+#menu li .dropdown {
+	display: inline-block;
+}
+
+.dropdown-content {
+	display: none;
+	position: fixed;
+	background-color: #f9f9f9;
+	/* min-width: 160px; */
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-content ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	overflow-y: scroll;
+	max-height: 500px;
+}
+
+.dropdown-content a {
+	color: black;
+	padding: 12px 16px;
+	text-decoration: none;
+	display: block;
+}
+
+.dropdown:hover .dropdown-content {
+	display: block;
+}
+
+.right {
+	float: right;
+}

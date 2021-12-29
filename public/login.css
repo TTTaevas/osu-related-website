@@ -1,0 +1,33 @@
+/* The art of designing something nobody is supposed to see */
+
+html * {
+	font-family: Arial;
+	text-align: center;
+	margin: 0px;
+	color: darkred;
+	font-weight: bold;
+}
+
+@keyframes bad-login {
+	0%{background-position:45% 0%}
+	50%{background-position:56% 100%}
+	100%{background-position:45% 0%}
+}
+
+body {
+	min-height: 100vh;
+	background: linear-gradient(4deg, #003572, #000000);
+    background-size: 400% 400%;
+    animation: bad-login 15s ease infinite;
+}
+
+#message {
+	display: grid;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 10px;
+	background-color: black;
+	border: 2px solid;
+}

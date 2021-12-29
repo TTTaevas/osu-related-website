@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Matches reffed by Taevas</title>
+		<link rel="stylesheet" type="text/css" href="/referee.css">
+	</head>
+	<body>
+		<%- include("partials/menu") %>
+
+		<div id="referee_header">
+			<h1>Matches reffed by Taevas</h1>
+		</div>
+
+		<% if (user && user.roles.admin) { %>
+			<div class="admin" id="tournament_add">
+				<form id="add" action="/referee/add" method="POST" encType="multipart/form-data" target="add_response">
+					<label for="add_name"> Name
+						<input type="text" name="add_name">
+					</label>
+					<label for="add_forum"> Forum link
+						<input type="text" name="add_forum">
+					</label>
+					<label for="add_date"> Start date
+						<input type="date" name="add_date">
+					</label>
+					<label for="add_date"> Match IDs, separated with ,
+						<input type="text" name="add_mp_ids">
+					</label>
+					<label for="add_banner"> Staff banner
+						<input type="file" accept=".gif,.jpg,.jpeg,.png" name="add_banner">
+					</label>
+					<label for="add_submit">
+						<input type="submit" name="add_submit" value="Add tournament">
+					</label>
+				</form>
+				<iframe name='add_response'></iframe>
+				<button onclick="changeDisplay()">Close</button>
+			</div>
+			<div class="admin" id="tournament_remove">
+				<form id="remove" action="/referee/remove" method="POST" target="remove_response">
+					<label for="remove_name"> Name
+						<input type="text" name="remove_name">
+					</label>
+					<label for="remove_submit">
+						<input type="submit" name="remove_submit" value="Remove tournament">
+					</label>
+				</form>
+				<iframe name='remove_response'></iframe>
+				<button onclick="changeDisplay()">Close</button>
+			</div>
+			<div class="admin" id="tournament_import">
+				<form id="import" action="/referee/import" encType="multipart/form-data" method="POST" target="import_response">
+					<label for="import_json"> Your reffing_experience.json
+						<input type="file" accept=".json" name="import_json">
+					</label>
+					<label for="import_submit">
+						<input type="submit" name="import_submit" value="Import JSON">
+					</label>
+				</form>
+				<iframe name='import_response'></iframe>
+				<button onclick="changeDisplay()">Close</button>
+			</div>
+		<% } %>
+
+		<div id="tournaments">
+			<% for (let i = 0; i < tournaments.length; i++) { %>
+				<div class="tournament" id="<%= tournaments[i].id %>">
+
+					<div class="details">
+						<div class="t_name">
+							<a href="<%= tournaments[i].forum %>"><%= tournaments[i].name %></a>
+						</div>
+						<div class="t_date">
+							<%= tournaments[i].proper_date %>
+						</div>
+						<div class="t_number_matches">
+							<%= tournaments[i].matches.length %> matches
+						</div>
+					</div>
+
+					<div class="matches">
+						<% for (let e = 0; e < tournaments[i].matches.length; e++) { %>
+							<% let match = tournaments[i].matches[e] %>
+							<div class="match">
+								<div class="content">
+									<div class="m_name">
+										<a href="<%= match.url %>"><%= match.name %></a>
+									</div>
+									<div class="players">
+										<% for (let o = 0; o < match.players.length; o++) { %>
+											<% let player = match.players[o] %>
+											<div class="player">
+												<img class="flag" src="https://osuflags.omkserver.nl/<%= player.country_code %>.png">
+												<a class="username" href="https://osu.ppy.sh/users/<%= player.id %>"><%= player.name %></a>
+											</div>
+										<% } %>
+									</div>
+								</div>
+							</div>
+						<% } %>
+					</div>
+
+					<% if (user && user.roles.admin) { %>
+						<form class="addMatches" id="addMatchesTo<%= tournaments[i].id %>" action="referee/addMatches" method="POST" target="addMatches_responseFor<%= tournaments[i].id %>">
+							<label for="mp_ids"> Match IDs, separated with ,
+								<input type="text" name="mp_ids" style="min-width: 40vw;">
+							</label>
+							<label for="tournament_name" style="display: none;">
+								<input type="text" name="tournament_name" value="<%= tournaments[i].name %>">
+							</label>
+							<label for="addMatches_submit">
+								<input type="submit" name="addMatches_submit" value="Add matches">
+							</label>
+						</form>
+						<iframe name="addMatches_responseFor<%= tournaments[i].id %>"></iframe>
+					<% } %>
+
+				</div>
+			<% } %>
+		</div>
+
+		<%- include("partials/footer") %>
+
+	</body>
+</html>

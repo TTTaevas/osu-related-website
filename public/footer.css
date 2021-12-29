@@ -1,0 +1,42 @@
+footer {
+	display: block;
+	padding: 20px;
+	color: mediumorchid;
+	background-color: #2b2a33;
+	border-top: 1px solid white;
+}
+
+#cool_stuff {
+	display: grid;
+}
+
+#login {
+	display: flex;
+	margin: 10px auto auto auto;
+	padding-top: 10px;
+	border-top: 1px solid mediumorchid;
+	width: 75vw;
+}
+
+#login * {
+	width: 25vw;
+}
+
+footer a {
+	font-size: 18px;
+	text-decoration: none;
+	color: mediumorchid;
+	background-color: #1b2a33;
+	border: 1px solid black;
+	padding: 2px;
+	margin: 2px auto;
+	width: 50vw;
+}
+
+footer a:hover {
+	color: magenta;
+}
+
+footer a:active {
+	color: red;
+}
