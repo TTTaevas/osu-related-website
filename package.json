@@ -1,13 +1,12 @@
 {
   "name": "taevas.xyz",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node database.js"
   },
   "author": "Taevas",
-  "license": "ISC",
+  "license": "WTFPL",
   "dependencies": {
     "axios": "^0.24.0",
     "body-parser": "^1.19.0",
@@ -18,5 +17,15 @@
     "express-fileupload": "^1.2.1",
     "express-session": "^1.17.2",
     "mongodb": "^4.2.1"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TTTaevas/taevas.xyz.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TTTaevas/taevas.xyz/issues"
+  },
+  "homepage": "https://github.com/TTTaevas/taevas.xyz#readme",
+  "description": ""
 }
