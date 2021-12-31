@@ -1,6 +1,5 @@
 require('dotenv').config()
 const mongodb = require("mongodb").MongoClient
-const basic = require("./basic-requests.js")
 
 module.exports = async function tournamentsHandle(type) {
 	let client_uri = type == "referee" ? process.env.REF_CONNECTIONSTRING : process.env.PLA_CONNECTIONSTRING

@@ -1,33 +1,20 @@
 const production = process.env.PRODUCTION == "true" ? true : false
-
-require('dotenv').config()
-const express = require("express")
-const session = require("express-session")
-const bodyParser = require('body-parser')
-const fileUpload = require('express-fileupload')
-const mongodb = require("mongodb")
-const MongoStore = require("connect-mongo")
-const path = require("path")
-
-// import 'em functions
-const sessionHandler = require("./functions/session-handler.js")
-const tournamentsHandle = require("./functions/tournaments-handle.js")
-const request = require("./functions/request.js")
-const userCheck = require("./functions/user-check.js")
-const referee = require("./functions/referee.js")
 const client = require("./database.js")
 
-// express app stuff
+require('dotenv').config()
+const path = require("path")
+
+
+// express configuration stuff
+const express = require("express")
 const app = express()
 
-// use
 app.use(express.urlencoded({extended: true}))
 app.use(express.static("public"))
 app.use(express.static("views"))
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(bodyParser.json())
-app.use(fileUpload())
 
+const MongoStore = require("connect-mongo")
+const session = require("express-session")
 app.use(session({
 	secret: process.env.SESSION_SECRET,
 	resave: false,
@@ -39,10 +26,24 @@ app.use(session({
 	store: new MongoStore({client: client})
 }))
 
-// set
+const bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
+
+const fileUpload = require('express-fileupload')
+app.use(fileUpload())
+
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 if (production) {app.set('trust proxy', 1)}
+
+
+// import 'em functions
+const sessionHandler = require("./functions/session-handler.js")
+const tournamentsHandle = require("./functions/tournaments-handle.js")
+const userCheck = require("./functions/user-check.js")
+const referee = require("./functions/referee.js")
+
 
 // get
 app.get("/", async (req, res) => {
@@ -63,7 +64,7 @@ app.get("/referee", async (req, res) => {
 
 app.post("/referee/add", async (req, res) => {
 	let check = await userCheck(client, req.session.user, "admin")
-	!check.authorized ? res.status(401).send("Unauthorized; not an admin") : await referee.addTournament(req.body, req, res)
+	!check.authorized ? res.status(401).send("Unauthorized; not an admin") : await referee.addTournament(req.body, req.files, res)
 })
 
 app.post("/referee/remove", async (req, res) => {
@@ -73,7 +74,7 @@ app.post("/referee/remove", async (req, res) => {
 
 app.post("/referee/import", async (req, res) => {
 	let check = await userCheck(client, req.session.user, "admin")
-	!check.authorized ? res.status(401).send("Unauthorized; not an admin") : await referee.importTournament(req, res)
+	!check.authorized ? res.status(401).send("Unauthorized; not an admin") : await referee.importTournament(req.files, res)
 })
 
 app.post("/referee/addMatches", async (req, res) => {

@@ -1,5 +1,5 @@
-const request = require("./request.js")
-const userCheck = require("./user-check.js") // consider "res.status(401).render("unauthorized", {user: user})" within it
+const request = require("./osu-requests.js").request
+const userCheck = require("./user-check.js")
 
 module.exports = async function sessionHandler(req, client) {
 	var response
@@ -19,7 +19,6 @@ module.exports = async function sessionHandler(req, client) {
 		} else {
 			status.user = response
 		}
-
 
 		// if not logged in, if no code in url
 	} else if (!req.query.code && !req.session.user) {
@@ -61,11 +60,10 @@ async function codeHandler(req, client) {
 	} catch {return "You don't seem to exist... wait what, contact Taevas immediately"}
 
 	var user
-	req.session.user = user_object.id
-
+	
 	// deal with users db stuff
-	if (req.session.user) {
-		let data = await userCheck(client, req.session.user)
+	if (user_object && user_object.id) {
+		let data = await userCheck(client, user_object.id)
 		// if user is not in db, put them in db
 		if (!data.user) {
 			user = {
@@ -90,10 +88,11 @@ async function codeHandler(req, client) {
 				user_object: user_object
 			}
 			await data.collection.updateOne(filter, {$set: updated})
-			const findResultAgain = await data.collection.find({id: req.session.user}).toArray()
+			const findResultAgain = await data.collection.find({id: user_object.id}).toArray()
 			user = findResultAgain[0] // if only updateOne could return full updated doc
 		}
 	}
 
+	req.session.user = user_object.id
 	return user
 }

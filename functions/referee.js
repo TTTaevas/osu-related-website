@@ -3,8 +3,10 @@ const path = require("path")
 const uploadPath = path.dirname(__dirname) + "/public/banners/"
 
 const fetchMatchData = require("./fetch-match-data.js")
+const sanitize = require("./sanitizer.js")
 
-async function addTournament(form, req, res) {
+async function addTournament(form, files, res) {
+	let file_name = false
 	if (!form || !form.add_name || !form.add_name.length) {return res.status(302).send("Missing tournament name")}
 	let stuff = await refClient()
 	const tournaments = await stuff.collection.find().toArray()
@@ -13,9 +15,13 @@ async function addTournament(form, req, res) {
 		return res.status(302).send("This tournament already exists!")
 	}
 
-	if (req.files && req.files.add_banner) {
-		let banner = req.files.add_banner
-		banner.mv(`${uploadPath}${req.files.add_banner.name}`, function(e) {if (e) {console.log("Could not treat banner", e)}})
+	if (files && files.add_banner) {
+		let sanitized = sanitize(files.add_banner.name, "filename")
+		if (sanitized.pass) {
+			file_name = sanitized.obj
+			let banner = files.add_banner
+			banner.mv(`${uploadPath}${file_name}`, function(e) {if (e) {console.log("Could not treat banner", e)}})
+		}
 	}
 
 	var mp_ids
@@ -32,14 +38,14 @@ async function addTournament(form, req, res) {
 			forum: form.add_forum,
 			date: new Date(form.add_date),
 			matches: mp_ids,
-			banner: req.files && req.files.add_banner ? req.files.add_banner.name : false
+			banner: file_name
 		}
 
 		await stuff.collection.insertOne(tournament)
 		await res.status(201).send(`${form.add_name} added successfully`)
 	} catch(e) {
 		console.log("Could not add tournament", e)
-		await res.status(500).send(`Error: ${e}`)
+		await res.status(500).send("Error, contact Taevas about it")
 	} finally {
 		await stuff.client.close()
 		if (mp_ids.length) {
@@ -61,22 +67,32 @@ async function removeTournament(form, res) {
 
 	try {
 		await stuff.collection.deleteOne({name: form.remove_name})
-		for (let i = 0; i < matches.length; i++) {await matches_collection.deleteOne({id: matches[i]})}
+		for (let i = 0; i < matches.length; i++) {
+			let sanitized = sanitize(matches[i], "id")
+			if (sanitized.pass) {
+				await matches_collection.deleteOne({id: sanitized.obj})
+			}
+		}
 		console.log(`${form.remove_name} has been removed`)
 		await res.status(201).send(`${form.remove_name} removed successfully`)
 	} catch(e) {
 		console.log("Could not remove tournament", e)
-		await res.status(201).send(`Error: ${e}`)
+		await res.status(201).send("Error, contact Taevas about it")
 	} finally {
 		await stuff.client.close()
 	}
 }
 
-async function importTournament(req, res) {
-	if (!req.files || !req.files.import_json) {return res.status(302).send("No file")}
-	let temp_file = req.files.import_json
-	let file_name = __dirname + `/temp_files/${temp_file.md5}.json`
+async function importTournament(files, res) {
+	if (!files || !files.import_json) {return res.status(302).send("No file")}
+	let temp_file = files.import_json
+
+	var partial_file_name
+	let sanitized = sanitize(temp_file.md5, "filename")
+	if (sanitized.pass) {partial_file_name = sanitized.obj} else {return await res.status(500).send(`Error: ${sanitized.details}`)}
+	let file_name = __dirname + `/temp_files/${partial_file_name}.json`
 	await temp_file.mv(file_name)
+
 	var json_file
 
 	try {
@@ -92,13 +108,13 @@ async function importTournament(req, res) {
 	} catch(e) {
 		console.log("Could not read json", e)
 		if (fs.existsSync(file_name)) {await fs.unlinkSync(file_name)}
-		return await res.status(500).send(`Error: ${e}`)
+		return await res.status(500).send("Error, couldn't read json, contact Taevas about it")
 	}
 
 	if (fs.existsSync(file_name)) {await fs.unlinkSync(file_name)}
 	if (!json_file || !json_file.tournaments) {
 		console.log("json_file is empty", e)
-		return await res.status(500).send(`Error: ${e}`)
+		return await res.status(500).send("Error, json seems empty, contact Taevas about it if needed")
 	}
 
 	let stuff = await refClient()
@@ -120,7 +136,7 @@ async function importTournament(req, res) {
 			console.log(`${tournaments[i].name} added successfully`)
 			counter_good++
 		} catch(e) {
-			console.log(`${tournaments[i].name} could not be added`, e)
+			console.log(`${tournaments[i].name} could not be added`, e.message)
 			counter_bad++
 		}
 	}
@@ -131,11 +147,15 @@ async function importTournament(req, res) {
 }
 
 async function addMatches(form, res) {
-	if (!form || !form.add_mp_ids || !form.add_mp_ids.length) {return res.status(302).send("No match ID in input")}
+	if (!form || !form.mp_ids || !form.mp_ids.length) {return res.status(302).send("No match ID in input")}
 	if (!form.tournament_name || !form.tournament_name.length) {return res.status(302).send("Missing tournament name")}
 
-	let mp_ids = form.add_mp_ids.split(",").filter((id) => {return !isNaN(id)})
-	for (let i = 0; i < mp_ids.length; i++) {mp_ids[i] = Number(mp_ids[i])}
+	let temp_mp_ids = form.mp_ids.split(",")
+	let mp_ids = []
+	for (let i = 0; i < temp_mp_ids.length; i++) {
+		let sanitized = sanitize(temp_mp_ids[i], "id")
+		if (sanitized.pass) {mp_ids.push(sanitized.obj)}
+	}
 	if (!mp_ids.length) {return res.status(302).send("No valid match ID in input")}
 
 	let stuff = await refClient()
