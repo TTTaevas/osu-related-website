@@ -33,7 +33,8 @@ function string(rtn, s_obj) {
 	rtn = rtn.replaceAll("}", "")
 	rtn = rtn.replaceAll("<", "")
 	rtn = rtn.replaceAll(">", "")
-	rtn = rtn.replaceAll("&#", "")
+	rtn = rtn.replaceAll("?", "")
+	rtn = rtn.replaceAll("&", "")
 	if (!rtn.length) {return {pass: false, obj: s_obj, details: "String length 0"}}
 	return {pass: true, obj: rtn, details: "string"}
 }

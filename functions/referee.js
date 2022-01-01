@@ -8,6 +8,9 @@ const sanitize = require("./sanitizer.js")
 async function addTournament(form, files, res) {
 	let file_name = false
 	if (!form || !form.add_name || !form.add_name.length) {return res.status(302).send("Missing tournament name")}
+	let tournament_name = sanitize(form.add_name, "string")
+	if (!tournament_name.pass) {return await res.status(500).send("Error regarding the tournament name", tournament_name.details)}
+
 	let stuff = await refClient()
 	const tournaments = await stuff.collection.find().toArray()
 
@@ -34,7 +37,7 @@ async function addTournament(form, files, res) {
 
 	try {
 		let tournament = {
-			name: form.add_name,
+			name: tournament_name.obj,
 			forum: form.add_forum,
 			date: new Date(form.add_date),
 			matches: mp_ids,
@@ -42,39 +45,42 @@ async function addTournament(form, files, res) {
 		}
 
 		await stuff.collection.insertOne(tournament)
-		await res.status(201).send(`${form.add_name} added successfully`)
+		await res.status(201).send(`${tournament.name} added successfully`)
+
+		if (mp_ids.length) {
+			console.log("Now looking for match data due to", mp_ids)
+			fetchMatchData("referee")
+		}
 	} catch(e) {
 		console.log("Could not add tournament", e)
 		await res.status(500).send("Error, contact Taevas about it")
 	} finally {
 		await stuff.client.close()
-		if (mp_ids.length) {
-			console.log("Now looking for match data due to", mp_ids)
-			fetchMatchData("referee")
-		}
 	}
 }
 
 async function removeTournament(form, res) {
 	if (!form || !form.remove_name || !form.remove_name.length) {return res.status(302).send("Missing tournament name")}
+	let tournament_name = sanitize(form.remove_name, "string")
+	if (!tournament_name.pass) {return await res.status(500).send("Error regarding the tournament name", tournament_name.details)}
 	let stuff = await refClient()
 	const tournaments = await stuff.collection.find().toArray()
 
-	let tournament = tournaments.find((tournament) => {return tournament.name == form.remove_name})
+	let tournament = tournaments.find((tournament) => {return tournament.name == tournament_name})
 	if (!tournament) {return res.status(302).send("This tournament does not exist!")}
 	let matches = tournament.matches
 	let matches_collection = stuff.db.collection("matches")
 
 	try {
-		await stuff.collection.deleteOne({name: form.remove_name})
+		await stuff.collection.deleteOne({name: tournament_name})
 		for (let i = 0; i < matches.length; i++) {
 			let sanitized = sanitize(matches[i], "id")
 			if (sanitized.pass) {
 				await matches_collection.deleteOne({id: sanitized.obj})
 			}
 		}
-		console.log(`${form.remove_name} has been removed`)
-		await res.status(201).send(`${form.remove_name} removed successfully`)
+		console.log(`${tournament_name} has been removed`)
+		await res.status(201).send(`${tournament_name} removed successfully`)
 	} catch(e) {
 		console.log("Could not remove tournament", e)
 		await res.status(201).send("Error, contact Taevas about it")
