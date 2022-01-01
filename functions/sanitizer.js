@@ -31,6 +31,8 @@ function string(rtn, s_obj) {
 	try {rtn = String(s_obj)} catch {return {pass: false, obj: s_obj, details: "Invalid-looking string"}}
 	rtn = rtn.replaceAll("{", "")
 	rtn = rtn.replaceAll("}", "")
+	rtn = rtn.replaceAll("<", "")
+	rtn = rtn.replaceAll(">", "")
 	rtn = rtn.replaceAll("&#", "")
 	if (!rtn.length) {return {pass: false, obj: s_obj, details: "String length 0"}}
 	return {pass: true, obj: rtn, details: "string"}

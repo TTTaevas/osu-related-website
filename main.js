@@ -26,12 +26,36 @@ app.use(session({
 	store: new MongoStore({client: client})
 }))
 
+const helmet = require('helmet')
+app.use(
+	helmet({
+		contentSecurityPolicy: {
+			directives: {
+				defaultSrc: ["'self'"],
+				scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+				imgSrc: ["'self'", "https://osuflags.omkserver.nl/"],
+				styleSrc: ["'self'", "'unsafe-inline'"]
+			}
+		}
+	})
+)
+
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
 const fileUpload = require('express-fileupload')
 app.use(fileUpload())
+
+const rateLimit = require('express-rate-limit')
+const rateLimiter = rateLimit({
+	windowMs: 60 * 1000, // 1 minute
+	max: 40, // 40 requests per IP per minute
+	message: "You are currently being rate-limited, please try again soon",
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+app.use(rateLimiter)
 
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))

@@ -80,6 +80,10 @@ label {
 	font-weight: bold;
 }
 
+.t_name a {
+	color: rgb(0, 102, 204);
+}
+
 .t_date {
 	margin-top: 5px;
 }

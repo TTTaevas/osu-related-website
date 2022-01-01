@@ -92,7 +92,7 @@
 										<% for (let o = 0; o < match.players.length; o++) { %>
 											<% let player = match.players[o] %>
 											<div class="player">
-												<img class="flag" src="https://osuflags.omkserver.nl/<%= player.country_code %>.png">
+												<img class="flag" src="https://osuflags.omkserver.nl/<%= player.country_code %>.png" alt="<%= player.country_code %>">
 												<a class="username" href="https://osu.ppy.sh/users/<%= player.id %>"><%= player.name %></a>
 											</div>
 										<% } %>
@@ -107,9 +107,7 @@
 							<label for="mp_ids"> Match IDs, separated with ,
 								<input type="text" name="mp_ids" style="min-width: 40vw;">
 							</label>
-							<label for="tournament_name" style="display: none;">
-								<input type="text" name="tournament_name" value="<%= tournaments[i].name %>">
-							</label>
+							<input type="hidden" name="tournament_name" value="<%= tournaments[i].name %>">
 							<label for="addMatches_submit">
 								<input type="submit" name="addMatches_submit" value="Add matches">
 							</label>
