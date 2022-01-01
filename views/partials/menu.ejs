@@ -1,6 +1,6 @@
 <ul id="menu">
-	<link rel="stylesheet" type="text/css" href="/menu.css">
-	<script type="text/javascript" src="./menu.js"></script>
+	<link rel="stylesheet" type="text/css" href="./css/menu.css">
+	<script type="text/javascript" src="./js/menu.js"></script>
 	<li class="menu-list-element"><a class="menu-button" href="/">Home</a></li>
 	<li class="menu-list-element dropdown">
 		<a href="javascript:void(0)" class="menu-button dropbtn" onclick="stay(this)">Jump to...</a>
@@ -13,7 +13,7 @@
 		</div>
 	</li>
 	<% if (user && user.roles.admin) { %>
-		<script type="text/javascript" src="./admin.js"></script>
+		<script type="text/javascript" src="./js/admin.js"></script>
 		<li class="menu-list-element dropdown">
 			<a href="javascript:void(0)" class="menu-button dropbtn" onclick="stay(this)">Admin</a>
 			<div class="dropdown-content">

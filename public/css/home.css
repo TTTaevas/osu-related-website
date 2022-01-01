@@ -8,14 +8,14 @@ html * {
 	min-height: 80vh;
 	padding-top: 20vh;
 	background-color: #111;
-	background-image: url("./table.png");
+	background-image: url("../images/table.png");
 	background-repeat: no-repeat;
 	background-position: center;
 	background-position-y: 300px;
 }
 
 #main_image {
-	background-image: url("./crt.png");
+	background-image: url("../images/crt.png");
 	height: 400px;
 	background-position: center;
 	background-repeat: no-repeat;
