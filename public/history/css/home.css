@@ -1,0 +1,46 @@
+html * {
+	font-family: Arial;
+	text-align: center;
+	margin: 0px;
+}
+
+#main {
+	min-height: 80vh;
+	padding-top: 20vh;
+	background-color: #111;
+	background-image: url("../images/table.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-position-y: 300px;
+}
+
+#main_image {
+	background-image: url("../images/crt.png");
+	height: 400px;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
+	position: relative;
+}
+
+#main_menu {
+	list-style: none;
+	padding: 160px 100px 0 0;
+	font-size: 24px;
+	color: white;
+}
+
+#main_menu li {
+	margin: 5px 0;
+}
+
+#main_menu a {
+	color: white;
+}
+
+@media screen and (max-width: 640px) {
+	#main_menu {
+		font-size: 4vw;
+		padding: 160px 15vw 0 0;
+	}
+}

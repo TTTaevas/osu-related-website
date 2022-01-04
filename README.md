@@ -1,6 +1,6 @@
 # taevas.xyz
 
-[taevas.xyz](taevas.xyz) is a simple website meant to succeed to the [open-source](https://github.com/TTTaevas/TTTaevas.github.io) static website [TTTaevas.github.io](https://tttaevas.github.io)
+[taevas.xyz](https://taevas.xyz) is a simple website meant to succeed to the [open-source](https://github.com/TTTaevas/TTTaevas.github.io) static website [TTTaevas.github.io](https://tttaevas.github.io)
 
 As of right now, the purpose is still the same: keeping track of my osu! tournament history as both a player and a referee
 

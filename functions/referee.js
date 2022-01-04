@@ -155,6 +155,8 @@ async function importTournament(files, res) {
 async function addMatches(form, res) {
 	if (!form || !form.mp_ids || !form.mp_ids.length) {return res.status(302).send("No match ID in input")}
 	if (!form.tournament_name || !form.tournament_name.length) {return res.status(302).send("Missing tournament name")}
+	let tournament_name = sanitize(form.tournament_name, "string")
+	if (!tournament_name.pass) {return await res.status(500).send("Error regarding the tournament name", tournament_name.details)}
 
 	let temp_mp_ids = form.mp_ids.split(",")
 	let mp_ids = []
@@ -166,15 +168,15 @@ async function addMatches(form, res) {
 
 	let stuff = await refClient()
 	const tournaments = await stuff.collection.find().toArray()
-	let tournament = tournaments.find((tournament) => {return tournament.name == form.tournament_name})
+	let tournament = tournaments.find((tournament) => {return tournament.name == tournament_name})
 	if (!tournament) {return res.status(302).send("This tournament does not exist!")}
 
 	mp_ids = mp_ids.filter((id) => {return tournament.matches.indexOf(id) == -1})
 	if (!mp_ids.length) {return res.status(302).send("Matches in input are already there")}
 
 	let updated = {matches: tournament.matches.concat(mp_ids)}
-	await stuff.collection.updateOne({name: form.tournament_name}, {$set: updated})
-	res.status(201).send(`Finished adding ${mp_ids.length} match(es) for ${form.tournament_name}\nWill now fetch multiplayer information`)
+	await stuff.collection.updateOne({name: tournament_name}, {$set: updated})
+	res.status(201).send(`Finished adding ${mp_ids.length} match(es) for ${tournament_name}\nWill now fetch multiplayer information`)
 	fetchMatchData("referee")
 }
 

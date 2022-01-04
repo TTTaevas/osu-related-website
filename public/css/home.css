@@ -1,46 +1,91 @@
-html * {
-	font-family: Arial;
-	text-align: center;
-	margin: 0px;
+@font-face {
+	font-family: ShareTechMono-Regular;
+	src: url(../fonts/ShareTechMono-Regular.ttf);
+}
+
+html {
+	font-family: ShareTechMono-Regular, Arial, sans-serif;
+}
+
+body {
+	background: purple;
+	margin: 0;
 }
 
 #main {
-	min-height: 80vh;
-	padding-top: 20vh;
-	background-color: #111;
-	background-image: url("../images/table.png");
-	background-repeat: no-repeat;
-	background-position: center;
-	background-position-y: 300px;
+	display: flex;
+	height: 100vh;
+	width: 100%;
+	font-size: 48px;
 }
 
-#main_image {
-	background-image: url("../images/crt.png");
-	height: 400px;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: contain;
+#left, #right {
+	display: flex;
+	height: 100vh;
+	width: 50%;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
 	position: relative;
+	text-decoration: none;
 }
 
-#main_menu {
-	list-style: none;
-	padding: 160px 100px 0 0;
-	font-size: 24px;
-	color: white;
+#left {
+	background: #1b2a33;
+	color: #ba55d3;
 }
 
-#main_menu li {
-	margin: 5px 0;
+#right {
+	background: #000;
+	color: #FFF;
+	text-shadow:-5px 5px #FFF;
 }
 
-#main_menu a {
-	color: white;
+#left span {
+	transform: rotate(-90deg);
+	text-decoration: underline dashed;
 }
 
-@media screen and (max-width: 640px) {
-	#main_menu {
-		font-size: 4vw;
-		padding: 160px 15vw 0 0;
+#right span {
+	transform: rotate(90deg);
+	
+}
+
+@keyframes left {
+	0% {
+		background-color: #1b2a33;
+		color: #ba55d3;
+		font-size: 48px;
 	}
+	100% {
+		background-color: #ba55d3;
+		color: #1b2a33;
+		font-size: 60px;
+	}
+}
+
+#left:hover {
+	animation-duration: 0.1s;
+	animation-name: left;
+	background-color: #ba55d3;
+	color: #1b2a33;
+	font-size: 60px;
+}
+
+@keyframes right {
+	0% {
+		font-size: 48px;
+		text-shadow:-5px 5px #FFF;
+	}
+	100% {
+		font-size: 60px;
+		text-shadow: 5px 20px #FFF;
+	}
+}
+
+#right:hover {
+	animation-duration: 0.1s;
+	animation-name: right;
+	font-size: 60px;
+	text-shadow: 5px 20px #FFF;
 }

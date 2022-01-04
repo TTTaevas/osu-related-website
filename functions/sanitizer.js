@@ -35,6 +35,7 @@ function string(rtn, s_obj) {
 	rtn = rtn.replaceAll(">", "")
 	rtn = rtn.replaceAll("?", "")
 	rtn = rtn.replaceAll("&", "")
+	rtn = rtn.replaceAll("%", "")
 	if (!rtn.length) {return {pass: false, obj: s_obj, details: "String length 0"}}
 	return {pass: true, obj: rtn, details: "string"}
 }
@@ -42,8 +43,7 @@ function string(rtn, s_obj) {
 function filename(rtn, f_obj) {
 	rtn = string(rtn, f_obj)
 	if (!rtn.pass) {return rtn}
-	rtn = rtn.obj.replaceAll("../", "")
-	rtn = rtn.replaceAll("./", "")
+	rtn = rtn.obj.replaceAll("/", "")
 	if (!rtn.length) {return {pass: false, obj: f_obj, details: "Filename length 0"}}
 	return {pass: true, obj: rtn, details: "filename"}
 }

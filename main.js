@@ -69,47 +69,70 @@ const userCheck = require("./functions/user-check.js")
 const referee = require("./functions/referee.js")
 
 
-// get
-app.get("/", async (req, res) => {
+// get main
+app.get("/", async (req, res) => {res.render("home")})
+
+// get history
+app.get("/history", async (req, res) => {
 	let check = await userCheck(client, req.session.user)
-	res.status(200).render("home", {user: check.user})
+	res.status(200).render("history/home", {user: check.user})
 })
 
-app.get("/login", async (req, res) => {
-	let status = await sessionHandler(req, client)
-	status.ok ? res.status(200).redirect("/") : res.status(201).render("login", {status: status})
-})
+// app.get("/history/login", async (req, res) => {
+// 	let status = await sessionHandler(req, client)
+// 	status.ok ? res.status(200).redirect("/history") : res.status(201).render("login", {status: status})
+// })
 
-app.get("/referee", async (req, res) => {
+app.get("/history/referee", async (req, res) => {
 	let check = await userCheck(client, req.session.user)
 	let tournaments = await tournamentsHandle("referee")
-	res.render("referee", {user: check.user, tournaments: tournaments})
+	res.render("history/referee", {user: check.user, tournaments: tournaments})
 })
 
-app.post("/referee/add", async (req, res) => {
+app.get("/history/player", async (req, res) => {res.render("player")})
+
+app.get("/history/:a", (req, res) => {
+	res.status(404).render("history/fourofour")
+})
+
+// post history
+app.post("/history/referee/add", async (req, res) => {
 	let check = await userCheck(client, req.session.user, "admin")
 	!check.authorized ? res.status(401).send("Unauthorized; not an admin") : await referee.addTournament(req.body, req.files, res)
 })
 
-app.post("/referee/remove", async (req, res) => {
+app.post("/history/referee/remove", async (req, res) => {
 	let check = await userCheck(client, req.session.user, "admin")
 	!check.authorized ? res.status(401).send("Unauthorized; not an admin") : await referee.removeTournament(req.body, res)
 })
 
-app.post("/referee/import", async (req, res) => {
+app.post("/history/referee/import", async (req, res) => {
 	let check = await userCheck(client, req.session.user, "admin")
 	!check.authorized ? res.status(401).send("Unauthorized; not an admin") : await referee.importTournament(req.files, res)
 })
 
-app.post("/referee/addMatches", async (req, res) => {
+app.post("/history/referee/addMatches", async (req, res) => {
 	let check = await userCheck(client, req.session.user, "admin")
 	!check.authorized ? res.status(401).send("Unauthorized; not an admin") : await referee.addMatches(req.body, res)
 })
 
-app.get("/player", async (req, res) => {res.render("player")})
+
+// get layer01
+app.get("/layer01", async (req, res) => {
+	let check = await userCheck(client, req.session.user)
+	res.status(200).render("layer01/home", {user: check.user})
+})
+
+app.get("/layer01/login", async (req, res) => {
+	let status = await sessionHandler(req, client)
+	status.ok ? res.status(200).redirect("/layer01") : res.status(201).render("login", {status: status})
+})
+
+
 
 app.use(function(req, res, next) {
 	res.status(404).render("fourofour")
 })
+
 
 module.exports = app

@@ -1,0 +1,50 @@
+/* ALL LAYER01 CONTENT */
+
+@font-face {
+	font-family: LiberationSans-Bold;
+	src: url(../fonts/LiberationSans-Bold.ttf);
+}
+
+html {
+	font-family: LiberationSans-Bold, Arial, sans-serif;
+}
+
+body {
+	margin: 0;
+}
+
+#menu {
+	width: 100vw;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #000;
+	border-bottom: 1px solid white;
+	z-index: 3;
+}
+
+#menu > li {
+	float: left;
+}
+
+.logo {
+	border-right: 1px solid white;
+}
+
+.menu-button {
+	display: inline-block;
+	color: #FFF;
+	text-align: center;
+	padding: 10px 30px;
+	text-decoration: none;
+}
+
+#menu li a:hover {
+	color: #000;
+	background-color: #FFF;
+}
+
+.right {
+	float: right;
+}
