@@ -74,7 +74,15 @@ async function codeHandler(req, client) {
 				rank: user_object.statistics.global_rank,
 				discord: user_object.discord != null ? user_object.discord : "not specified",
 				roles: {
-					admin: false
+					admin: false,
+					referee: false,
+					pooler: false,
+					streamer: false,
+					commentator: false,
+					staff: false,
+					registered_staff: false,
+					player: false,
+					registered_player: false
 				},
 				user_object: user_object
 			}

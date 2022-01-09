@@ -9,7 +9,71 @@
 	<body>
 		<%- include("partials/menu") %>
 		<div id="main">
-			
+			<div id="top">
+				<h1>WELCOME TO <span>LAYER01</span></h1>
+				<% let date = new Date() %>
+				<% function a(b) {return b>9?b:"0".concat(b)} %>
+				<p><%=a(date.getUTCFullYear())%>-<%=a(date.getUTCMonth()+1)%>-<%=a(date.getUTCDate())%> <%=a(date.getUTCHours())%>:<%=a(date.getUTCMinutes())%>:<%=a(date.getUTCSeconds())%> UTC+0</p>	
+			</div>
+			<div id="bottom">
+
+				<div id="buttons">
+					<a href="https://discord.gg/sHR2kC6dWf" target="_blank" class="button" id="discord">
+						<img src="./images/discord.png">
+						Discord server
+					</a>
+					<a href="" class="button" id="osu">
+						<img src="./images/osu.png">
+						Forum post
+					</a>
+					<% if (user) { %>
+						<% if (!user.roles.registered_player) { %>
+							<a href="" class="button" id="player-regs">
+								<img src="./images/form.png">
+								Player registration form
+							</a>
+						<% } %>
+						<a href="" class="button" id="staff-regs">
+							<img src="./images/form.png">
+							Staff registration form
+						</a>
+					<% } else { %>
+						<a href="" class="button" id="login">
+							Please login before registering as a player or as staff :3
+						</a>
+					<% } %>
+				</div>
+
+				<div id="right">
+					<div id="schedule">
+						<ul id="events">
+							<li>Players registrations</li>
+							<li>Qualifiers</li>
+							<li>---</li>
+							<li>Round of 16</li>
+							<li>Quarterfinals</li>
+							<li>Semifinals</li>
+							<li>Finals</li>
+							<li>Grandfinals</li>
+						</ul>
+						<ul id="dates">
+							<li>2022-01-?? to 2022-02-06</li>
+							<li>2022-02-12 to 2022-02-13</li>
+							<li>---</li>
+							<li>2022-02-19 to 2022-02-20</li>
+							<li>2022-02-26 to 2022-02-27</li>
+							<li>2022-03-05 to 2022-03-06</li>
+							<li>2022-03-12 to 2022-03-13</li>
+							<li>2022-03-19 to 2022-03-20</li>
+						</ul>
+					</div>
+					<ul id="prizepool">
+						<li>1st place: 2 months of osu! supporter and a profile banner</li>
+						<li>2nd place: 1 month of osu! supporter and a profile banner</li>
+						<li>3rd place: A profile banner</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>

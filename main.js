@@ -128,6 +128,11 @@ app.get("/layer01/login", async (req, res) => {
 	status.ok ? res.status(200).redirect("/layer01") : res.status(201).render("login", {status: status})
 })
 
+app.get("/layer01/rules", async (req, res) => {
+	let check = await userCheck(client, req.session.user)
+	res.status(200).render("layer01/rules", {user: check.user})
+})
+
 
 
 app.use(function(req, res, next) {

@@ -7,13 +7,23 @@
 
 html {
 	font-family: LiberationSans-Bold, Arial, sans-serif;
+	scroll-padding-top: 57px;
 }
 
 body {
+	color: white;
+	background: black;
 	margin: 0;
+	text-align: center;
+}
+
+#main {
+	padding-top: 50px;
+	margin: 0 20px;
 }
 
 #menu {
+	position: fixed;
 	width: 100vw;
 	list-style-type: none;
 	margin: 0;

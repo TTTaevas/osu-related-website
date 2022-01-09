@@ -1,0 +1,123 @@
+#main {
+	background-color: #000;
+}
+
+h1 {
+	font-size: 64px;
+	margin-bottom: 0;
+}
+
+h1 span {
+	text-shadow: -10px 5px #003;
+}
+
+h1 span:hover {
+	background-color: #FFF;
+	color: #000;
+	text-shadow: 14px 3px #000;
+}
+
+#top {
+	margin-bottom: 50px;
+}
+
+#bottom {
+	
+}
+
+#right {
+	display: inline-table;
+}
+
+#buttons {
+	display: inline-grid;
+	width: 500px;
+	max-width: 80vw;
+}
+
+.button {
+	display: inline-grid;
+	padding: 10px;
+	margin: 20px;
+	transition: linear 0.1s;
+	color: #FFF;
+	border: 1px solid black;
+}
+
+.button img {
+	height: 50px;
+	margin: 5px auto;
+}
+
+.button:hover {
+	font-size: 20px;
+	border: 1px solid;
+}
+
+.button:hover img {
+}
+
+#discord {
+	border-left: 1px solid #5865F2;
+	border-bottom: 1px solid #5865F2;
+}
+
+#osu {
+	border-left: 1px solid #ff66aa;
+	border-top: 1px solid #ff66aa;
+}
+
+#login {
+	font-size: 20px;
+	border-left: 1px solid yellow;
+	border-right: 1px solid yellow;
+}
+
+#player-regs {
+	border-right: 1px solid green;
+	border-bottom: 1px solid green;
+}
+
+#staff-regs {
+	border-right: 1px solid blue;
+	border-top: 1px solid blue;
+}
+
+#right > *:hover {
+	background-color: #FFF;
+	color: #000;
+}
+
+#schedule {
+	display: inline-flex;
+	padding: 15px 0;
+}
+
+#right ul {
+	list-style: none;
+	padding: 15px;
+	margin: 0px;
+}
+
+#right li {
+	margin: 5px 0;
+}
+
+#events {
+	border-right: 1px solid red;
+	text-align: right;
+}
+
+#dates {
+	text-align: left;
+}
+
+#prizepool {
+	border-bottom: 1px solid #ff00ff;
+}
+
+@media screen and (max-width: 500px) {
+	#schedule {
+		display: none;
+	}
+}

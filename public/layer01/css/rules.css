@@ -1,0 +1,77 @@
+h1 {
+	font-size: 56px;
+}
+
+h2 {
+	font-size: 28px;
+	text-decoration: underline;
+}
+
+@media screen and (max-width: 500px) {
+	h2 {
+		font-size: 24px;
+	}
+}
+
+#rules {
+	margin: 0 15vw;
+	padding: 1vh 1vw;
+	border-left: 1px solid #FFF;
+	border-right: 1px solid #FFF;
+}
+
+#rules > * {
+	padding: 0.5vh 2vw;
+	margin: 0.5vh 1vw;
+	transition: 0.3s;
+}
+
+#rules > *:hover {
+	background: #FFF;
+	color: #000;
+	padding: 3vh 2vw;
+	margin: 1vh 1vw;
+}
+
+a {
+	color: #d2738a;
+}
+
+br {
+	margin-bottom: 5px;
+}
+
+ul {
+	list-style: none;
+	padding: 0;
+}
+
+#layer01 {
+	border-left: 1px solid red;
+	border-bottom: 1px solid red;
+}
+
+#participants {
+	border-right: 1px solid blue;
+	border-top: 1px solid blue;
+}
+
+#disqualification {
+	border-top: 1px solid green;
+	border-bottom: 1px solid green;
+}
+
+#playlists {
+	border-top: 1px solid pink;
+	border-left: 1px solid pink;
+}
+
+#qualifiers {
+	border-right: 1px solid purple;
+	border-bottom: 1px solid purple;
+}
+
+#matches {
+	border-left: 1px solid gray;
+	border-right: 1px solid gray;
+}
