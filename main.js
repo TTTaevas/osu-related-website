@@ -89,9 +89,9 @@ app.get("/history/referee", async (req, res) => {
 	res.render("history/referee", {user: check.user, tournaments: tournaments})
 })
 
-app.get("/history/player", async (req, res) => {res.render("player")})
+app.get("/history/player", async (req, res) => {res.render("history/player")})
 
-app.get("/history/:a", (req, res) => {
+app.get("/history/*", (req, res) => {
 	res.status(404).render("history/fourofour")
 })
 
@@ -125,7 +125,7 @@ app.get("/layer01", async (req, res) => {
 
 app.get("/layer01/login", async (req, res) => {
 	let status = await sessionHandler(req, client)
-	status.ok ? res.status(200).redirect("/layer01") : res.status(201).render("login", {status: status})
+	status.ok ? res.status(200).redirect("/layer01") : res.status(201).render("layer01/login", {status: status})
 })
 
 app.get("/layer01/rules", async (req, res) => {
@@ -133,7 +133,9 @@ app.get("/layer01/rules", async (req, res) => {
 	res.status(200).render("layer01/rules", {user: check.user})
 })
 
-
+app.get("/layer01/*", (req, res) => {
+	res.status(404).render("layer01/fourofour")
+})
 
 app.use(function(req, res, next) {
 	res.status(404).render("fourofour")

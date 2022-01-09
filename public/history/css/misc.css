@@ -8,17 +8,17 @@ html * {
 	font-weight: bold;
 }
 
-@keyframes bad-login {
-	0%{background-position:45% 0%}
-	50%{background-position:56% 100%}
-	100%{background-position:45% 0%}
+@keyframes hysteria {
+	0% {background-position: 45% 0%}
+	50% {background-position: 56% 100%}
+	100% {background-position: 45% 0%}
 }
 
 body {
 	min-height: 100vh;
 	background: linear-gradient(4deg, #003572, #000000);
     background-size: 400% 400%;
-    animation: bad-login 15s ease infinite;
+    animation: hysteria 15s ease infinite;
 }
 
 #message {

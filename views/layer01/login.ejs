@@ -3,8 +3,8 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Taevas' place</title>
-		<link rel="stylesheet" type="text/css" href="/login.css">
+		<title>LAYER01 | LOGIN</title>
+		<link rel="stylesheet" type="text/css" href="./css/misc.css">
 	</head>
 	<body>
 		<div id="message">
@@ -13,12 +13,12 @@
 			<% } %>
 			<% if (status.reason) { %>
 				<h2><%= status.reason %></h2>
-				<a href="https://osu.ppy.sh/oauth/authorize?response_type=code&client_id=11451&redirect_uri=https://taevas.xyz/">Click here to try to login</a>
+				<a href="https://osu.ppy.sh/oauth/authorize?response_type=code&client_id=11451&redirect_uri=https://taevas.xyz/layer01/login">Click here to try to login</a>
 			<% } %>
 			<% if (status.user) { %> <!-- in theory it's currently impossible -->
 				<p>Nice to see you here, <%= status.user.username %>!</p>
 			<% } %>
-			<a href="/">Click here to come back to the main page</a>
+			<a href="/layer01">Click here to come back to LAYER01</a>
 		</div>
 	</body>
 </html>

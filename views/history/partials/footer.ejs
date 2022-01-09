@@ -4,11 +4,9 @@
 		<a href="https://osu.ppy.sh/users/7276846">Made by Taevas</a>
 		<a href="https://github.com/TTTaevas/taevas.xyz">GitHub repository</a>
 	</div>
-	<div id="login">
-		<% if (user) { %>
+	<% if (user) { %>
+		<div id="login">
 			<p style="margin: auto;">Thank you <strong><%= user.username %></strong> for visiting uwu</p>
-		<% } else { %>
-			<a href="https://osu.ppy.sh/oauth/authorize?response_type=code&client_id=11451&redirect_uri=https://taevas.xyz/">Login</a> <!-- /login  -->
-		<% } %>
-	</div>
+		</div>
+	<% } %>
 </footer>
