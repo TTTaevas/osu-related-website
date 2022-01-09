@@ -44,7 +44,7 @@ async function codeHandler(req, client) {
 				"grant_type": "authorization_code",
 				"client_id": 11451,
 				"client_secret": process.env.OSU_CLIENT_SECRET,
-				"redirect_uri": "https://taevas.xyz/",
+				"redirect_uri": "https://taevas.xyz/layer01/login",
 				"code": req.query.code
 			})
 		)

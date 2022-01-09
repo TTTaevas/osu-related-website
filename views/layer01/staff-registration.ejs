@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>LAYER01 | STAFF REG</title>
+		<link rel="stylesheet" type="text/css" href="./css/regs.css">
+	</head>
+	<body>
+		<%- include("partials/menu") %>
+		<div id="main">
+			<h1>STAFF REGISTRATION</h1>
+			<form method="POST" action="">
+				<div class="form_part" id="div_discord">
+					<h3>What is your Discord?</h3>
+					<h5>Note that your registration will be ignored if you are not in the tournament's <a href="https://discord.gg/sHR2kC6dWf" target="_blank">Discord Server</a></h5>
+					<label for="discord"><input type="text" name="discord" id="discord" value="<%= user.discord ? user.discord : '' %>" required></label>
+				</div>
+				<div class="form_part" id="div_roles">
+					<h3>What would you like to do here?</h3>
+					<h5>If you intend on both staffing and playing in this tournament, please check the rules first!</h5>
+					<label for="pooler"><input type="checkbox" name="pooler" id="pooler">Pooler</label>
+					<label for="referee"><input type="checkbox" name="referee" id="referee">Referee</label>
+					<label for="streamer"><input type="checkbox" name="streamer" id="streamer">Streamer</label>
+					<label for="commentator"><input type="checkbox" name="commentator" id="commentator">Commentator</label>
+				</div>
+				<div class="form_part" id="div_experience">
+					<h3>Do you have experience in what you would like to do?</h3>
+					<h5>It's okay if you do not!</h5>
+					<label for="experience"><input type="text" name="experience" id="experience" value="" required></label>
+				</div>
+				<input type="submit" id="submit" value="Submit!">
+			</form>
+		</div>
+	</body>
+</html>

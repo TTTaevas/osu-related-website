@@ -62,11 +62,16 @@ app.set("views", path.join(__dirname, "views"))
 if (production) {app.set('trust proxy', 1)}
 
 
-// import 'em functions
+// import 'em functions (site-wide)
 const sessionHandler = require("./functions/session-handler.js")
-const tournamentsHandle = require("./functions/tournaments-handle.js")
 const userCheck = require("./functions/user-check.js")
+
+// (history-wide)
+const tournamentsHandle = require("./functions/tournaments-handle.js")
 const referee = require("./functions/referee.js")
+
+// (layer01-wide)
+const formHandler = require("./functions/form-handler.js")
 
 
 // get main
@@ -131,6 +136,18 @@ app.get("/layer01/login", async (req, res) => {
 app.get("/layer01/rules", async (req, res) => {
 	let check = await userCheck(client, req.session.user)
 	res.status(200).render("layer01/rules", {user: check.user})
+})
+
+app.get("/layer01/staff-registration", async (req, res) => {
+	let check = await userCheck(client, req.session.user)
+	check.user ? res.status(200).render("layer01/staff-registration", {user: check.user}) : res.redirect("/layer01")
+})
+
+app.post("/layer01/staff-registration", async (req, res) => {
+	let check = await userCheck(client, req.session.user)
+	if (!check.user) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Probably not logged in"}})}
+	let form = formHandler.staff(check.user, req.body)
+	res.status(200).render("layer01/staff-registration", {user: check.user}) // temp
 })
 
 app.get("/layer01/*", (req, res) => {

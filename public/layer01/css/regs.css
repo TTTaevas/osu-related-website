@@ -1,0 +1,83 @@
+form, form > * {
+	display: inline-grid;
+}
+
+.form_part {
+	padding: 10px;
+	margin: 10px;
+}
+
+#div_discord {
+	border-right: 1px solid green;
+	border-bottom: 1px solid green;
+}
+
+#div_roles {
+	border-right: 1px solid red;
+	border-top: 1px solid red;
+}
+
+#div_experience {
+	border-right: 1px solid blue;
+	border-left: 1px solid blue;
+}
+
+h1 {
+	font-size: 50px;
+}
+
+h3 {
+	transition: 0.1s;
+	font-size: 26px;
+	margin: 5px;
+}
+
+div:hover > h3 {
+	background-color: #FFF;
+	color: #000;
+}
+
+h5 {
+	font-size: 16px;
+	margin: 5px;
+}
+
+a {
+	color: #5865F2;
+}
+
+label:first-of-type {
+	margin-top: 20px;
+}
+
+input[type=text] {
+	padding: 5px 10px;
+}
+
+#experience {
+	width: 400px;
+	max-width: 40vw;
+}
+
+@media screen and (max-width: 700px) {
+	#experience {
+		height: 50px;
+	}
+}
+
+#submit {
+	font-family: LiberationSans-Bold, Arial, sans-serif;
+	width: fit-content;
+	margin: 30px auto;
+	padding: 20px;
+	font-size: 30px;
+	border: 1px solid white;
+	background-color: #000;
+	color: #FFF;
+	cursor: pointer;
+}
+
+#submit:hover {
+	background-color: #FFF;
+	color: #000;
+}

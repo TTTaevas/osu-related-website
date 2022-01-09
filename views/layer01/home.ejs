@@ -28,18 +28,18 @@
 					</a>
 					<% if (user) { %>
 						<% if (!user.roles.registered_player) { %>
-							<a href="" class="button" id="player-regs">
+							<a href="player-registration" class="button" id="player-regs">
 								<img src="./images/form.png">
 								Player registration form
 							</a>
 						<% } %>
-						<a href="" class="button" id="staff-regs">
+						<a href="staff-registration" class="button" id="staff-regs">
 							<img src="./images/form.png">
 							Staff registration form
 						</a>
 					<% } else { %>
 						<a href="https://osu.ppy.sh/oauth/authorize?response_type=code&client_id=11451&redirect_uri=https://taevas.xyz/layer01/login" class="button" id="login">
-							Please login before registering as a player or as staff :3
+							Please login here before registering as a player or as staff :3
 						</a>
 					<% } %>
 				</div>
