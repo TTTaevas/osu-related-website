@@ -26,6 +26,15 @@ h1 {
 	font-size: 50px;
 }
 
+h4 {
+	font-size: 24px;
+	background-color: #FFF;
+	color: #000;
+	padding: 10px;
+	margin: 20px auto;
+	width: fit-content;
+}
+
 h3 {
 	transition: 0.1s;
 	font-size: 26px;

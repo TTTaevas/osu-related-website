@@ -140,14 +140,15 @@ app.get("/layer01/rules", async (req, res) => {
 
 app.get("/layer01/staff-registration", async (req, res) => {
 	let check = await userCheck(client, req.session.user)
-	check.user ? res.status(200).render("layer01/staff-registration", {user: check.user}) : res.redirect("/layer01")
+	let message = check.user.roles.registered_staff ? "You have already registered as staff, but feel free to reregister if you need to change something :3" : null
+	check.user ? res.status(200).render("layer01/staff-registration", {user: check.user, message: message}) : res.redirect("/layer01")
 })
 
 app.post("/layer01/staff-registration", async (req, res) => {
 	let check = await userCheck(client, req.session.user)
 	if (!check.user) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Probably not logged in"}})}
-	let form = formHandler.staff(check.user, req.body)
-	res.status(200).render("layer01/staff-registration", {user: check.user}) // temp
+	let form = await formHandler.staff(check.user, check.collection, check.db, req.body)
+	res.status(200).render("layer01/staff-registration", {user: check.user, message: form.message})
 })
 
 app.get("/layer01/*", (req, res) => {

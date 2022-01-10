@@ -10,6 +10,9 @@
 		<%- include("partials/menu") %>
 		<div id="main">
 			<h1>STAFF REGISTRATION</h1>
+			<% if (message) { %>
+				<h4 id="message"><%= message %></div>
+			<% } %>
 			<form method="POST" action="">
 				<div class="form_part" id="div_discord">
 					<h3>What is your Discord?</h3>
