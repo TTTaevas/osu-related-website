@@ -33,7 +33,7 @@ app.use(
 			directives: {
 				defaultSrc: ["'self'"],
 				scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-				imgSrc: ["'self'", "https://osuflags.omkserver.nl/"],
+				imgSrc: ["'self'", "https://osuflags.omkserver.nl/", "https://*.ppy.sh/"],
 				styleSrc: ["'self'", "'unsafe-inline'"]
 			}
 		}
@@ -149,6 +149,16 @@ app.post("/layer01/staff-registration", async (req, res) => {
 	if (!check.user) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Probably not logged in"}})}
 	let form = await formHandler.staff(check.user, check.collection, check.db, req.body)
 	res.status(200).render("layer01/staff-registration", {user: check.user, message: form.message})
+})
+
+app.get("/layer01/staff-regs", async (req, res) => {
+	let check = await userCheck(client, req.session.user, "admin")
+	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+
+	let regs_col = check.db.collection("staff_regs")
+	let regs = await regs_col.find().toArray()
+	for (let i = 0; i < regs.length; i++) {regs[i].user = check.users.find((user) => user.id == regs[i].id)}
+	res.status(200).render("layer01/staff-regs", {user: check.user, regs: regs})
 })
 
 app.get("/layer01/*", (req, res) => {

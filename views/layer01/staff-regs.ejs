@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>LAYER01 | STAFF REGS</title>
+		<link rel="stylesheet" type="text/css" href="./css/staff-regs.css">
+	</head>
+	<body>
+		<%- include("partials/menu") %>
+		<div id="main">
+			<h1>STAFF REGISTRATIONS</h1>
+			<ul id="regs">
+				<% for (let i = 0; i < regs.length; i++) { %>
+					<li class="reg">
+						<table class="user_card">
+							<tbody>
+								<tr>
+									<td rowspan="2">
+										<img class="user_card_avatar" src="<%= regs[i].user.avatar %>">
+									</td>
+									<td>
+										<a href="https://osu.ppy.sh/users/<%= regs[i].user.id %>" target="_blank" class="user_card_name"><%= regs[i].user.username %></a>
+									</td>
+								</tr>
+								<tr>
+									<td class="user_card_below">
+										<img class="user_card_flag" src="https://osu.ppy.sh/images/flags/<%= regs[i].user.country %>.png">
+										<div class="user_card_rank"><%= regs[i].user.rank %></div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<ul class="form">
+							<% for (let e = 0; e < Object.keys(regs[i].form).length; e++) { %>
+								<li>
+									<p><%= Object.keys(regs[i].form)[e] %>: <%= Object.values(regs[i].form)[e] %></p>
+								</li>
+							<% } %>
+						</ul>
+					</li>
+				<% } %>
+			</ul>
+		</div>
+	</body>
+</html>

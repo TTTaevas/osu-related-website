@@ -12,14 +12,14 @@ async function staff(user, users, db, form) {
 	await users.updateOne({_id: user._id}, {$set: updated_roles})
 
 	let reg = {
-		user: user.id,
+		id: user.id,
 		form: form,
 		date: new Date()
 	}
 	const staff_regs = db.collection("staff_regs")
 	const regs = await staff_regs.find().toArray()
 	if (regs.find((reg_a) => {return reg_a.user == reg.user})) {
-		staff_regs.updateOne({user: user.id}, {$set: reg})
+		staff_regs.updateOne({id: user.id}, {$set: reg})
 	} else {
 		staff_regs.insertOne(reg)
 	}
@@ -39,6 +39,9 @@ function san(form) {
 		let value = sanitize(Object.values(form)[i], "string")
 		if (!value.pass) {continue}
 		sanitized_form[key.obj] = value.obj
+
+		// I kinda don't wanna allow anyone to create a big-ass form if you see what I mean
+		if (i >= 16) {i = Object.keys(form).length}
 	}
 	return sanitized_form
 }
