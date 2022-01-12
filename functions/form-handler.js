@@ -27,7 +27,7 @@ async function staff(user, users, db, form) {
 		staff_regs.insertOne(reg)
 	}
 
-	return {ok: true, message: `Registered! (${String(staff_roles).replaceAll(",", ", ")}) | It may take some time for your registration to be looked at`}
+	return {ok: true, message: `Registered! (${String(staff_roles).replace(/,/g, ", ")}) | It may take some time for your registration to be looked at`}
 }
 
 async function player(user, users, form) {

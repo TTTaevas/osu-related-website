@@ -34,7 +34,7 @@ module.exports = function sanitize(obj, src) {
 	if (src == "filename") {
 		rtn = string(rtn, obj)
 		if (!rtn.pass) {return rtn}
-		rtn = rtn.obj.replaceAll("/", "")
+		rtn = rtn.obj.replace(/\//g, "")
 		if (!rtn.length) {return {pass: false, obj: obj, details: "Filename length 0"}}
 		return {pass: true, obj: rtn, details: "filename"}
 	}
@@ -51,13 +51,13 @@ function number(rtn, n_obj) {
 
 function string(rtn, s_obj) {
 	try {rtn = String(s_obj)} catch {return {pass: false, obj: s_obj, details: "Invalid-looking string"}}
-	rtn = rtn.replaceAll("{", "")
-	rtn = rtn.replaceAll("}", "")
-	rtn = rtn.replaceAll("<", "")
-	rtn = rtn.replaceAll(">", "")
-	rtn = rtn.replaceAll("?", "")
-	rtn = rtn.replaceAll("&", "")
-	rtn = rtn.replaceAll("%", "")
+	rtn = rtn.replace(/{/g, "")
+	rtn = rtn.replace(/}/g, "")
+	rtn = rtn.replace(/</g, "")
+	rtn = rtn.replace(/>/g, "")
+	rtn = rtn.replace(/\?/g, "")
+	rtn = rtn.replace(/&/g, "")
+	rtn = rtn.replace(/%/g, "")
 	if (!rtn.length) {return {pass: false, obj: s_obj, details: "String length 0"}}
 	return {pass: true, obj: rtn, details: "string"}
 }
