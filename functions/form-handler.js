@@ -22,9 +22,9 @@ async function staff(user, users, db, form) {
 	const staff_regs = db.collection("staff_regs")
 	const regs = await staff_regs.find().toArray()
 	if (regs.find((reg_a) => {return reg_a.user == reg.user})) {
-		staff_regs.updateOne({id: user.id}, {$set: reg})
+		await staff_regs.updateOne({id: user.id}, {$set: reg})
 	} else {
-		staff_regs.insertOne(reg)
+		await staff_regs.insertOne(reg)
 	}
 
 	return {ok: true, message: `Registered! (${String(staff_roles).replace(/,/g, ", ")}) | It may take some time for your registration to be looked at`}
