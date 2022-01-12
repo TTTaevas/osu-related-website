@@ -5,6 +5,9 @@ h1 {
 h2 {
 	font-size: 28px;
 	text-decoration: underline;
+	width: fit-content;
+	margin: 10px auto;
+	padding: 10px;
 }
 
 @media screen and (max-width: 500px) {
@@ -24,13 +27,18 @@ h2 {
 	padding: 0.5vh 2vw;
 	margin: 0.5vh 1vw;
 	transition: 0.3s;
+	border: 1px solid #000;
 }
 
 #rules > *:hover {
+	padding: 3vh 2.4vw;
+	margin: 1vh 0.6vw;
+	border: 1px solid #FFF;
+}
+
+#rules > *:hover h2 {
 	background: #FFF;
 	color: #000;
-	padding: 3vh 2vw;
-	margin: 1vh 0.6vw;
 }
 
 a {
@@ -46,32 +54,32 @@ ul {
 	padding: 0;
 }
 
-#layer01 {
+/* #rules*/ #layer01 {
 	border-left: 1px solid red;
 	border-bottom: 1px solid red;
 }
 
-#participants {
+/* #rules*/ #participants {
 	border-right: 1px solid blue;
 	border-top: 1px solid blue;
 }
 
-#disqualification {
+/* #rules*/ #disqualification {
 	border-top: 1px solid green;
 	border-bottom: 1px solid green;
 }
 
-#playlists {
+/* #rules*/ #playlists {
 	border-top: 1px solid pink;
 	border-left: 1px solid pink;
 }
 
-#qualifiers {
+/* #rules*/ #qualifiers {
 	border-right: 1px solid purple;
 	border-bottom: 1px solid purple;
 }
 
-#matches {
+/* #rules*/ #matches {
 	border-left: 1px solid gray;
 	border-right: 1px solid gray;
 }

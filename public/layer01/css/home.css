@@ -83,9 +83,12 @@ h1 span:hover {
 	border-top: 1px solid blue;
 }
 
+#right > * {
+	border: 1px solid #000;
+}
+
 #right > *:hover {
-	background-color: #FFF;
-	color: #000;
+	border: 1px solid #FFF;
 }
 
 #schedule {
@@ -95,8 +98,8 @@ h1 span:hover {
 
 #right ul {
 	list-style: none;
-	padding: 15px;
-	margin: 0px;
+	padding: 10px;
+	margin: 10px 0;
 }
 
 #right li {
@@ -112,7 +115,8 @@ h1 span:hover {
 	text-align: left;
 }
 
-#prizepool {
+#right #prizepool {
+	border-top: 1px solid #ff00ff;
 	border-bottom: 1px solid #ff00ff;
 }
 
