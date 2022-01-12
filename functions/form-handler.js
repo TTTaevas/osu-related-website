@@ -21,9 +21,11 @@ async function staff(user, users, db, form) {
 	}
 	const staff_regs = db.collection("staff_regs")
 	const regs = await staff_regs.find().toArray()
-	if (regs.find((reg_a) => {return reg_a.user == reg.user})) {
+	if (regs.find((reg_a) => {return reg_a.id == reg.id})) {
+		console.log(`Updating staff reg ${reg.id}`)
 		await staff_regs.updateOne({id: user.id}, {$set: reg})
 	} else {
+		console.log(`Inserting staff reg ${reg.id}`)
 		await staff_regs.insertOne(reg)
 	}
 
