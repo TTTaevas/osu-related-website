@@ -19,18 +19,19 @@ async function request(main, header_part, data) {
 	})
 	.catch((error) => {
 		if (error.response) {
-     		// Request made and server responded
-     		console.log("\n/!\\", error.response.statusText, error.response.status, main)
-    		throw new Error("\n/!\\", error.response.statusText, error.response.status, main)
-    	} else if (error.request) {
-    		// The request was made but no response was received
-    		console.log("\n/!\\ No response received", error.message, main)
-    		throw new Error("\n/!\\ No response received", error.message, main)
-    	} else {
-    		// Something happened in setting up the request that triggered an error
-    		console.log("\n/!\\ Some axios error happened", error.message, main)
-    		throw new Error("\n/!\\ Some axios error happened", error.message, main)
-    	}
+			// Request made and server responded
+			console.log("\n/!\\", error.response.statusText, error.response.status, main, error.response.data)
+			if (error.response.config) {console.log(`config.data: ${error.response.config.data}`)}
+			throw new Error("\n/!\\", error.response.statusText, error.response.status, main, error.response.data)
+		} else if (error.request) {
+			// The request was made but no response was received
+			console.log("\n/!\\ No response received", error.message, main)
+			throw new Error("\n/!\\ No response received", error.message, main)
+		} else {
+			// Something happened in setting up the request that triggered an error
+			console.log("\n/!\\ Some axios error happened", error.message, main)
+			throw new Error("\n/!\\ Some axios error happened", error.message, main)
+		}
 	})
 	
 	if (resp) {
