@@ -38,6 +38,14 @@
 								</li>
 							<% } %>
 						</ul>
+						<form method="POST" action="">
+							<input type="hidden" name="id" id="id" value="<%= regs[i].user.id %>">
+							<label for="pooler"><input type="checkbox" name="pooler" id="pooler">Pooler</label>
+							<label for="referee"><input type="checkbox" name="referee" id="referee">Referee</label>
+							<label for="streamer"><input type="checkbox" name="streamer" id="streamer">Streamer</label>
+							<label for="commentator"><input type="checkbox" name="commentator" id="commentator">Commentator</label>
+							<input type="submit" id="submit" value="Add to staff!" style="margin-bottom: 0;">
+						</form>
 					</li>
 				<% } %>
 			</ul>

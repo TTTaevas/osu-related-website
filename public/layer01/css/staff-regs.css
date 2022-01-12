@@ -43,6 +43,7 @@ a {
 	border-radius: 25%;
 	margin-bottom: 79px;
 	margin-right: 10px;
+	border: 1px solid;
 }
 
 .user_card_name {

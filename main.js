@@ -72,6 +72,7 @@ const referee = require("./functions/referee.js")
 
 // (layer01-wide)
 const formHandler = require("./functions/form-handler.js")
+const addStaff = require("./functions/add-staff.js")
 
 
 // get main
@@ -140,7 +141,9 @@ app.get("/layer01/rules", async (req, res) => {
 
 app.get("/layer01/staff-registration", async (req, res) => {
 	let check = await userCheck(client, req.session.user)
-	let message = check.user.roles.registered_staff ? "You have already registered as staff, but feel free to reregister if you need to change something :3" : null
+	let message = null
+	if (check.user.roles.registered_staff) {message = "You have already registered as staff, but feel free to reregister if you need to change something :3"}
+	if (check.user.roles.staff) {message = "You are already staff! You should ask Taevas if you want to change something :3c"}
 	check.user ? res.status(200).render("layer01/staff-registration", {user: check.user, message: message}) : res.redirect("/layer01")
 })
 
@@ -159,6 +162,13 @@ app.get("/layer01/staff-regs", async (req, res) => {
 	let regs = await regs_col.find().toArray()
 	for (let i = 0; i < regs.length; i++) {regs[i].user = check.users.find((user) => user.id == regs[i].id)}
 	res.status(200).render("layer01/staff-regs", {user: check.user, regs: regs})
+})
+
+app.post("/layer01/staff-regs", async (req, res) => {
+	let check = await userCheck(client, req.session.user, "admin")
+	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+	await addStaff(check.db, check.collection, req.body)
+	res.redirect("/layer01/staff-regs")
 })
 
 app.get("/layer01/*", (req, res) => {

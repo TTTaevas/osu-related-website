@@ -11,8 +11,8 @@ html {
 }
 
 body {
-	color: white;
-	background: black;
+	background-color: #000;
+	color: #FFF;
 	margin: 0;
 	text-align: center;
 }
@@ -28,6 +28,35 @@ body {
 	}
 }
 
+form {
+	display: inline-grid;
+}
+
+label:first-of-type {
+	margin-top: 20px;
+}
+
+input[type=text] {
+	padding: 5px 10px;
+}
+
+#submit {
+	font-family: LiberationSans-Bold, Arial, sans-serif;
+	width: fit-content;
+	margin: 30px auto;
+	padding: 20px;
+	font-size: 30px;
+	border: 1px solid #FFF;
+	background-color: #000;
+	color: #FFF;
+	cursor: pointer;
+}
+
+#submit:hover {
+	background-color: #FFF;
+	color: #000;
+}
+
 #menu {
 	position: fixed;
 	width: 100vw;
@@ -36,7 +65,7 @@ body {
 	padding: 0;
 	overflow: hidden;
 	background-color: #000;
-	border-bottom: 1px solid white;
+	border-bottom: 1px solid #FFF;
 	z-index: 3;
 }
 
@@ -65,8 +94,8 @@ body {
 }
 
 #menu li a:hover {
-	color: #000;
 	background-color: #FFF;
+	color: #000;
 }
 
 .right {
