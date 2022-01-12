@@ -48,7 +48,10 @@ async function codeHandler(req, client) {
 				"code": req.query.code
 			})
 		)
-	} catch {return "Invalid code!"}
+	} catch (e) {
+		console.log(e)
+		return e.public
+	}
 
 	var user_object
 	try {

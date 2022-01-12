@@ -4,14 +4,14 @@ module.exports = function sanitize(obj, src) {
 	if (src == "id") return number(rtn, obj)
 	if (src == "string") return string(rtn, obj)
 
-	if (src == "response") {
-		rtn = {"statusText": "", "status": 0}
-		let s_statusText = string(rtn, obj.statusText)
-		if (!s_statusText.pass) {return s_statusText} else {rtn.statusText = s_statusText.obj}
-		let n_status = number(rtn, obj.status)
-		if (!n_status.pass) {return n_status} else {rtn.status = n_status.obj}
-		return {pass: true, obj: rtn, details: "response"}
-	}
+	// if (src == "response") { Is it really useful? To me, that just looks useless, unless proven otherwise
+	// 	rtn = {"statusText": "", "status": 0}
+	// 	let s_statusText = string(rtn, obj.statusText)
+	// 	if (!s_statusText.pass) {return s_statusText} else {rtn.statusText = s_statusText.obj}
+	// 	let n_status = number(rtn, obj.status)
+	// 	if (!n_status.pass) {return n_status} else {rtn.status = n_status.obj}
+	// 	return {pass: true, obj: rtn, details: "response"}
+	// }
 	
 	if (src == "form") {
 		if (!obj || typeof obj != "object") {return {pass: false, obj: obj, details: "Not an object"}}

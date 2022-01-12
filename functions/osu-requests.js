@@ -18,25 +18,34 @@ async function request(main, header_part, data) {
 		data: data
 	})
 	.catch((error) => {
+		let err = new Error("\n/!\\ An error happened while doing a request to osu!api v2")
 		if (error.response) {
-			// Request made and server responded
-			console.log("\n/!\\", error.response.statusText, error.response.status, main, error.response.data)
-			if (error.response.config) {console.log(`config.data: ${error.response.config.data}`)}
-			throw new Error("\n/!\\", error.response.statusText, error.response.status, main, error.response.data)
+			err.type = "Request made and server responded"
+			err.public = "Invalid code!"
+			err.main = main
+			err.status = error.response.status
+			err.statusText = error.response.statusText
+			err.response = error.response.data
+			if (error.response.config) {err.config = error.response.config.data}
 		} else if (error.request) {
-			// The request was made but no response was received
-			console.log("\n/!\\ No response received", error.message, main)
-			throw new Error("\n/!\\ No response received", error.message, main)
+			err.type = "Request made but server did not respond"
+			err.public = "osu!api seems to be down currently"
+			err.main = main
+			err.message = error.message
 		} else {
 			// Something happened in setting up the request that triggered an error
-			console.log("\n/!\\ Some axios error happened", error.message, main)
-			throw new Error("\n/!\\ Some axios error happened", error.message, main)
+			err.type = "Setting up the request caused an (axios?) error"
+			err.public = "Unknown error"
+			err.main = main
+			err.message = error.message
 		}
+		throw err
 	})
 	
 	if (resp) {
-		let sanitized = sanitize(resp, "response")
-		console.log(sanitized.obj.statusText, sanitized.obj.status, main)
+		// let sanitized = sanitize(resp, "response") Seems useless to me :^) I wasn't even checking the pass smh
+		//console.log(sanitized.obj.statusText, sanitized.obj.status, main)
+		console.log(resp.statusText, resp.status, main)
 		return resp.data
 	} else {
 		return false
