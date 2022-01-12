@@ -142,9 +142,13 @@ app.get("/layer01/rules", async (req, res) => {
 app.get("/layer01/staff-registration", async (req, res) => {
 	let check = await userCheck(client, req.session.user)
 	let message = null
-	if (check.user.roles.registered_staff) {message = "You have already registered as staff, but feel free to reregister if you need to change something :3"}
-	if (check.user.roles.staff) {message = "You are already staff! You should ask Taevas if you want to change something :3c"}
-	check.user ? res.status(200).render("layer01/staff-registration", {user: check.user, message: message}) : res.redirect("/layer01")
+	if (check.user) {
+		if (check.user.roles.registered_staff) {message = "You have already registered as staff, but feel free to reregister if you need to change something :3"}
+		if (check.user.roles.staff) {message = "You are already staff! You should ask Taevas if you want to change something :3c"}
+		res.status(200).render("layer01/staff-registration", {user: check.user, message: message})
+	} else {
+		res.redirect("/layer01")
+	}
 })
 
 app.post("/layer01/staff-registration", async (req, res) => {

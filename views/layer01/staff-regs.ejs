@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,6 +40,7 @@
 						</ul>
 						<form method="POST" action="">
 							<input type="hidden" name="id" id="id" value="<%= regs[i].user.id %>">
+							<input type="hidden" name="discord" id="discord" value="<%= regs[i].form.discord %>">
 							<label for="pooler"><input type="checkbox" name="pooler" id="pooler">Pooler</label>
 							<label for="referee"><input type="checkbox" name="referee" id="referee">Referee</label>
 							<label for="streamer"><input type="checkbox" name="streamer" id="streamer">Streamer</label>

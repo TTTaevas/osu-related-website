@@ -15,7 +15,7 @@ module.exports = async function addStaff(db, users_col, form) {
 
 	// Add to staff
 	const user = await users_col.findOne({id: form.id})
-	let updated = {roles: user.roles}
+	let updated = {discord: form.discord, roles: user.roles}
 	updated.roles.staff = true
 	if (form.pooler) {updated.roles.pooler = true}
 	if (form.referee) {updated.roles.referee = true}
