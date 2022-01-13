@@ -122,6 +122,9 @@ h1 span:hover {
 
 @media screen and (max-width: 500px) {
 	#schedule {
-		display: none;
+		font-size: 3.3vw;
+	}
+	h1 {
+		font-size: 48px;
 	}
 }

@@ -10,17 +10,20 @@ h2 {
 	padding: 10px;
 }
 
-@media screen and (max-width: 500px) {
-	h2 {
-		font-size: 24px;
-	}
-}
-
 #rules {
 	margin: 0 15vw;
 	padding: 1vh 1vw;
 	border-left: 1px solid #FFF;
 	border-right: 1px solid #FFF;
+}
+
+@media screen and (max-width: 500px) {
+	h2 {
+		font-size: 24px;
+	}
+	#rules {
+		margin: 0 5vw;
+	}
 }
 
 #rules > * {
