@@ -41,10 +41,10 @@
 						<form method="POST" action="">
 							<input type="hidden" name="id" id="id" value="<%= regs[i].user.id %>">
 							<input type="hidden" name="discord" id="discord" value="<%= regs[i].form.discord %>">
-							<label for="pooler"><input type="checkbox" name="pooler" id="pooler">Pooler</label>
-							<label for="referee"><input type="checkbox" name="referee" id="referee">Referee</label>
-							<label for="streamer"><input type="checkbox" name="streamer" id="streamer">Streamer</label>
-							<label for="commentator"><input type="checkbox" name="commentator" id="commentator">Commentator</label>
+							<label for="pooler<%= i %>"><input type="checkbox" name="pooler" id="pooler<%= i %>">Pooler</label>
+							<label for="referee<%= i %>"><input type="checkbox" name="referee" id="referee<%= i %>">Referee</label>
+							<label for="streamer<%= i %>"><input type="checkbox" name="streamer" id="streamer<%= i %>">Streamer</label>
+							<label for="commentator<%= i %>"><input type="checkbox" name="commentator" id="commentator<%= i %>">Commentator</label>
 							<input type="submit" id="submit" value="Add to staff!" style="margin-bottom: 0;">
 						</form>
 					</li>
