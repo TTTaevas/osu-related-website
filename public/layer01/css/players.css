@@ -1,0 +1,88 @@
+h1 {
+	font-size: 48px;
+	padding-top: 10px;
+}
+
+ul {
+	padding: 0;
+	font-size: 0px;
+}
+
+li {
+	list-style: none;
+	font-size: 16px;
+}
+
+a {
+	color: inherit;
+}
+
+.reg {
+	display: inline-block;
+	width: 350px;
+	max-width: 80vw;
+	/*min-height: 200px;*/
+	margin: 10px;
+	padding: 10px;
+	border: 1px solid #FFF;
+	color: #FFF;
+	background-color: #000;
+	transition: 0.1s;
+}
+
+.reg:hover {
+	color: #000;
+	background-color: #FFF;
+	border: 1px solid;
+}
+
+.user_card {
+	display: inline-block;
+	height: 80px;
+	width: auto;
+	border-radius: 25px;
+	padding: 0 10px;
+	text-align: center;
+	border: 1px solid;
+}
+
+.user_card_avatar {
+	height: 58px;
+	width: 58px;
+	border-radius: 25%;
+	margin-bottom: 79px;
+	margin-right: 10px;
+	border: 1px solid;
+}
+
+.user_card_name {
+	padding-top: 20px;
+	float: left;
+	white-space: nowrap;
+}
+
+.user_card_below {
+	margin-bottom: 95px;
+	float: left;
+}
+
+.user_card_flag {
+	width: 25px;
+	float: left;
+}
+
+.user_card_rank {
+	margin-left: 30px;
+}
+
+.red {
+	color: red;
+}
+
+.reg_info {
+	margin: 10px;
+}
+
+.reg_info li {
+	margin: 5px;
+}

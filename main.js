@@ -139,6 +139,16 @@ app.get("/layer01/rules", async (req, res) => {
 	res.status(200).render("layer01/rules", {user: check.user})
 })
 
+
+// player stuff
+app.get("/layer01/players", async (req, res) => {
+	let check = await userCheck(client, req.session.user)
+	let players = check.users.filter((user) => {return user.roles.player})
+	res.status(200).render("layer01/players", {user: check.user, players: players})
+})
+
+
+// staff stuff
 app.get("/layer01/staff-registration", async (req, res) => {
 	let check = await userCheck(client, req.session.user)
 	let message = null
@@ -175,6 +185,7 @@ app.post("/layer01/staff-regs", async (req, res) => {
 	res.redirect("/layer01/staff-regs")
 })
 
+// 404
 app.get("/layer01/*", (req, res) => {
 	res.status(404).render("layer01/fourofour")
 })

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>LAYER01 | PLAYERS</title>
+		<link rel="stylesheet" type="text/css" href="./css/players.css">
+	</head>
+	<body>
+		<%- include("partials/menu") %>
+		<div id="main">
+			<h1>PLAYERS (<%= players.length %>)</h1>
+			<ul id="regs">
+				<% for (let i = 0; i < players.length; i++) { %>
+					<li class="reg">
+						<table class="user_card">
+							<tbody>
+								<tr>
+									<td rowspan="2">
+										<img class="user_card_avatar" src="<%= players[i].avatar %>">
+									</td>
+									<td>
+										<a href="https://osu.ppy.sh/users/<%= players[i].id %>" target="_blank" class="user_card_name"><%= players[i].username %></a>
+									</td>
+								</tr>
+								<tr>
+									<td class="user_card_below">
+										<img class="user_card_flag" src="https://osu.ppy.sh/images/flags/<%= players[i].country %>.png">
+										<div class="user_card_rank<%= players[i].rank < 75000 ? ' red' : players[i].rank > 125000 ? ' red' : ''%>"><%= players[i].rank %></div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<ul class="reg_info">
+							<li class="discord">
+								DISCORD: <%= players[i].discord %>
+							</li>
+							<li class="timezone">
+								TIMEZONE: <%= players[i].timezone %>
+							</li>
+						</ul>
+					</li>
+				<% } %>
+			</ul>
+		</div>
+	</body>
+</html>
