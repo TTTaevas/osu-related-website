@@ -33,7 +33,24 @@ async function staff(user, users, db, form) {
 }
 
 async function player(user, users, form) {
-	console.log("no clue yet lol")
+	let sanitized_form = sanitize(form, "form")
+	if (!sanitized_form.pass) {return {ok: false, message: "Something seems to have gone wrong very wrong ><"}}
+	form = sanitized_form.obj
+
+	if (!form.discord) {return {ok: false, message: "No Discord was provided"}}
+	if (!form.timezone) {return {ok: false, message: "No timezone was provided"}}
+
+	let info = {
+		roles: user.roles,
+		discord: form.discord.substring(0, 35),
+		timezone: form.timezone.substring(0, 12)
+	}
+	info.roles.registered_player = true
+	info.roles.player = true
+
+	await users.updateOne({id: user.id}, {$set: info})
+	console.log(`(${user.id}) ${user.username} just registered as a player!`)
+	return {ok: true, message: `Registered! Welcome to the tournament, ${user.username}!`} // note that this message currently cannot be shown
 }
 
 module.exports = {

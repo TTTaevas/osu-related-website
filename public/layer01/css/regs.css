@@ -22,17 +22,13 @@ form > * {
 	border-left: 1px solid blue;
 }
 
-h1 {
-	font-size: 50px;
+#div_timezone {
+	border-right: 1px solid purple;
+	border-left: 1px solid purple;
 }
 
-h4 {
-	font-size: 24px;
-	background-color: #FFF;
-	color: #000;
-	padding: 10px;
-	margin: 20px auto;
-	width: fit-content;
+h1 {
+	font-size: 50px;
 }
 
 h3 {
@@ -57,11 +53,21 @@ a {
 
 #experience {
 	width: 400px;
-	max-width: 40vw;
+}
+
+#timezone {
+	width: 100px;
 }
 
 @media screen and (max-width: 700px) {
+	h1 {
+		font-size: 36px;
+		padding-top: 30px;
+	}
 	#experience {
-		height: 50px;
+		width: 70vw;
+	}
+	form #submit {
+		padding: 10px;
 	}
 }

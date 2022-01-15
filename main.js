@@ -141,9 +141,29 @@ app.get("/layer01/rules", async (req, res) => {
 
 
 // player stuff
+app.get("/layer01/player-registration", async (req, res) => {
+	let check = await userCheck(client, req.session.user)
+	let message = null
+	if (check.user) {
+		if (check.user.roles.pooler) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Poolers cannot play in the tournament"}})}
+		if (check.user.roles.registered_player) {message = "You are already a player, but you can reregister if you want to change your discord/timezone :3c"}
+		res.status(200).render("layer01/player-registration", {user: check.user, message: message})
+	} else {
+		res.redirect("/layer01")
+	}
+})
+
+app.post("/layer01/player-registration", async (req, res) => {
+	let check = await userCheck(client, req.session.user)
+	if (!check.user) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Probably not logged in"}})}
+	let form = await formHandler.player(check.user, check.collection, req.body)
+	res.redirect("/layer01/players")
+})
+
 app.get("/layer01/players", async (req, res) => {
 	let check = await userCheck(client, req.session.user)
 	let players = check.users.filter((user) => {return user.roles.player})
+	players = players.sort((a, b) => {return a.rank - b.rank}) // sort by rank
 	res.status(200).render("layer01/players", {user: check.user, players: players})
 })
 
@@ -184,6 +204,7 @@ app.post("/layer01/staff-regs", async (req, res) => {
 	await addStaff(check.db, check.collection, req.body)
 	res.redirect("/layer01/staff-regs")
 })
+
 
 // 404
 app.get("/layer01/*", (req, res) => {

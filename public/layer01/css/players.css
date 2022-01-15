@@ -80,7 +80,9 @@ a {
 }
 
 .reg_info {
-	margin: 10px;
+	text-align: left;
+	width: fit-content;
+	margin: 10px auto;
 }
 
 .reg_info li {

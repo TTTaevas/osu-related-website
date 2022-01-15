@@ -76,6 +76,7 @@ async function codeHandler(req, client) {
 				country: user_object.country_code,
 				rank: user_object.statistics.global_rank,
 				discord: user_object.discord != null ? user_object.discord : "not specified",
+				timezone: "not specified",
 				roles: {
 					admin: false,
 					referee: false,
