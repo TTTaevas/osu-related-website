@@ -42,8 +42,8 @@ async function player(user, users, form) {
 
 	let info = {
 		roles: user.roles,
-		discord: form.discord.substring(0, 35),
-		timezone: form.timezone.substring(0, 12)
+		discord: form.discord.substring(0, 40),
+		timezone: form.timezone.substring(0, 15)
 	}
 	info.roles.registered_player = true
 	info.roles.player = true

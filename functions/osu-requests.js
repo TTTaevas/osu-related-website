@@ -72,14 +72,16 @@ async function getToken() {
 	return response.access_token
 }
 
-async function getUser(token, user_id) {
+async function getUser(token, user_id, mode) {
 	let sanitized = sanitize(user_id, "id")
 	if (sanitized.pass) {user_id = sanitized.obj} else {return false}
+
+	if (!mode) {mode == "osu"}
 
 	var response
 	try {
 		response = await request(
-			{"method": "get", "base_url_part": "api/v2/users", "url": user_id},
+			{"method": "get", "base_url_part": "api/v2/users", "url": `${user_id}/${mode}`},
 			{"Authorization": `Bearer ${token}`},
 			{}
 		)

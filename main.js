@@ -71,6 +71,7 @@ const tournamentsHandle = require("./functions/tournaments-handle.js")
 const referee = require("./functions/referee.js")
 
 // (layer01-wide)
+const admin = require("./functions/admin.js")
 const formHandler = require("./functions/form-handler.js")
 const addStaff = require("./functions/add-staff.js")
 
@@ -83,11 +84,6 @@ app.get("/history", async (req, res) => {
 	let check = await userCheck(client, req.session.user)
 	res.status(200).render("history/home", {user: check.user})
 })
-
-// app.get("/history/login", async (req, res) => {
-// 	let status = await sessionHandler(req, client)
-// 	status.ok ? res.status(200).redirect("/history") : res.status(201).render("login", {status: status})
-// })
 
 app.get("/history/referee", async (req, res) => {
 	let check = await userCheck(client, req.session.user)
@@ -165,6 +161,13 @@ app.get("/layer01/players", async (req, res) => {
 	let players = check.users.filter((user) => {return user.roles.player})
 	players = players.sort((a, b) => {return a.rank - b.rank}) // sort by rank
 	res.status(200).render("layer01/players", {user: check.user, players: players})
+})
+
+app.post("/layer01/players", async (req, res) => {
+	let check = await userCheck(client, req.session.user, "admin")
+	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+	await admin.updatePlayers(check.users, check.collection)
+	res.redirect("/layer01/players")
 })
 
 
