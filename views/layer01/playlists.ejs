@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>LAYER01 | PLAYLISTS</title>
+		<link rel="stylesheet" type="text/css" href="./css/playlists.css">
+	</head>
+	<body>
+		<%- include("partials/menu") %>
+		<div id="main">
+			<ul id="playlists">
+
+			</ul>
+			<% if (user && user.roles.admin) { %>
+				<form id="c_pool" method="POST" action="">
+					<label for="c_name">Playlist Name<input type="text" name="c_name" class="c_name"></label>
+					<div class="c_map" id="c_0">
+						<label for="c_mod">Mod<input type="text" name="c_mod" class="c_mod" minlength="3" maxlength="3"></label>
+						<label for="c_id">ID<input type="text" name="c_id" class="c_id" minlength="1"></label>
+					</div>
+					<button type="button" id="create_map" onclick="createMap()">New map</button>
+					<script type="text/javascript">
+						function createMap() {
+							let maps = document.getElementsByClassName('c_map')
+							let before = document.getElementById('create_map')
+							let i = maps.length
+							let new_map = maps[maps.length - 1].cloneNode(true)
+							new_map.id = `c_${i}`
+							document.getElementById('c_pool').insertBefore(new_map, before)
+						}
+					</script>
+					<input type="submit" id="submit" value="Create playlist!">
+				</form>
+			<% } %>
+		</div>
+	</body>
+</html>

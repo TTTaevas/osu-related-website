@@ -136,6 +136,23 @@ app.get("/layer01/rules", async (req, res) => {
 })
 
 
+// playlists stuff
+app.get("/layer01/playlists", async (req, res) => {
+	let check = await userCheck(client, req.session.user, "admin") // REMOVE AUTHORIZATION STUFF ONCE DONE
+	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+	let playlists_col = check.db.collection("playlists")
+	let pools = await playlists_col.find().toArray()
+	res.status(200).render("layer01/playlists", {user: check.user, playlists: pools})
+})
+
+app.post("/layer01/playlists", async (req, res) => {
+	let check = await userCheck(client, req.session.user, "admin") // REMOVE AUTHORIZATION STUFF ONCE DONE
+	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+	console.log(req.body)
+	res.redirect("/layer01/playlists")
+})
+
+
 // player stuff
 app.get("/layer01/player-registration", async (req, res) => {
 	let check = await userCheck(client, req.session.user)
@@ -166,7 +183,7 @@ app.get("/layer01/players", async (req, res) => {
 app.post("/layer01/players", async (req, res) => {
 	let check = await userCheck(client, req.session.user, "admin")
 	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
-	await admin.updatePlayers(check.users, check.collection)
+	admin.updatePlayers(check.users, check.collection)
 	res.redirect("/layer01/players")
 })
 

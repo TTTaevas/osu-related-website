@@ -41,19 +41,29 @@ input[type=text] {
 	padding: 5px 10px;
 }
 
-#submit {
+#submit, button {
 	font-family: LiberationSans-Bold, Arial, sans-serif;
 	width: fit-content;
-	margin: 30px auto;
-	padding: 20px;
-	font-size: 30px;
 	border: 1px solid #FFF;
 	background-color: #000;
 	color: #FFF;
 	cursor: pointer;
 }
 
-#submit:hover {
+#submit {
+	margin: 30px auto;
+	padding: 20px;
+	font-size: 30px;
+}
+
+button {
+	margin: 15px auto;
+	padding: 10px;
+	font-size: 15px;
+	min-width: 20vw;
+}
+
+#submit:hover, button:hover {
 	background-color: #FFF;
 	color: #000;
 }

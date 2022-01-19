@@ -1,0 +1,17 @@
+form {
+	padding: 10px 15vw;
+	margin: 10px;
+	border: 1px solid;
+}
+
+input {
+	margin: 2px 10px;
+}
+
+.c_mod {
+	width: 35px;
+}
+
+.c_id {
+	width: 60px;
+}

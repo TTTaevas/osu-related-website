@@ -113,33 +113,45 @@ async function getMatch(token, match_id, tournament) {
 			{}
 		)
 	} catch {return false}
-	
 	if (!response) {return false}
-	let custom = {
-		name: response.match.name,
-		id: response.match.id,
-		tournament: tournament,
-		url: `https://osu.ppy.sh/community/matches/${response.match.id}`,
-		date: new Date(response.match.start_time),
-		players: []
-	}
-	
 
-	let events = response.events.filter((event) => {if (event.game) {return event}})
-	let users = []
+	var return_object
+	let games = response.events.filter((event) => {if (event.game) {return event}})
+	let players = []
+
+	if (tournament) { // HISTORY
+		let custom = {
+			name: response.match.name,
+			id: response.match.id,
+			tournament: tournament,
+			url: `https://osu.ppy.sh/community/matches/${response.match.id}`,
+			date: new Date(response.match.start_time)
+		}
+
+		return_object = custom
+	} else { // LAYER01
+		let c_games = games.map((e) => {return e.game})
+		let custom = {
+			name: response.match.name,
+			id: response.match.id,
+			url: `https://osu.ppy.sh/community/matches/${response.match.id}`,
+			games: c_games
+		}
+		return_object = custom
+	}
 
 	// The users object of the response include at least the referee, which we do not want
-	for (let i = 0; i < events.length; i++) {
-		let scores = events[i].game.scores
+	for (let i = 0; i < games.length; i++) {
+		let scores = games[i].game.scores
 		for (let e = 0; e < scores.length; e++) {
-			if (!users.find((user) => {return user.id == scores[e].user_id}) && scores[e].score > 0) {
-				users.push(response.users.find((user) => {return user.id == scores[e].user_id}))
+			if (!players.find((player) => {return player.id == scores[e].user_id}) && scores[e].score > 0) {
+				players.push(response.users.find((user) => {return user.id == scores[e].user_id}))
 			}
 		}
 	}
 
-	custom.players = users
-	return custom
+	return_object.players = players
+	return return_object
 }
 
 module.exports = {
