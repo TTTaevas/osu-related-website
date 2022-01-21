@@ -101,6 +101,22 @@ async function getUser(token, user_id, mode) {
 	return response
 }
 
+async function getBeatmap(token, diff_id) {
+	let sanitized = sanitize(diff_id, "id")
+	if (sanitized.pass) {diff_id = sanitized.obj} else {return false}
+
+	var response
+	try {
+		response = await request(
+			{"method": "get", "base_url_part": "api/v2/beatmaps", "url": `${diff_id}`},
+			{"Authorization": `Bearer ${token}`},
+			{}
+		)
+	} catch {response = false}
+
+	return response
+}
+
 async function getMatch(token, match_id, tournament) {
 	let sanitized = sanitize(match_id, "id")
 	if (sanitized.pass) {match_id = sanitized.obj} else {return false}
@@ -158,5 +174,6 @@ module.exports = {
 	request,
 	getToken,
 	getUser,
+	getBeatmap,
 	getMatch
 }

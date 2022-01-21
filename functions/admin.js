@@ -1,5 +1,4 @@
 const request = require("./osu-requests.js")
-const util = require('util')
 
 async function updatePlayers(users, users_col) {
 	let token = await request.getToken()

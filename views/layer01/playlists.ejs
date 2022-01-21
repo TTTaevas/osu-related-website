@@ -9,8 +9,14 @@
 	<body>
 		<%- include("partials/menu") %>
 		<div id="main">
+			<h1>PLAYLISTS</h1>
 			<ul id="playlists">
-
+				<% for (let i = 0; i < playlists.length; i++) { %>
+					<% let playlist = playlists[i] %>
+					<li class="playlist" id="<%= playlist.name %>">
+						<span class="selector"><%= playlist.name %></span>
+					</li>
+				<% } %>
 			</ul>
 			<% if (user && user.roles.admin) { %>
 				<form id="c_pool" method="POST" action="">

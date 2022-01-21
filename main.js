@@ -146,9 +146,9 @@ app.get("/layer01/playlists", async (req, res) => {
 })
 
 app.post("/layer01/playlists", async (req, res) => {
-	let check = await userCheck(client, req.session.user, "admin") // REMOVE AUTHORIZATION STUFF ONCE DONE
+	let check = await userCheck(client, req.session.user, "admin")
 	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
-	console.log(req.body)
+	let form = await formHandler.playlist(check.db, req.body)
 	res.redirect("/layer01/playlists")
 })
 
