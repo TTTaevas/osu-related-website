@@ -1,3 +1,82 @@
+h1 {
+	font-size: 48px;
+	padding-top: 10px;
+}
+
+.playlist_container {
+	border: 1px solid;
+	width: fit-content;
+	margin: auto;
+	padding: 0 25px 25px 25px;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+td {
+	border-left: 1px solid;
+	border-right: 1px solid;
+}
+
+td:first-child {
+	border-left: 0px none;
+}
+
+td:last-child {
+	border-right: 0px none;
+}
+
+.playlist {
+	margin: auto;
+}
+
+.legend {
+	font-size: 18px;
+	border-bottom: 1px solid;
+}
+
+.legend td {
+	padding: 0 10px;
+}
+
+.map_banner {
+	height: 35px;
+	width: 100px;
+	vertical-align: middle;
+}
+
+.map_id {
+	padding: 0 10px;
+}
+
+.NM {
+	color: #88bff0;
+}
+
+.HD {
+	color: #eedaa1;
+}
+
+.HR {
+	color: #f79595;
+}
+
+.DT {
+	color: #ac92e6;
+}
+
+.EZ {
+	color: #a4d293;
+}
+
+.map_name {
+	padding: 0 7px;
+	margin: 7px 7px;
+	display: inline-block;
+	max-width: 400px;
+}
+
 form {
 	padding: 10px 15vw;
 	margin: 10px;

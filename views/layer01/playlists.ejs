@@ -10,14 +10,45 @@
 		<%- include("partials/menu") %>
 		<div id="main">
 			<h1>PLAYLISTS</h1>
-			<ul id="playlists">
+			<div id="playlists">
 				<% for (let i = 0; i < playlists.length; i++) { %>
-					<% let playlist = playlists[i] %>
-					<li class="playlist" id="<%= playlist.name %>">
-						<span class="selector"><%= playlist.name %></span>
-					</li>
+					<div class="playlist_container">
+						<% let playlist = playlists[i] %>
+						<h2 class="playlist_name"><%= playlist.name %></h2>
+						<table class="playlist" id="<%= playlist.name %>">
+							<tr class="legend">
+								<td>BANNER</td>
+								<td>MOD</td>
+								<td>ID</td>
+								<td>MAP</td>
+								<td>SR</td>
+								<td>BPM</td>
+								<td>LENGTH</td>
+								<td>CS</td>
+								<td>AR</td>
+								<td>OD</td>
+							</tr>
+							<% for (let e = 0; e < playlist.maps.length; e++) { %>
+								<% let map = playlist.maps[e] %>
+								<tr class="map">
+									<td><img src="<%= map.data.beatmapset.covers.card %>" class="map_banner"></a></td>
+									<td><div class="<%= map.mod %>"><%= map.mod_id %></div></td>
+									<td><div class="map_id"><%= map.id %></div></td>
+									<td><a href="<%= map.data.url %>" target="_blank" class="map_name <%= map.mod %>">
+										<%= map.data.beatmapset.artist %> - <%= map.data.beatmapset.title %> [<%= map.data.version %>]
+									</a></td>
+									<td><div class="sr"><%= map.data.difficulty_rating %></div></td>
+									<td><div class="bpm"><%= map.data.bpm %></div></td>
+									<td><div class="length"><%= map.data.hit_length %></div></td>
+									<td><div class="cs"><%= map.data.cs %></div></td>
+									<td><div class="ar"><%= map.data.ar %></div></td>
+									<td><div class="od"><%= map.data.accuracy %></div></td>
+								</tr>
+							<% } %>
+						</table>
+					</div>
 				<% } %>
-			</ul>
+			</div>
 			<% if (user && user.roles.admin) { %>
 				<form id="c_pool" method="POST" action="">
 					<label for="c_name">Playlist Name<input type="text" name="c_name" class="c_name"></label>

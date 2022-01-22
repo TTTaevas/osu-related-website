@@ -117,6 +117,31 @@ async function getBeatmap(token, diff_id) {
 	return response
 }
 
+async function v1Beatmap(diff_id, mods) { // the need for this function to exist is extremely yikes
+	const axios = require("axios")
+	let sanitized = sanitize(diff_id, "id")
+	if (sanitized.pass) {diff_id = sanitized.obj} else {return false}
+
+	console.log(`Requesting v1 data for map ${diff_id} with mods ${mods}`)
+	var response
+	try {
+		response = await axios({
+			method: "get",
+			baseURL: "https://osu.ppy.sh/api/",
+			url: `/get_beatmaps?b=${diff_id}&mods=${mods}&k=${process.env.OSU_V1_KEY}`,
+			headers: {
+				"Content-Type": "application/json",
+				"Accept": "application/json",
+			}
+		})
+	} catch (e) {
+		console.log(e)
+		response = {data: false}
+	}
+
+	return response.data
+}
+
 async function getMatch(token, match_id, tournament) {
 	let sanitized = sanitize(match_id, "id")
 	if (sanitized.pass) {match_id = sanitized.obj} else {return false}
@@ -175,5 +200,6 @@ module.exports = {
 	getToken,
 	getUser,
 	getBeatmap,
+	v1Beatmap,
 	getMatch
 }
