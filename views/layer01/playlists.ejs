@@ -11,6 +11,10 @@
 		<div id="main">
 			<h1>PLAYLISTS</h1>
 			<div id="playlists">
+				<% if (!playlists.length) { %>
+					<h2>No playlist has been released yet :3c</h2>
+					<img src="./images/astolfoSleep.png" style="margin: 20px auto 0 auto;">
+				<% } %>
 				<% for (let i = 0; i < playlists.length; i++) { %>
 					<div class="playlist_container">
 						<% let playlist = playlists[i] %>

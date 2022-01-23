@@ -138,8 +138,7 @@ app.get("/layer01/rules", async (req, res) => {
 
 // playlists stuff
 app.get("/layer01/playlists", async (req, res) => {
-	let check = await userCheck(client, req.session.user, "admin") // REMOVE AUTHORIZATION STUFF ONCE DONE
-	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+	let check = await userCheck(client, req.session.user)
 	let playlists_col = check.db.collection("playlists")
 	let pools = await playlists_col.find().toArray()
 	res.status(200).render("layer01/playlists", {user: check.user, playlists: pools})

@@ -7,10 +7,10 @@ module.exports = async function userCheck(client, sesUser, requiredRole) {
 	// This if statement is not supposed to trigger ever, but that's only in theory
 	if (findResult.length >= 2) {console.log(`userCheck's findResult has found ${findResult.length} users with sesUser ${sesUser}`)}
 
-	if (!findResult.length) return {authorized: false, user: false, users: users, collection: collection}
+	if (!findResult.length) return {authorized: false, user: false, users: users, collection: collection, db: db}
 	let user = findResult[0]
 	if (requiredRole && !user.roles.admin && !user.roles[requiredRole]) {
-		return {authorized: false, user: user, users: users, collection: collection}
+		return {authorized: false, user: user, users: users, collection: collection, db: db}
 	}
 	
 	return {authorized: true, user: user, users: users, collection: collection, db: db}
