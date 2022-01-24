@@ -48,7 +48,7 @@ async function addTournament(form, files, res) {
 		await res.status(201).send(`${tournament.name} added successfully`)
 
 		if (mp_ids.length) {
-			console.log("Now looking for match data due to", mp_ids)
+			console.log("(REFEREE) Now looking for match data due to", mp_ids)
 			fetchMatchData("referee")
 		}
 	} catch(e) {

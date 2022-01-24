@@ -15,7 +15,7 @@
 
 		<% if (user && user.roles.admin) { %>
 			<div class="admin" id="tournament_add">
-				<form id="add" action="/referee/add" method="POST" encType="multipart/form-data" target="add_response">
+				<form id="add" action="referee/add" method="POST" encType="multipart/form-data" target="add_response">
 					<label for="add_name"> Name
 						<input type="text" name="add_name">
 					</label>
@@ -39,7 +39,7 @@
 				<button onclick="changeDisplay()">Close</button>
 			</div>
 			<div class="admin" id="tournament_remove">
-				<form id="remove" action="/referee/remove" method="POST" target="remove_response">
+				<form id="remove" action="referee/remove" method="POST" target="remove_response">
 					<label for="remove_name"> Name
 						<input type="text" name="remove_name">
 					</label>
@@ -51,7 +51,7 @@
 				<button onclick="changeDisplay()">Close</button>
 			</div>
 			<div class="admin" id="tournament_import">
-				<form id="import" action="/referee/import" encType="multipart/form-data" method="POST" target="import_response">
+				<form id="import" action="referee/import" encType="multipart/form-data" method="POST" target="import_response">
 					<label for="import_json"> Your reffing_experience.json
 						<input type="file" accept=".json" name="import_json">
 					</label>
