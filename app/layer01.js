@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
 })
 
 router.get("/login", async (req, res) => {
-	const sessionHandler = require("./functions/session-handler.js")
+	const sessionHandler = require("../functions/session-handler.js")
 	let status = await sessionHandler(req, client)
 	status.ok ? res.status(200).redirect("/layer01") : res.status(201).render("layer01/login", {status: status})
 })
@@ -110,6 +110,17 @@ router.route("/staff-regs")
 	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 	await addStaff(check.db, check.collection, req.body)
 	res.redirect("/layer01/staff-regs")
+})
+
+
+router.route("/qualifiers")
+.get(async (req, res) => {
+	let check = await userCheck(client, req.session.user, "admin") // REMOVE ADMIN AUTHORIZATION ONCE DONE
+	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+
+	let lobbies_col = check.db.collection("quals_lobbies")
+	let lobbies = await lobbies_col.find().toArray()
+	res.status(200).render("layer01/staff-regs", {user: check.user, lobbies: lobbies})
 })
 
 
