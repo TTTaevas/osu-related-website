@@ -1,0 +1,64 @@
+h1 {
+	font-size: 48px;
+	padding-top: 10px;
+}
+
+a {
+	color: inherit;
+}
+
+
+table {
+	border-collapse: collapse;
+}
+
+td {
+	border-left: 1px solid;
+	border-bottom: 1px solid grey;
+	border-right: 1px solid;
+	padding: 5px 10px;
+}
+
+td:first-child {
+	border-left: 0px none;
+}
+
+td:last-child {
+	border-left: 0px none;
+	border-right: 0px none;
+}
+
+input {
+	margin: 3px 10px;
+}
+
+#lobbies {
+	margin: auto;
+}
+
+.legend * {
+	font-size: 18px;
+	border-bottom: 1px solid white;
+}
+
+.lobby:hover {
+	background: #FFF;
+	color: #000 !important;
+}
+
+.id {
+	margin: 5px;
+}
+
+.player {
+	display: inline-block;
+	margin: 0 3px;
+}
+
+@media screen and (max-width: 540px) {
+	td {
+		border-left: 1px solid;
+		border-right: 1px solid;
+		padding: 0 5px;
+	}
+}

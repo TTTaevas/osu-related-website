@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>LAYER01 | QUALIFIERS LOBBIES</title>
+		<link rel="stylesheet" type="text/css" href="./css/qualifiers.css">
+	</head>
+	<body>
+		<%- include("partials/menu") %>
+		<div id="main">
+			<h1>QUALIFIERS LOBBIES</h1>
+			<table id="lobbies">
+				<tbody>
+					<tr class="legend">
+						<td>ID</td>
+						<td>SCHEDULE</td>
+						<td>REFEREE</td>
+						<td>PLAYERS</td>
+					</tr>
+					<% for (let i = 0; i < lobbies.length; i++) { %>
+						<tr class="lobby" id="<%= lobbies[i].id %>">
+							<td><div class="id"><%= lobbies[i].id %></div></td>
+							<td><div class="schedule">
+								<% let date = lobbies[i].schedule %>
+								<% function a(b) {return b>9?b:"0".concat(b)} %>
+								<%=a(date.getUTCFullYear())%>-<%=a(date.getUTCMonth()+1)%>-<%=a(date.getUTCDate())%> <%=a(date.getUTCHours())%>:<%=a(date.getUTCMinutes())%>:<%=a(date.getUTCSeconds())%> UTC+0 %>
+							</div></td>
+							<td><div class="referee">
+								<% if (lobbies[i].referee) { %>
+									<a href="https://osu.ppy.sh/users/<%= lobbies[i].referee.id %>" target="_blank"><%= lobbies[i].referee.name %></a>
+								<% } %>
+							</div></td>
+							<td class="players"> <% for (let e = 0; e < lobbies[i].players.length; e++) { %>
+								<div class="player">
+									<% if (lobbies[i].players[e]) { %>
+										<a href="https://osu.ppy.sh/users/<%= lobbies[i].players[e].id %>" target="_blank"><%= lobbies[i].players[e].name %></a>
+									<% } %>
+								</div>
+							<% } %> </td>
+						</tr>
+					<% } %>
+				</tbody>
+			</table>
+			<% if (user && user.roles.admin) { %>
+				<form id="c_lobby" method="POST" action="">
+					<input type="hidden" name="act" class="act" value="create">
+					<label for="c_prefix">Prefix<input type="text" name="c_prefix" class="c_prefix"></label>
+					<label for="c_min">First number<input type="number" name="c_min" class="c_min"></label>
+					<label for="c_max">Last number<input type="number" name="c_max" class="c_max"></label>
+					<input type="submit" id="submit" value="Create lobbies!">
+				</form>
+			<% } %>
+		</div>
+	</body>
+</html>

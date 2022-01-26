@@ -120,7 +120,35 @@ router.route("/qualifiers")
 
 	let lobbies_col = check.db.collection("quals_lobbies")
 	let lobbies = await lobbies_col.find().toArray()
-	res.status(200).render("layer01/staff-regs", {user: check.user, lobbies: lobbies})
+	lobbies = lobbies.sort((a, b) => {return Number(a.schedule) - Number(b.schedule)})
+	res.status(200).render("layer01/qualifiers", {user: check.user, lobbies: lobbies})
+})
+.post(async (req, res) => {
+	if (!req.body) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+	switch(req.body.act) {
+		case "create":
+			let check = await userCheck(client, req.session.user, "admin")
+			if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+
+			let lobbies_col = check.db.collection("quals_lobbies")
+			let new_lobbies = []
+			for (let i = req.body.c_min; i <= req.body.c_max; i++) {
+				let d = new Date(Date.UTC(2022, 1, 5, (i-1)*2))
+				let lobby = {
+					id: `${req.body.c_prefix}${i}`,
+					schedule: d,
+					referee: false,
+					players: new Array(16).fill(false),
+					mp_link: false
+				}
+				console.log(`Creating Qualifier Lobby ${req.body.c_prefix}${i}`)
+				new_lobbies.push(lobby)
+			}
+			await lobbies_col.insertMany(new_lobbies)
+			return res.redirect("/layer01/qualifiers")
+		default:
+			return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})
+	}
 })
 
 
