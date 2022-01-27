@@ -1,28 +1,9 @@
-#main {
-	background-color: #000;
-}
-
 h1 {
-	font-size: 64px;
-	margin-bottom: 0;
-}
-
-h1 span {
-	text-shadow: -10px 5px #003;
-}
-
-h1 span:hover {
-	background-color: #FFF;
-	color: #000;
-	text-shadow: 14px 3px #000;
+	margin-bottom: 0px;
 }
 
 #top {
 	margin-bottom: 50px;
-}
-
-#bottom {
-	
 }
 
 #right {
@@ -52,9 +33,6 @@ h1 span:hover {
 .button:hover {
 	font-size: 20px;
 	border: 1px solid;
-}
-
-.button:hover img {
 }
 
 #discord {
@@ -123,8 +101,5 @@ h1 span:hover {
 @media screen and (max-width: 500px) {
 	#schedule {
 		font-size: 3.3vw;
-	}
-	h1 {
-		font-size: 48px;
 	}
 }

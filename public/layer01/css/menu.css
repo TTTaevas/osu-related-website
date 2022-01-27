@@ -22,11 +22,30 @@ body {
 	margin: 0 20px;
 }
 
-@media screen and (max-width: 420px) {
-	#main {
-		padding: 100px 0;
-		margin: 0 10px;
-	}
+h1 {
+	font-size: 64px;
+}
+
+h1 span {
+	text-shadow: -10px 5px #003;
+}
+
+h1 span:hover {
+	background-color: #FFF;
+	color: #000;
+	text-shadow: 14px 3px #000;
+}
+
+h4 {
+	font-weight: normal;
+}
+
+a {
+	color: inherit;
+}
+
+table {
+	border-collapse: collapse;
 }
 
 form {
@@ -67,6 +86,17 @@ button {
 	background-color: #FFF;
 	color: #000;
 }
+
+#message {
+	font-size: 24px;
+	background-color: #FFF;
+	color: #000;
+	padding: 10px;
+	margin: 20px auto;
+	width: fit-content;
+}
+
+/* MENU */
 
 #menu {
 	position: fixed;
@@ -109,15 +139,20 @@ button {
 	color: #000;
 }
 
-#message {
-	font-size: 24px;
-	background-color: #FFF;
-	color: #000;
-	padding: 10px;
-	margin: 20px auto;
-	width: fit-content;
-}
-
 .right {
 	float: right;
+}
+
+@media screen and (max-width: 600px) {
+	#menu {
+		position: static;
+	}
+
+	#main {
+		padding: 0 0 20px 0;
+	}
+
+	h1 { /* long text do be like that */
+		font-size: 10vw;
+	}
 }

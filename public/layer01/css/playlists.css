@@ -1,17 +1,8 @@
-h1 {
-	font-size: 48px;
-	padding-top: 10px;
-}
-
 .playlist_container {
 	border: 1px solid;
 	width: fit-content;
 	margin: 50px auto;
 	padding: 0 25px 25px 25px;
-}
-
-table {
-	border-collapse: collapse;
 }
 
 td {

@@ -6,10 +6,6 @@ li {
 	list-style: none;
 }
 
-a {
-	color: inherit;
-}
-
 .reg {
 	display: inline-block;
 	width: fit-content;

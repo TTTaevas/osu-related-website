@@ -27,10 +27,6 @@ form > * {
 	border-left: 1px solid purple;
 }
 
-h1 {
-	font-size: 50px;
-}
-
 h3 {
 	transition: 0.1s;
 	font-size: 26px;
@@ -47,7 +43,7 @@ h5 {
 	margin: 5px;
 }
 
-a {
+h5 a {
 	color: #5865F2;
 }
 

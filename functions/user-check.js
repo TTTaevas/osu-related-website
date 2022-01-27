@@ -2,13 +2,10 @@ module.exports = async function userCheck(client, sesUser, requiredRole) {
 	const db = client.db()
 	const collection = db.collection("users")
 
-	const findResult = await collection.find({id: sesUser}).toArray() // might wanna switch to findOne in the near future
 	const users = await collection.find().toArray()
-	// This if statement is not supposed to trigger ever, but that's only in theory
-	if (findResult.length >= 2) {console.log(`userCheck's findResult has found ${findResult.length} users with sesUser ${sesUser}`)}
+	const user = users.find((u) => {return u.id == sesUser})
 
-	if (!findResult.length) return {authorized: false, user: false, users: users, collection: collection, db: db}
-	let user = findResult[0]
+	if (!user) return {authorized: false, user: false, users: users, collection: collection, db: db}
 	if (requiredRole && !user.roles.admin && !user.roles[requiredRole]) {
 		return {authorized: false, user: user, users: users, collection: collection, db: db}
 	}
