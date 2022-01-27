@@ -10,6 +10,24 @@
 		<%- include("partials/menu") %>
 		<div id="main">
 			<h1>QUALIFIERS LOBBIES</h1>
+			<% if (user && user.roles.referee) { %>
+				<div id="referee">
+					<form id="r_lobby_add" method="POST" action="">
+						<h3>Type in the IDs of the lobbies you would like to ref! (comma separated)</h3>
+						<h5>(Example: Q3, Q4, Q17, Q18)</h5>
+						<input type="hidden" name="act" class="act" value="ref_add">
+						<input type="text" name="r_lobbies" class="r_lobbies">
+						<input type="submit" id="submit" value="Ref lobbies!">
+					</form>
+					<form id="r_lobby_rem" method="POST" action="">
+						<h3>Or if you would like to drop lobbies, use this: (comma separated)</h3>
+						<h5>(Example: Q3, Q4, Q17, Q18)</h5>
+						<input type="hidden" name="act" class="act" value="ref_rem">
+						<input type="text" name="r_lobbies" class="r_lobbies">
+						<input type="submit" id="submit" value="Drop lobbies!">
+					</form>
+				</div>
+			<% } %>
 			<table id="lobbies">
 				<tbody>
 					<tr class="legend">

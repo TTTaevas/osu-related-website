@@ -125,12 +125,15 @@ router.route("/qualifiers")
 })
 .post(async (req, res) => {
 	if (!req.body) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+	var check
+	var lobbies_col
+
 	switch(req.body.act) {
 		case "create":
-			let check = await userCheck(client, req.session.user, "admin")
+			check = await userCheck(client, req.session.user, "admin")
 			if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+			lobbies_col = check.db.collection("quals_lobbies")
 
-			let lobbies_col = check.db.collection("quals_lobbies")
 			let new_lobbies = []
 			for (let i = req.body.c_min; i <= req.body.c_max; i++) {
 				let d = new Date(Date.UTC(2022, 1, 5, (i-1)*2))
@@ -146,6 +149,34 @@ router.route("/qualifiers")
 			}
 			await lobbies_col.insertMany(new_lobbies)
 			return res.redirect("/layer01/qualifiers")
+			break
+		case "ref_add":
+			check = await userCheck(client, req.session.user, "referee")
+			if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+			lobbies_col = check.db.collection("quals_lobbies")
+
+			let reffed_lobbies = req.body.r_lobbies.toUpperCase().replace(/ /g, "").split(",")
+			let referee = {referee: {id: check.user.id, name: check.user.username}}
+			for (let i = 0; i < reffed_lobbies.length; i++) {
+				let a = await lobbies_col.updateOne({id: reffed_lobbies[i]}, {$set: referee})
+				if (a.modifiedCount) {console.log(`${reffed_lobbies[i]} is now being reffed by ${check.user.username}`)}
+			}
+			return res.redirect("/layer01/qualifiers")
+			break
+		case "ref_rem":
+			check = await userCheck(client, req.session.user, "referee")
+			if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+			lobbies_col = check.db.collection("quals_lobbies")
+
+			let dropped_lobbies = req.body.r_lobbies.toUpperCase().replace(/ /g, "").split(",")
+			for (let i = 0; i < dropped_lobbies.length; i++) {
+				// Note that I could add to filter `referee: {id: check.user.id, name: check.user.username}`
+				// But it's worth not adding it, mostly because some referees don't wanna bother go to sheet/website to drop
+				let a = await lobbies_col.updateOne({id: dropped_lobbies[i]}, {$set: {referee: false}})
+				if (a.modifiedCount) {console.log(`${dropped_lobbies[i]} has been dropped (referee) by ${check.user.username}`)}
+			}
+			return res.redirect("/layer01/qualifiers")
+			break
 		default:
 			return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})
 	}

@@ -1,3 +1,11 @@
+#referee > * {
+	margin: 10px;
+}
+
+#referee h5 {
+	margin-top: 0;
+}
+
 td {
 	border-left: 1px solid;
 	border-bottom: 1px solid grey;

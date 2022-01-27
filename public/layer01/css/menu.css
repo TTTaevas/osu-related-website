@@ -146,6 +146,7 @@ button {
 @media screen and (max-width: 600px) {
 	#menu {
 		position: static;
+		width: 100%;
 	}
 
 	#main {
