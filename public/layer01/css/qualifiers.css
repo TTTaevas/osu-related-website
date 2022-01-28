@@ -1,9 +1,26 @@
-#referee > * {
+h1 {
+	margin-bottom: 0px;
+}
+
+
+#referee_div, #player_div {
+	border: 1px solid;
+	width: fit-content;
+	margin: 20px auto;
+	padding: 0 20px;
+}
+
+#referee_div > *, #player_div > * {
 	margin: 10px;
 }
 
-#referee h5 {
+#referee_div h5, #player_div h5 {
 	margin-top: 0;
+}
+
+#player_div input[type=text] {
+	width: 50px;
+	margin: auto;
 }
 
 td {

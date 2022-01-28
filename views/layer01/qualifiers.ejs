@@ -10,8 +10,11 @@
 		<%- include("partials/menu") %>
 		<div id="main">
 			<h1>QUALIFIERS LOBBIES</h1>
+			<% let date = new Date() %>
+			<% function a(b) {return b>9?b:"0".concat(b)} %>
+			<h4 id="time"><%=a(date.getUTCFullYear())%>-<%=a(date.getUTCMonth()+1)%>-<%=a(date.getUTCDate())%> <%=a(date.getUTCHours())%>:<%=a(date.getUTCMinutes())%>:<%=a(date.getUTCSeconds())%> UTC+0</h4>
 			<% if (user && user.roles.referee) { %>
-				<div id="referee">
+				<div id="referee_div">
 					<form id="r_lobby_add" method="POST" action="">
 						<h3>Type in the IDs of the lobbies you would like to ref! (comma separated)</h3>
 						<h5>(Example: Q3, Q4, Q17, Q18)</h5>
@@ -25,6 +28,17 @@
 						<input type="hidden" name="act" class="act" value="ref_rem">
 						<input type="text" name="r_lobbies" class="r_lobbies">
 						<input type="submit" id="submit" value="Drop lobbies!">
+					</form>
+				</div>
+			<% } %>
+			<% if (user && user.roles.player) { %>
+				<div id="player_div">
+					<form id="p_lobby_join" method="POST" action="">
+						<h3>Type in the ID of the lobby you'd like to play in!</h3>
+						<h5>(Example: Q3)</h5>
+						<input type="hidden" name="act" class="act" value="player_join">
+						<input type="text" name="p_lobby" class="p_lobby">
+						<input type="submit" id="submit" value="Join lobby!">
 					</form>
 				</div>
 			<% } %>

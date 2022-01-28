@@ -177,6 +177,41 @@ router.route("/qualifiers")
 			}
 			return res.redirect("/layer01/qualifiers")
 			break
+		case "player_join":
+			check = await userCheck(client, req.session.user)//, "player")
+			if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+			lobbies_col = check.db.collection("quals_lobbies")
+			let lobbies = await lobbies_col.find().toArray()
+
+			let lobby_name = req.body.p_lobby.toUpperCase().replace(/ /g, "")
+			let lobby = lobbies.find((e) => {return e.id == lobby_name})
+			if (lobby) {
+				let free_spot = lobby.players.indexOf(false)
+				if (free_spot != -1) {
+					// Remove the player from all lobbies
+					for (let i = 0; i < lobbies.length; i++) {
+						for (let e = 0; e < lobbies[i].players.length; e++) {
+							let player = lobbies[i].players[e]
+							if (player && player.id == check.user.id) {
+								let updated = lobbies[i].players
+								updated[e] = false
+								let remove = await lobbies_col.updateOne({id: lobbies[i].id}, {$set: {players: updated}})
+								if (remove.modifiedCount) {console.log(`${check.user.username} has left lobby ${lobbies[i].id}`)}
+							}
+						}
+					}
+
+					// Add the player to the lobby
+					// lobbies = await lobbies_col.find().toArray() // if needed to update? I don't think that's needed
+					let players = lobby.players
+					players[free_spot] = {id: check.user.id, name: check.user.username}
+					let add = await lobbies_col.updateOne({id: lobby_name}, {$set: {players: players}})
+					if (add.modifiedCount) {console.log(`${check.user.username} will be playing in lobby ${lobby_name}`)}
+				}
+			}
+
+			return res.redirect("/layer01/qualifiers")
+			break
 		default:
 			return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})
 	}
