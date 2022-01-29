@@ -8,6 +8,8 @@ const admin = require("../functions/admin.js")
 const formHandler = require("../functions/form-handler.js")
 const addStaff = require("../functions/add-staff.js")
 
+const time_now = new Date()
+
 router.get("/", async (req, res) => {
 	let check = await userCheck(client, req.session.user)
 	res.status(200).render("layer01/home", {user: check.user})
@@ -42,6 +44,8 @@ router.route("/playlists")
 
 router.route("/player-registration")
 .get(async (req, res) => {
+	let end_of_regs = new Date(Date.UTC(2022, 0, 31))
+	if (time_now > end_of_regs) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "We are no longer accepting player registrations! Sorry ><"}})}
 	let check = await userCheck(client, req.session.user)
 	let message = null
 	if (check.user) {
@@ -53,6 +57,8 @@ router.route("/player-registration")
 	}
 })
 .post(async (req, res) => {
+	let end_of_regs = new Date(Date.UTC(2022, 0, 31))
+	if (time_now > end_of_regs) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "We are no longer accepting player registrations! Sorry ><"}})}
 	let check = await userCheck(client, req.session.user)
 	if (!check.user) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Probably not logged in"}})}
 	let form = await formHandler.player(check.user, check.collection, req.body)
@@ -186,6 +192,7 @@ router.route("/qualifiers")
 			let lobby_name = req.body.p_lobby.toUpperCase().replace(/ /g, "")
 			let lobby = lobbies.find((e) => {return e.id == lobby_name})
 			if (lobby) {
+				if (time_now > lobby.schedule) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "You're trying to join a lobby that has already happened!"}})}
 				let free_spot = lobby.players.indexOf(false)
 				if (free_spot != -1) {
 					// Remove the player from all lobbies
@@ -193,6 +200,7 @@ router.route("/qualifiers")
 						for (let e = 0; e < lobbies[i].players.length; e++) {
 							let player = lobbies[i].players[e]
 							if (player && player.id == check.user.id) {
+								if (time_now > lobbies[i].schedule) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "You're trying to join a lobby despite being in a lobby that has already happened!"}})}
 								let updated = lobbies[i].players
 								updated[e] = false
 								let remove = await lobbies_col.updateOne({id: lobbies[i].id}, {$set: {players: updated}})
