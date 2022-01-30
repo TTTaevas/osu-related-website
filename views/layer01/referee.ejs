@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<% let title = lobby ? lobby.id : "REFEREE HELPER" %>
+		<title>LAYER01 | <%= title %></title>
+		<link rel="stylesheet" type="text/css" href="./css/referee.css">
+	</head>
+	<body>
+		<%- include("partials/menu") %>
+		<div id="main">
+			<% if (lobby) { %>
+				<ul id="commands">
+					<li>Create the lobby with <span class="command" onclick="navigator.clipboard.writeText(this.innerHTML)">!mp create L01: (Lobby <%= lobby.id %>) vs (Qualifiers)</span></li>
+					<li>Set up the lobby with <span class="command" onclick="navigator.clipboard.writeText(this.innerHTML)">!mp set 0 3 16</span></li>
+					<li>Feel free to put the MP link there: <input type="text" name="mp_link" style="width: 300px;"></li>
+					<li>When the lobby is done, send the MP link in #qualifiers alongside the lobby name (<%= lobby.id %>) and notes if something unexpected happened</li>
+				</ul>
+				<ul id="invites">
+					<% for (let i = 0; i < lobby.players.length; i++) { %>
+						<% if (lobby.players[i]) { %>
+							<li><span class="command" onclick="navigator.clipboard.writeText(this.innerHTML)">!mp invite <%= lobby.players[i].name %></span> or <span class="command" onclick="navigator.clipboard.writeText(this.innerHTML)">!mp invite #<%= lobby.players[i].id %></span></li>
+						<% } %>
+					<% } %>
+				</ul>
+				<ul id="mappool">
+					<% if (playlist) { %>
+						<% for (let i = 0; i < playlist.maps.length; i++) { %>
+							<% let map = playlist.maps[i] %>
+							<li><a href="<%= map.data.url %>" target="_blank"><%= map.mod_id %></a> <span class="command" onclick="navigator.clipboard.writeText(this.innerHTML)">!mp map <%= map.mod_id %></span> <span class="command" onclick="navigator.clipboard.writeText(this.innerHTML)">!mp mods <%= map.mod == "NM" ? "NF" : map.mod == "HD" ? "NF HD" : map.mod == "HR" ? "Freemod" : map.mod == "DT" ? "DT Freemod" : "EZ" %></span></li>
+						<% } %>
+					<% } else { %>
+						<li>Pool seems to be missing? That's weird, please contact Taevas about it</li>
+					<% } %>
+				</ul>
+			<% } else if (lobbies) { %>
+				<% let date = new Date() %>
+				<% function a(b) {return b>9?b:"0".concat(b)} %>
+				<div id="lobby_selection">
+					<% for (let i = 0; i < lobbies.length; i++) { %>
+						<% let referee = lobbies[i].referee %>
+						<form method="GET">
+							<input type="hidden" name="lobby" value="<%= lobbies[i].id %>">
+							<button type="submit" class="lobby <%= referee ? referee.id == user.id ? 'green' : '' : '' %>">
+								<div class="lobby_name"><%= lobbies[i].id %></div>
+								<div class="lobby_referee">Referee: <%= referee ? lobbies[i].referee.name : "None" %></div>
+								<div class="lobby_schedule">
+									<% let s = lobbies[i].schedule %>
+									<%=a(s.getUTCFullYear())%>-<%=a(s.getUTCMonth()+1)%>-<%=a(s.getUTCDate())%> <%=a(s.getUTCHours())%>:<%=a(s.getUTCMinutes())%>:<%=a(s.getUTCSeconds())%> UTC+0 %>
+								</div>
+							</button>
+						</form>
+					<% } %>
+				</div>
+				<h4 id="time"><%=a(date.getUTCFullYear())%>-<%=a(date.getUTCMonth()+1)%>-<%=a(date.getUTCDate())%> <%=a(date.getUTCHours())%>:<%=a(date.getUTCMinutes())%>:<%=a(date.getUTCSeconds())%> UTC+0</h4>
+			<% } %>
+		</div>
+	</body>
+</html>

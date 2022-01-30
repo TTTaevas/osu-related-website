@@ -1,0 +1,63 @@
+#commands, #invites, #mappool {
+	margin: 40px;
+	padding: 15px 0;
+}
+
+#commands *, #invites *, #mappool * {
+	margin: 5px;
+	padding: 5px;
+}
+
+ul {
+	padding: 0;
+}
+
+li {
+	list-style: none;
+}
+
+#lobby_selection {
+	margin-top: 30px;
+}
+
+.green {
+	border-color: green;
+}
+
+.lobby {
+	margin: 5px;
+	width: 175px;
+}
+
+.lobby_name {
+	font-weight: bold;
+	font-size: 20px;
+	margin-bottom: 5px;
+}
+
+#commands {
+	text-align: left;
+	border-right: 1px solid blue;
+	border-bottom: 1px solid blue;
+}
+
+#invites {
+	text-align: right;
+	border-left: 1px solid green;
+	border-bottom: 1px solid green;
+}
+
+#mappool {
+	border: 1px solid red;
+}
+
+.command {
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 18px;
+	background-color: #373737;
+}
+
+.command:active {
+	font-size: 19px;
+}

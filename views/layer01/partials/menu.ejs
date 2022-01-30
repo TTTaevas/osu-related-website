@@ -9,8 +9,13 @@
 	<% } %>
 	<li class="menu-list-element"><a class="menu-button" href="/layer01/rules">RULES</a></li>
 	<li class="menu-list-element"><a class="menu-button" href="/layer01/players">PLAYERS</a></li>
-	<li class="menu-list-element"><a class="menu-button" href="/layer01/playlists">PLAYLISTS</a></li>
+	<% if (user && user.roles.admin) { %>
+		<li class="menu-list-element"><a class="menu-button" href="/layer01/playlists">PLAYLISTS</a></li>
+	<% } %>
 	<% if (user && user.roles.admin) { %>
 		<li class="menu-list-element"><a class="menu-button" href="/layer01/qualifiers">QUALIFIERS LOBBIES</a></li>
+	<% } %>
+	<% if (user && user.roles.admin) { %>
+		<li class="menu-list-element"><a class="menu-button" href="/layer01/referee">REFEREE HELPER</a></li>
 	<% } %>
 </ul>

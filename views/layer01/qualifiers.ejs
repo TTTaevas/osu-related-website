@@ -9,7 +9,7 @@
 	<body>
 		<%- include("partials/menu") %>
 		<div id="main">
-			<h1>QUALIFIERS LOBBIES</h1>
+			<h1><span>QUALIFIERS</span> LOBBIES</h1>
 			<% let date = new Date() %>
 			<% function a(b) {return b>9?b:"0".concat(b)} %>
 			<h4 id="time"><%=a(date.getUTCFullYear())%>-<%=a(date.getUTCMonth()+1)%>-<%=a(date.getUTCDate())%> <%=a(date.getUTCHours())%>:<%=a(date.getUTCMinutes())%>:<%=a(date.getUTCSeconds())%> UTC+0</h4>
