@@ -51,6 +51,10 @@ li {
 	border: 1px solid red;
 }
 
+.mod {
+	font-weight: bold;
+}
+
 .command {
 	cursor: pointer;
 	font-weight: bold;

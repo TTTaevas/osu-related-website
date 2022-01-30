@@ -135,7 +135,7 @@ router.route("/referee")
 	if (lobby) {
 		let playlists_col = check.db.collection("playlists")
 		let pools = await playlists_col.find().toArray()
-		playlist = pools.find((p) => {return p.name.toLowerCase() == "qualifiers lobby"})
+		playlist = pools.find((p) => {return p.name.toLowerCase() == "qualifiers playlist"})
 	}
 
 	res.status(200).render("layer01/referee", {user: check.user, lobby: lobby, lobbies: lobbies, playlist: playlist})
