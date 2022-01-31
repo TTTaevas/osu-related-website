@@ -147,7 +147,6 @@ router.route("/referee")
 router.route("/qualifiers")
 .get(async (req, res) => {
 	let check = await userCheck(client, req.session.user)
-
 	let lobbies_col = check.db.collection("quals_lobbies")
 	let lobbies = await lobbies_col.find().toArray()
 	lobbies = lobbies.sort((a, b) => {return Number(a.schedule) - Number(b.schedule)})
