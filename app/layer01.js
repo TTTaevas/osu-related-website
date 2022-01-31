@@ -8,7 +8,7 @@ const admin = require("../functions/admin.js")
 const formHandler = require("../functions/form-handler.js")
 const addStaff = require("../functions/add-staff.js")
 
-const time_now = new Date()
+var time_now
 
 router.get("/", async (req, res) => {
 	let check = await userCheck(client, req.session.user)
@@ -45,6 +45,7 @@ router.route("/playlists")
 router.route("/player-registration")
 .get(async (req, res) => {
 	let end_of_regs = new Date(Date.UTC(2022, 0, 31))
+	time_now = new Date()
 	if (time_now > end_of_regs) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "We are no longer accepting player registrations! Sorry ><"}})}
 	let check = await userCheck(client, req.session.user)
 	let message = null
@@ -58,6 +59,7 @@ router.route("/player-registration")
 })
 .post(async (req, res) => {
 	let end_of_regs = new Date(Date.UTC(2022, 0, 31))
+	time_now = new Date()
 	if (time_now > end_of_regs) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "We are no longer accepting player registrations! Sorry ><"}})}
 	let check = await userCheck(client, req.session.user)
 	if (!check.user) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Probably not logged in"}})}
@@ -214,6 +216,7 @@ router.route("/qualifiers")
 			let lobby_name = req.body.p_lobby.toUpperCase().replace(/ /g, "")
 			let lobby = lobbies.find((e) => {return e.id == lobby_name})
 			if (lobby) {
+				time_now = new Date()
 				if (time_now > lobby.schedule) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "You're trying to join a lobby that has already happened!"}})}
 				let free_spot = lobby.players.indexOf(false)
 				if (free_spot != -1) {
