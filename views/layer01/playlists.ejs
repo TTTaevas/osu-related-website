@@ -18,7 +18,12 @@
 				<% for (let i = 0; i < playlists.length; i++) { %>
 					<div class="playlist_container">
 						<% let playlist = playlists[i] %>
-						<h2 class="playlist_name"><%= playlist.name %></h2>
+						<div class="playlist_top">
+							<h2 class="playlist_name"><%= playlist.name %></h2>
+							<% if (playlist.mappack) { %>
+								<a class="mappack" href="<%= playlist.mappack %>" target="_blank">Click me to download the mappack!</a>
+							<% } %>
+						</div>
 						<table class="playlist" id="<%= playlist.name %>">
 							<tr class="legend">
 								<td>BANNER</td>
@@ -56,6 +61,7 @@
 			<% if (user && user.roles.admin) { %>
 				<form id="c_pool" method="POST" action="">
 					<label for="c_name">Playlist Name<input type="text" name="c_name" class="c_name"></label>
+					<label for="c_mappack">Mappack Link<input type="text" name="c_mappack" class="c_mappack"></label>
 					<div class="c_map" id="c_0">
 						<label for="c_mod">Mod<input type="text" name="c_mod" class="c_mod" minlength="3" maxlength="3"></label>
 						<label for="c_id">ID<input type="text" name="c_id" class="c_id" minlength="1"></label>

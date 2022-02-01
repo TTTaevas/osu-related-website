@@ -19,7 +19,7 @@ h1 {
 }
 
 #player_div input[type=text] {
-	width: 50px;
+	width: 70px;
 	margin: auto;
 }
 
@@ -59,6 +59,10 @@ input {
 
 .id {
 	margin: 5px;
+}
+
+.players {
+	text-align: left;
 }
 
 .player {

@@ -22,6 +22,14 @@ td:last-child {
 	margin: auto;
 }
 
+.playlist_name {
+	margin-bottom: 5px;
+}
+
+.playlist_top {
+	margin-bottom: 20px;
+}
+
 .legend {
 	font-size: 18px;
 	border-bottom: 1px solid;

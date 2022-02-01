@@ -82,6 +82,7 @@ async function playlist(db, form) {
 					break
 				case "DT":
 					v1 = await request.v1Beatmap(maps[i].id, 64)
+					map_data.bpm = Math.round(map_data.bpm * 1.5)
 					map_data.ar = Number((map_data.ar <= 5 ? (1800-((1800-map_data.ar*120)*2/3))/120 : ((1200-((1200-(map_data.ar-5)*150)*2/3))/150)+5).toFixed(1))
 					map_data.accuracy = Number(((79.5-((79.5-6*map_data.accuracy)*2/3))/6).toFixed(1))
 					map_data.total_length = Math.round(map_data.total_length / (3 / 2)) // Total length is currently unused by website but au-cas-où
@@ -105,6 +106,7 @@ async function playlist(db, form) {
 
 	let pool = {
 		name: form.c_name,
+		mappack: form.c_mappack,
 		maps: maps
 	}
 
