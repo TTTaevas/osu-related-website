@@ -47,6 +47,7 @@ router.route("/player-registration")
 	let end_of_regs = new Date(Date.UTC(2022, 0, 31))
 	time_now = new Date()
 	if (time_now > end_of_regs) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "We are no longer accepting player registrations! Sorry ><"}})}
+
 	let check = await userCheck(client, req.session.user)
 	let message = null
 	if (check.user) {
@@ -61,6 +62,7 @@ router.route("/player-registration")
 	let end_of_regs = new Date(Date.UTC(2022, 0, 31))
 	time_now = new Date()
 	if (time_now > end_of_regs) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "We are no longer accepting player registrations! Sorry ><"}})}
+
 	let check = await userCheck(client, req.session.user)
 	if (!check.user) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Probably not logged in"}})}
 	let form = await formHandler.player(check.user, check.collection, req.body)
@@ -207,7 +209,7 @@ router.route("/qualifiers")
 			return res.redirect("/layer01/qualifiers")
 			break
 		case "player_join":
-			check = await userCheck(client, req.session.user)//, "player")
+			check = await userCheck(client, req.session.user, "player")
 			if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 			lobbies_col = check.db.collection("quals_lobbies")
 			let lobbies = await lobbies_col.find().toArray()
@@ -247,6 +249,23 @@ router.route("/qualifiers")
 		default:
 			return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})
 	}
+})
+
+
+router.route("/qualifiers-results")
+.get(async (req, res) => {
+	let check = await userCheck(client, req.session.user)
+	res.status(200).render("layer01/qualifiers-results", {user: check.user})
+})
+.post(async (req, res) => {
+	let check = await userCheck(client, req.session.user, "admin")
+	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+
+	let mp_id = Number(req.body.new_mplink.replace(/[^0-9]/g, ""))
+	let quals_mps = check.db.collection("quals_mps")
+
+	await admin.addMatch(mp_id, quals_mps)
+	res.redirect("/layer01/qualifiers-results")
 })
 
 

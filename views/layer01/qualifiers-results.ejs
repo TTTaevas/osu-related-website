@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>LAYER01 | QUALIFIERS RESULTS</title>
+		<link rel="stylesheet" type="text/css" href="./css/qualifiers-results.css">
+	</head>
+	<body>
+		<%- include("partials/menu") %>
+		<div id="main">
+			<h1><span>QUALIFIERS</span> RESULTS</h1>
+			<% if (user && user.roles.admin) { %>
+				<form method="POST" action="">
+					<label for="new_mplink">MP Link<input type="text" name="new_mplink" class="new_mplink"></label>
+					<input type="submit" id="submit" value="Add to qualifiers results!">
+				</form>
+			<% } %>
+		</div>
+	</body>
+</html>

@@ -17,7 +17,7 @@ async function updatePlayers(users, users_col) {
 }
 
 async function addMatch(id, match_col) {
-	// the data of a match will be stored within the tournament match/qualifiers
+	// the data of a match will be stored within a dedicated collection
 	let token = await request.getToken()
 	let match = await request.getMatch(token, id)
 	for (let i = 0; i < match.games.length; i++) {
@@ -28,7 +28,8 @@ async function addMatch(id, match_col) {
 			}
 		}
 	}
-	console.log(util.inspect(match, false, null, true))
+	await match_col.insertOne(match)
+	console.log(`${match.name} now in the collection!`)
 	return "yes"
 }
 

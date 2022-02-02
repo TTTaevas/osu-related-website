@@ -12,7 +12,7 @@
 		<div id="main">
 			<% if (lobby) { %>
 				<ul id="commands">
-					<li>Create the lobby with <span class="command" onclick="navigator.clipboard.writeText(this.innerHTML)">!mp create L01: (Lobby <%= lobby.id %>) vs (Qualifiers)</span></li>
+					<li>Create the lobby with <span class="command" onclick="navigator.clipboard.writeText(this.innerHTML)">!mp make L01: (Lobby <%= lobby.id %>) vs (Qualifiers)</span></li>
 					<li>Set up the lobby with <span class="command" onclick="navigator.clipboard.writeText(this.innerHTML)">!mp set 0 3 16</span></li>
 					<li>Feel free to put the MP link there: <input type="text" name="mp_link" style="width: 300px;"></li>
 					<li>When the lobby is done, send the MP link in #qualifiers alongside the lobby name (<%= lobby.id %>) and notes if something unexpected happened</li>
