@@ -255,7 +255,67 @@ router.route("/qualifiers")
 router.route("/qualifiers-results")
 .get(async (req, res) => {
 	let check = await userCheck(client, req.session.user)
-	res.status(200).render("layer01/qualifiers-results", {user: check.user})
+	
+	let playlists_col = check.db.collection("playlists")
+	let pools = await playlists_col.find().toArray()
+	playlist = pools.find((p) => {return p.name.toLowerCase() == "qualifiers playlist"})
+
+	let maps = playlist.maps.map((map) => {return {mod_id: map.mod_id, id: map.id, scores: []}})
+	// maps[0].id = 2696241 // testing purposes 
+	// maps[1].id = 949233 // testing purposes
+	// maps[2].id = 2665171 // testing purposes
+	// maps.splice(3, 1)[0] // testing purposes
+	// maps[3].id = 2863391 // testing purposes
+	// maps[4].id = 250349 // testing purposes
+	// maps[5].id = 1733839 // testing purposes
+	// maps[6].id = 85730 // testing purposes
+	// maps[7].id = 911974 // testing purposes
+	// maps[8].id = 3177022 // testing purposes
+	// maps[9].id = 599995 // testing purposes
+
+	let quals_mps = check.db.collection("quals_mps")
+	let matches = await quals_mps.find().toArray()
+	for (let i = 0; i < matches.length; i++) {
+		for (let e = 0; e < matches[i].games.length; e++) {
+			let game = matches[i].games[e]
+			maps.forEach((map) => {
+				if (map.id == game.beatmap.id) {
+					for (let o = 0; o < game.scores.length; o++) {
+						let score = game.scores[o]
+						let acc = score.accuracy.toPrecision(4).substring(2)
+						acc = Number(`${acc.slice(0, 2)}.${acc.slice(2)}`)
+						map.scores.push({user_id: score.user_id, score: score.score, acc: acc})
+					}
+				}
+			})
+		}
+	}
+
+	maps.forEach((map) => {
+		map.scores.sort((a, b) => a.score - b.score).reverse() // is that optimal?
+	})
+	
+	let seeds = []
+	for (let i = 0; i < maps[0].scores.length; i++) {
+		let user = maps[0].scores[i].user_id
+		let seed = {user_id: user, avg_rank: 0}
+		let rankings = []
+		for (let e = 0; e < maps.length; e++) {
+			let index = maps[e].scores.findIndex((score) => {return score.user_id == user})
+			rankings.push(index == -1 ? maps[0].scores.length : index + 1)
+		}
+
+		let total = 0
+		rankings.forEach((r) => {total += r})
+		seed.avg_rank = total / rankings.length
+		seeds.push(seed)
+	}
+	seeds.sort((a, b) => {return a.avg_rank - b.avg_rank})
+
+	// const util = require('util')
+	// console.log(util.inspect(maps, false, null, true))
+	// console.log(util.inspect(seeds, false, null, true))
+	res.status(200).render("layer01/qualifiers-results", {user: check.user, maps: maps, seeds: seeds})
 })
 .post(async (req, res) => {
 	let check = await userCheck(client, req.session.user, "admin")

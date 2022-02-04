@@ -28,7 +28,7 @@
 					<% if (playlist) { %>
 						<% for (let i = 0; i < playlist.maps.length; i++) { %>
 							<% let map = playlist.maps[i] %>
-							<li><a href="<%= map.data.url %>" class="<%= map.mod %> mod" target="_blank"><%= map.mod_id %></a> <span class="command" onclick="navigator.clipboard.writeText(this.innerHTML)">!mp map <%= map.id %></span> <span class="command" onclick="navigator.clipboard.writeText(this.innerHTML)">!mp mods <%= map.mod == "NM" ? "NF" : map.mod == "HD" ? "NF HD" : map.mod == "HR" ? "Freemod" : map.mod == "DT" ? "DT Freemod" : "EZ" %></span></li>
+							<li><a href="<%= map.data.url %>" class="<%= map.mod %> mod" target="_blank"><%= map.mod_id %></a> <span class="command" onclick="navigator.clipboard.writeText(this.innerHTML)">!mp map <%= map.id %></span> <span class="command" onclick="navigator.clipboard.writeText(this.innerHTML)">!mp mods <%= map.mod == "NM" ? "NF" : map.mod == "HD" ? "NF HD" : map.mod == "HR" ? "Freemod" : map.mod == "DT" ? "DT Freemod" : "NF EZ" %></span></li>
 						<% } %>
 					<% } else { %>
 						<li>Pool seems to be missing? That's weird, please contact Taevas about it</li>
