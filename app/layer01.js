@@ -261,30 +261,25 @@ router.route("/qualifiers-results")
 	playlist = pools.find((p) => {return p.name.toLowerCase() == "qualifiers playlist"})
 
 	let maps = playlist.maps.map((map) => {return {mod_id: map.mod_id, id: map.id, scores: []}})
-	// maps[0].id = 2696241 // testing purposes 
-	// maps[1].id = 949233 // testing purposes
-	// maps[2].id = 2665171 // testing purposes
-	// maps.splice(3, 1)[0] // testing purposes
-	// maps[3].id = 2863391 // testing purposes
-	// maps[4].id = 250349 // testing purposes
-	// maps[5].id = 1733839 // testing purposes
-	// maps[6].id = 85730 // testing purposes
-	// maps[7].id = 911974 // testing purposes
-	// maps[8].id = 3177022 // testing purposes
-	// maps[9].id = 599995 // testing purposes
 
 	let quals_mps = check.db.collection("quals_mps")
 	let matches = await quals_mps.find().toArray()
 	for (let i = 0; i < matches.length; i++) {
+		let players = matches[i].players
 		for (let e = 0; e < matches[i].games.length; e++) {
 			let game = matches[i].games[e]
 			maps.forEach((map) => {
 				if (map.id == game.beatmap.id) {
 					for (let o = 0; o < game.scores.length; o++) {
+						let already_has_score = map.scores.findIndex((score) => {return game.scores[o].user_id == score.user_id})
+						if (already_has_score != -1) {map.scores.splice(already_has_score, 1)}
+
 						let score = game.scores[o]
 						let acc = score.accuracy.toPrecision(4).substring(2)
 						acc = Number(`${acc.slice(0, 2)}.${acc.slice(2)}`)
-						map.scores.push({user_id: score.user_id, score: score.score, acc: acc})
+
+						let player = players.find((player) => {return player.id == score.user_id})
+						map.scores.push({user_id: score.user_id, username: player.username, score: score.score, acc: acc})
 					}
 				}
 			})
@@ -297,17 +292,17 @@ router.route("/qualifiers-results")
 	
 	let seeds = []
 	for (let i = 0; i < maps[0].scores.length; i++) {
-		let user = maps[0].scores[i].user_id
-		let seed = {user_id: user, avg_rank: 0}
+		let user_id = maps[0].scores[i].user_id
+		let seed = {user_id: user_id, username: maps[0].scores[i].username, avg_rank: 0}
 		let rankings = []
 		for (let e = 0; e < maps.length; e++) {
-			let index = maps[e].scores.findIndex((score) => {return score.user_id == user})
+			let index = maps[e].scores.findIndex((score) => {return score.user_id == user_id})
 			rankings.push(index == -1 ? maps[0].scores.length : index + 1)
 		}
 
 		let total = 0
 		rankings.forEach((r) => {total += r})
-		seed.avg_rank = total / rankings.length
+		seed.avg_rank = Number((total / rankings.length).toPrecision(3))
 		seeds.push(seed)
 	}
 	seeds.sort((a, b) => {return a.avg_rank - b.avg_rank})
