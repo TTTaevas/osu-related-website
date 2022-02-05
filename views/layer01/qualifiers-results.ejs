@@ -51,11 +51,15 @@
 								<% for (let e = 0; e < maps.length; e++) { %>
 									<td>
 										<div class="score">
-											<div class="player">
-												<a href="https://osu.ppy.sh/users/<%= maps[e].scores[i].user_id %>" target="_blank"><%= maps[e].scores[i].username %></a>
-											</div>
-											<div class="score"><%= maps[e].scores[i].score %></div>
-											<div class="acc"><%= maps[e].scores[i].acc %>%</div>
+											<% if (maps[e].scores[i]) { %>
+												<div class="player">
+													<a href="https://osu.ppy.sh/users/<%= maps[e].scores[i].user_id %>" target="_blank"><%= maps[e].scores[i].username %></a>
+												</div>
+												<div class="score"><%= maps[e].scores[i].score %></div>
+												<div class="acc"><%= maps[e].scores[i].acc %>%</div>
+											<% } else { %>
+												-
+											<% } %>
 										</div>
 									</td>
 								<% } %>
