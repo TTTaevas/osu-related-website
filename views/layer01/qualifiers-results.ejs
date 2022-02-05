@@ -16,6 +16,54 @@
 					<input type="submit" id="submit" value="Add to qualifiers results!">
 				</form>
 			<% } %>
+			<div id="seedings_container">
+				<h2>SEEDINGS</h2>
+				<table>
+					<tbody>
+						<tr class="legend">
+							<td>SEED</td>
+							<td>PLAYER</td>
+							<td>AVG. RANK</td>
+						</tr>
+						<% for (let i = 0; i < seeds.length; i++) { %>
+							<tr class="seed">
+								<td class="<%= i < 16 ? 'green' : '' %>"><%= i + 1 %></td>
+								<td><a href="https://osu.ppy.sh/users/<%= seeds[i].user_id %>" target="_blank"><%= seeds[i].username %></a></td>
+								<td><%= seeds[i].avg_rank %></td>
+							</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div id="scores_container">
+				<h2>SCORES</h2>
+				<table>
+					<tbody>
+						<tr class="legend">
+							<td>RANK</td>
+							<% for (let i = 0; i < maps.length; i++) { %>
+								<td><a href="https://osu.ppy.sh/b/<%= maps[i].id %>" target="_blank"><%= maps[i].mod_id %></a></td>
+							<% } %>
+						</tr>
+						<% for (let i = 0; i < maps[0].scores.length; i++) { %>
+							<tr>
+								<td class="rank"><%= i + 1 %></td>
+								<% for (let e = 0; e < maps.length; e++) { %>
+									<td>
+										<div class="score">
+											<div class="player">
+												<a href="https://osu.ppy.sh/users/<%= maps[e].scores[i].user_id %>" target="_blank"><%= maps[e].scores[i].username %></a>
+											</div>
+											<div class="score"><%= maps[e].scores[i].score %></div>
+											<div class="acc"><%= maps[e].scores[i].acc %>%</div>
+										</div>
+									</td>
+								<% } %>
+							</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</body>
 </html>

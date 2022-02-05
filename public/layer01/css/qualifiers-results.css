@@ -1,0 +1,55 @@
+.new_mplink {
+	width: 300px;
+	margin-left: 10px;
+}
+
+#seedings_container {
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+
+#scores_container {
+	padding-top: 10px;
+	margin-top: 10px;
+}
+
+table {
+	margin: auto;
+}
+
+td {
+	border-left: 1px solid #FFF;
+	border-bottom: 1px solid grey;
+	border-right: 1px solid #FFF;
+	padding: 5px 10px;
+}
+
+td:first-child {
+	border-left: 0px none;
+}
+
+td:last-child {
+	border-left: 0px none;
+	border-right: 0px none;
+}
+
+#seedings_container td {
+	border-left: 0px none;
+	border-right: 0px none;
+}
+
+.green {
+	color: lightgreen;
+}
+
+.rank {
+	font-size: 36px;
+}
+
+.player {
+	margin-bottom: 3px;
+}
+
+.player * {
+	color: skyblue;
+}
