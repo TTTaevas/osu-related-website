@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>LAYER01 | BRACKET STAGE</title>
+		<link rel="stylesheet" type="text/css" href="./css/bracket.css">
+	</head>
+	<body>
+		<%- include("partials/menu") %>
+		<div id="main">
+			<h1><span>BRACKET</span> STAGE</h1>
+			<% for (let i = 0; i < brackets.length; i++) { %>
+				<h2><%= brackets[i].name %></h2>
+				<table class="bracket">
+					<tr class="legend">
+						<td>ID</td>
+						<td>SCHEDULE (UTC+0)</td>
+						<td>PLAYER 1</td>
+						<td>SCORE</td>
+						<td>PLAYER 2</td>
+						<td>REFEREE</td>
+						<td>STREAMER</td>
+						<td>MP LINK</td>
+					</tr>
+					<% for (let e = 0; e < brackets[i].matches.length; e++) { %>
+						<% let match = brackets[i].matches[e] %>
+						<tr class="match <%= match.type == 'loser' ? 'lb' : 'wb' %>">
+							<td><div class="id"><%= match.id %></div></td>
+							<td><div class="schedule">
+								<% let date = match[e].schedule %>
+								<% function a(b) {return b>9?b:"0".concat(b)} %>
+								<%=a(date.getUTCFullYear())%>-<%=a(date.getUTCMonth()+1)%>-<%=a(date.getUTCDate())%> <%=a(date.getUTCHours())%>:<%=a(date.getUTCMinutes())%>:<%=a(date.getUTCSeconds())%>
+							</div></td>
+							<td><div class="player"><a href="https://osu.ppy.sh/users/<%= match.players[0].id %>" target="_blank"><%= match.players[0].username %></a></div></td>
+							<td><div class="scores">
+								<%= match.scores[0] %> - <%= match.scores[1] %>
+							</div></td>
+							<td><div class="player"><a href="https://osu.ppy.sh/users/<%= match.players[1].id %>" target="_blank"><%= match.players[1].username %></a></div></td>
+							<td><div class="referee"> <% if (match.referee) { %>
+								<a href="https://osu.ppy.sh/users/<%= match.referee.id %>" target="_blank"><%= match.referee.username %></a>
+							<% } %> </div></td>
+							<td><div class="streamer"> <% if (match.streamer) { %>
+								<a href="https://osu.ppy.sh/users/<%= match.streamer.id %>" target="_blank"><%= match.streamer.username %></a>
+							<% } %> </div></td>
+						</tr>
+					<% } %>
+				</table>
+			<% } %>
+		</div>
+	</body>
+</html>

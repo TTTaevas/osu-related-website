@@ -56,7 +56,7 @@
 							<td><div class="schedule">
 								<% let date = lobbies[i].schedule %>
 								<% function a(b) {return b>9?b:"0".concat(b)} %>
-								<%=a(date.getUTCFullYear())%>-<%=a(date.getUTCMonth()+1)%>-<%=a(date.getUTCDate())%> <%=a(date.getUTCHours())%>:<%=a(date.getUTCMinutes())%>:<%=a(date.getUTCSeconds())%> %>
+								<%=a(date.getUTCFullYear())%>-<%=a(date.getUTCMonth()+1)%>-<%=a(date.getUTCDate())%> <%=a(date.getUTCHours())%>:<%=a(date.getUTCMinutes())%>:<%=a(date.getUTCSeconds())%>
 							</div></td>
 							<td><div class="referee">
 								<% if (lobbies[i].referee) { %>

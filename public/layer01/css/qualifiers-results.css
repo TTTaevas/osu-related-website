@@ -53,3 +53,21 @@ td:last-child {
 .player * {
 	color: skyblue;
 }
+
+.seed:hover {
+	background: #FFF;
+	color: #000 !important;
+}
+
+.seed:hover .green {
+	color: green;
+}
+
+#scores_container tr:hover {
+	background: #FFF;
+	color: #000 !important;
+}
+
+#scores_container tr:hover .player a{
+	color: inherit;
+}
