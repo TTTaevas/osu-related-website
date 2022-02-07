@@ -24,12 +24,14 @@
 							<td>SEED</td>
 							<td>PLAYER</td>
 							<td>AVG. RANK</td>
+							<td>AVG. SCORE</td>
 						</tr>
 						<% for (let i = 0; i < seeds.length; i++) { %>
 							<tr class="seed">
 								<td class="<%= i < 16 ? 'green' : '' %>"><%= i + 1 %></td>
 								<td><a href="https://osu.ppy.sh/users/<%= seeds[i].user_id %>" target="_blank"><%= seeds[i].username %></a></td>
 								<td><%= seeds[i].avg_rank %></td>
+								<td><%= seeds[i].avg_score %></td>
 							</tr>
 						<% } %>
 					</tbody>
@@ -42,7 +44,10 @@
 						<tr class="legend">
 							<td>RANK</td>
 							<% for (let i = 0; i < maps.length; i++) { %>
-								<td><a href="https://osu.ppy.sh/b/<%= maps[i].id %>" target="_blank"><%= maps[i].mod_id %></a></td>
+								<td><div class="map">
+									<a href="https://osu.ppy.sh/b/<%= maps[i].id %>" target="_blank"><%= maps[i].mod_id %></a>
+									AVG. <%= maps[i].avg_score %>
+								</div></td>
 							<% } %>
 						</tr>
 						<% for (let i = 0; i < maps[0].scores.length; i++) { %>

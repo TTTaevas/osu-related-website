@@ -254,8 +254,7 @@ router.route("/qualifiers")
 
 router.route("/qualifiers-results")
 .get(async (req, res) => {
-	let check = await userCheck(client, req.session.user, "referee")
-	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+	let check = await userCheck(client, req.session.user)
 	
 	let playlists_col = check.db.collection("playlists")
 	let pools = await playlists_col.find().toArray()
@@ -287,6 +286,12 @@ router.route("/qualifiers-results")
 		}
 	}
 
+	maps.forEach((map) => { // Calculate a map's average score
+		let total = 0 // Do that before fake scores for more reliable data
+		map.scores.forEach((s) => {total += s.score})
+		map.avg_score = Math.round(total / map.scores.length)
+	})
+
 	for (let i = 0; i < maps[0].scores.length; i++) { // Create a fake score of 0 for every map a player hasn't played
 		for (let e = 0; e < maps.length; e++) { // Creating that is cool because it feels more transparent in the calculation process
 			let has_score = maps[e].scores.findIndex((score) => {return maps[0].scores[i].user_id == score.user_id})
@@ -303,16 +308,24 @@ router.route("/qualifiers-results")
 	let seeds = []
 	for (let i = 0; i < maps[0].scores.length; i++) {
 		let user_id = maps[0].scores[i].user_id
-		let seed = {user_id: user_id, username: maps[0].scores[i].username, avg_rank: 0}
+		let seed = {user_id: user_id, username: maps[0].scores[i].username, avg_score: 0, avg_rank: 0}
+
 		let rankings = []
+		let scores = []
 		for (let e = 0; e < maps.length; e++) {
 			let index = maps[e].scores.findIndex((score) => {return score.user_id == user_id})
 			rankings.push(index == -1 ? maps[0].scores.length : index + 1) // index should not ever be -1 because we have created fake scores of 0 earlier
+			scores.push(index == -1 ? 0 : maps[e].scores[index].score) // index should not ever be -1 because we have created fake scores of 0 earlier
 		}
 
-		let total = 0
-		rankings.forEach((r) => {total += r})
-		seed.avg_rank = Number((total / rankings.length).toPrecision(3))
+		let s_total = 0
+		scores = scores.filter((s) => {return s > 0})
+		scores.forEach((s) => {s_total += s})
+		seed.avg_score = Math.round(s_total / scores.length)
+
+		let r_total = 0
+		rankings.forEach((r) => {r_total += r})
+		seed.avg_rank = Number((r_total / rankings.length).toPrecision(3))
 		seeds.push(seed)
 	}
 	seeds.sort((a, b) => {return a.avg_rank - b.avg_rank})

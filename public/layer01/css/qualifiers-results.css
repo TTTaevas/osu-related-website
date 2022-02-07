@@ -42,6 +42,10 @@ td:last-child {
 	color: lightgreen;
 }
 
+.map {
+	display: grid;
+}
+
 .rank {
 	font-size: 36px;
 }
