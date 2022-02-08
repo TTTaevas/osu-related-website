@@ -13,6 +13,17 @@
 	margin-top: 0;
 }
 
+#brackets {
+	width: fit-content;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid;
+}
+
+#brackets h2 {
+	margin-top: 0;
+}
+
 table {
 	margin: auto;
 }
