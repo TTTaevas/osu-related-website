@@ -53,7 +53,6 @@ td:last-child {
 	padding: 0 7px;
 	margin: 7px 7px;
 	display: inline-block;
-	min-width: 75%;
 	max-width: 50vw;
 }
 
@@ -75,13 +74,13 @@ input {
 	width: 60px;
 }
 
-@media screen and (max-width: 830px) {
+@media screen and (max-width: 1000px) {
 	td:nth-child(1), td:nth-child(3), td:nth-child(7) {
 		display: none;
 	}
 }
 
-@media screen and (max-width: 540px) {
+@media screen and (max-width: 640px) {
 	.playlist_container {
 		padding: 0px 10px 25px 10px;
 	}

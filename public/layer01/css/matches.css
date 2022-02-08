@@ -1,0 +1,50 @@
+.staff {
+	border: 1px solid;
+	width: fit-content;
+	margin: 20px auto;
+	padding: 0 20px;
+}
+
+.staff > * {
+	margin: 10px;
+}
+
+.staff h5 {
+	margin-top: 0;
+}
+
+table {
+	margin: auto;
+}
+
+td {
+	border-left: 1px solid #FFF;
+	border-bottom: 1px solid grey;
+	border-right: 1px solid #FFF;
+	padding: 5px 10px;
+}
+
+td:first-child {
+	border-left: 0px none;
+}
+
+td:last-child {
+	border-right: 0px none;
+}
+
+.match:hover {
+	background: #FFF;
+	color: #000 !important;
+}
+
+.c_bracket_name {
+	margin-bottom: 10px;
+}
+
+.c_id {
+	width: 15px;
+}
+
+.c_type {
+	width: 30px;
+}

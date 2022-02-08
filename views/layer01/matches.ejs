@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>LAYER01 | MATCHES</title>
+		<link rel="stylesheet" type="text/css" href="./css/matches.css">
+	</head>
+	<body>
+		<%- include("partials/menu") %>
+		<div id="main">
+			<h1><span>MATCHES</span></h1>
+			<% let date = new Date() %>
+			<% function a(b) {return b>9?b:"0".concat(b)} %>
+			<h4 id="time"><%=a(date.getUTCFullYear())%>-<%=a(date.getUTCMonth()+1)%>-<%=a(date.getUTCDate())%> <%=a(date.getUTCHours())%>:<%=a(date.getUTCMinutes())%>:<%=a(date.getUTCSeconds())%> UTC+0</h4>
+
+			<% if (user && user.roles.referee) { %>
+				<div class="staff" id="referee_div">
+					<form id="r_match_add" method="POST" action="">
+						<h3>Type in the IDs of the matches you would like to ref! (comma separated)</h3>
+						<h5>(Example: 1, 3, 4)</h5>
+						<input type="hidden" name="act" class="act" value="ref_add">
+						<input type="text" name="matches" class="matches">
+						<input type="submit" id="submit" value="Ref matches!">
+					</form>
+					<form id="r_match_rem" method="POST" action="">
+						<h3>Or if you would like to drop matches, use this: (comma separated)</h3>
+						<h5>(Example: 6, 9)</h5>
+						<input type="hidden" name="act" class="act" value="ref_rem">
+						<input type="text" name="matches" class="matches">
+						<input type="submit" id="submit" value="Drop matches!">
+					</form>
+				</div>
+			<% } %>
+
+			<% if (user && user.roles.streamer) { %>
+				<div class="staff" id="streamer_div">
+					<form id="s_match_add" method="POST" action="">
+						<h3>Type in the IDs of the matches you would like to stream! (comma separated)</h3>
+						<h5>(Example: 1, 3, 4)</h5>
+						<input type="hidden" name="act" class="act" value="str_add">
+						<input type="text" name="matches" class="matches">
+						<input type="submit" id="submit" value="Stream matches!">
+					</form>
+					<form id="s_match_rem" method="POST" action="">
+						<h3>Or if you would like to drop matches, use this: (comma separated)</h3>
+						<h5>(Example: 6, 9)</h5>
+						<input type="hidden" name="act" class="act" value="str_rem">
+						<input type="text" name="matches" class="matches">
+						<input type="submit" id="submit" value="Drop matches!">
+					</form>
+				</div>
+			<% } %>
+
+			<% for (let i = 0; i < brackets.length; i++) { %>
+				<h2><%= brackets[i].name %></h2>
+				<table class="bracket">
+					<tr class="legend">
+						<td>ID</td>
+						<td>SCHEDULE (UTC+0)</td>
+						<td>PLAYER 1</td>
+						<td>SCORE</td>
+						<td>PLAYER 2</td>
+						<td>REFEREE</td>
+						<td>STREAMER</td>
+						<td>MP LINK</td>
+					</tr>
+					<% for (let e = 0; e < brackets[i].matches.length; e++) { %>
+						<% let match = brackets[i].matches[e] %>
+						<tr class="match <%= match.type == 'lb' ? 'lb' : 'wb' %>">
+							<td><div class="id"><%= match.id %></div></td>
+							<td><div class="schedule">
+								<% let date = match.schedule %>
+								<% function a(b) {return b>9?b:"0".concat(b)} %>
+								<%=a(date.getUTCFullYear())%>-<%=a(date.getUTCMonth()+1)%>-<%=a(date.getUTCDate())%> <%=a(date.getUTCHours())%>:<%=a(date.getUTCMinutes())%>:<%=a(date.getUTCSeconds())%>
+							</div></td>
+							<td><div class="player"><a href="https://osu.ppy.sh/users/<%= match.players[0].id %>" target="_blank"><%= match.players[0].username %></a></div></td>
+							<td><div class="scores">
+								<%= match.scores[0] %> - <%= match.scores[1] %>
+							</div></td>
+							<td><div class="player"><a href="https://osu.ppy.sh/users/<%= match.players[1].id %>" target="_blank"><%= match.players[1].username %></a></div></td>
+							<td><div class="referee"> <% if (match.referee) { %>
+								<a href="https://osu.ppy.sh/users/<%= match.referee.id %>" target="_blank"><%= match.referee.name %></a>
+							<% } %> </div></td>
+							<td><div class="streamer"> <% if (match.streamer) { %>
+								<a href="https://osu.ppy.sh/users/<%= match.streamer.id %>" target="_blank"><%= match.streamer.name %></a>
+							<% } %> </div></td>
+							<td><div class="mp_link">
+								<% if (match.mplink) { %>
+									<a href="<%= match.mp_link %>" target="_blank">MP LINK</a>
+								<% } else { %>
+									NONE
+								<% } %>
+							</div></td>
+						</tr>
+					<% } %>
+				</table>
+			<% } %>
+
+			<% if (user && user.roles.admin) { %>
+				<form id="c_bracket" method="POST" action="">
+					<input type="hidden" name="act" class="act" value="create">
+					<label for="c_bracket_name">Bracket<input type="text" name="c_bracket_name" class="c_bracket_name"></label>
+					<div class="c_match" id="c_0">
+						<label for="c_id">ID<input type="text" name="c_id" class="c_id" minlength="1"></label>
+						<label for="c_time">TIME (mm-dd hh:mm)<input type="text" name="c_time" class="c_time" minlength="1"></label>
+						<label for="c_player_1">PLAYER 1<input type="text" name="c_player_1" class="c_player_1" minlength="1"></label>
+						<label for="c_player_2">PLAYER 2<input type="text" name="c_player_2" class="c_player_2" minlength="1"></label>
+						<label for="c_type">TYPE (wb/lb)<input type="text" name="c_type" class="c_type" minlength="1" value="wb"></label>
+					</div>
+					<button type="button" id="create_match" onclick="createMatch()">New match</button>
+					<script type="text/javascript">
+						function createMatch() {
+							let matches = document.getElementsByClassName('c_match')
+							let before = document.getElementById('create_match')
+							let new_match = matches[matches.length - 1].cloneNode(true)
+							new_match.id = `c_${matches.length}`
+							document.getElementById('c_bracket').insertBefore(new_match, before)
+						}
+					</script>
+					<input type="submit" id="submit" value="Create matches!">
+				</form>
+			<% } %>
+		</div>
+	</body>
+</html>

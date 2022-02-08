@@ -16,15 +16,15 @@
 					<img src="./images/astolfoSleep.png" style="margin: 20px auto 0 auto;">
 				<% } %>
 				<% for (let i = 0; i < playlists.length; i++) { %>
-					<div class="playlist_container">
-						<% let playlist = playlists[i] %>
+					<% let playlist = playlists[i] %>
+					<div class="playlist_container" id="<%= playlist.name.toLowerCase() %>">
 						<div class="playlist_top">
 							<h2 class="playlist_name"><%= playlist.name %></h2>
 							<% if (playlist.mappack) { %>
 								<a class="mappack" href="<%= playlist.mappack %>" target="_blank">Click me to download the mappack!</a>
 							<% } %>
 						</div>
-						<table class="playlist" id="<%= playlist.name %>">
+						<table class="playlist">
 							<tr class="legend">
 								<td>BANNER</td>
 								<td>MOD</td>
