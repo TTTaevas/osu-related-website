@@ -5,6 +5,10 @@
 	padding: 0 20px;
 }
 
+.staff form {
+	width: 500px;
+}
+
 .staff > * {
 	margin: 10px;
 }
@@ -41,6 +45,11 @@ td:first-child {
 
 td:last-child {
 	border-right: 0px none;
+}
+
+.commentator {
+	display: inline-block;
+	margin: 0 3px;
 }
 
 .match:hover {

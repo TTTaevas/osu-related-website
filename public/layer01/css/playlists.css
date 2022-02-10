@@ -20,6 +20,7 @@ td:last-child {
 
 .playlist {
 	margin: auto;
+	max-width: 1280px;
 }
 
 .playlist_name {
@@ -54,6 +55,37 @@ td:last-child {
 	margin: 7px 7px;
 	display: inline-block;
 	max-width: 50vw;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.map:hover {
+	background-color: #FFF;
+	color: #000;
+}
+
+.map:hover > * {
+	border-color: #000;
+}
+
+.map:hover .NM {
+	color: #147bd7;
+}
+
+.map:hover .HD {
+	color: #917014;
+}
+
+.map:hover .HR {
+	color: #ce3b3b;
+}
+
+.map:hover .DT {
+	color: #7a4ce1;
+}
+
+.map:hover .EZ {
+	color: #479529;
 }
 
 form {
@@ -74,18 +106,28 @@ input {
 	width: 60px;
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1100px) {
+	#main {
+		margin: 0 10px !important;
+	}
+
 	td:nth-child(1), td:nth-child(3), td:nth-child(7) {
 		display: none;
 	}
 }
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 750px) {
 	.playlist_container {
 		padding: 0px 10px 25px 10px;
 	}
 
 	td:nth-child(8), td:nth-child(9), td:nth-child(10) {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 500px) {
+	td:nth-child(2) {
 		display: none;
 	}
 }

@@ -393,6 +393,7 @@ router.route("/matches")
 					type: req.body.c_type[i].toLowerCase(),
 					referee: false,
 					streamer: false,
+					commentators: new Array(4).fill(false),
 					mp_link: false
 				}
 				bracket.matches.push(match)
@@ -404,8 +405,15 @@ router.route("/matches")
 			break
 		case "ref_add":
 		case "str_add":
-			mode = req.body.act == "ref_add" ? "ref" : "str"
-			check = mode == "ref" ? await userCheck(client, req.session.user, "referee") : await userCheck(client, req.session.user, "streamer")
+		case "com_add":
+			mode = req.body.act == "ref_add" ? "ref" : req.body.act == "str_add" ? "str" : "com"
+			if (mode == "ref") {
+				check = await userCheck(client, req.session.user, "referee")
+			} else if (mode == "str") {
+				check = await userCheck(client, req.session.user, "streamer")
+			} else {
+				check = await userCheck(client, req.session.user, "commentator")
+			}
 			if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 			brackets_col = check.db.collection("brackets")
 			brackets = await brackets_col.find().toArray()
@@ -419,20 +427,30 @@ router.route("/matches")
 				if (index != -1) {
 					if (mode == "ref") {
 						matches_arr[index].referee = {id: check.user.id, name: check.user.username}
-					} else {
+					} else if (mode == "str") {
 						matches_arr[index].streamer = {id: check.user.id, name: check.user.username}
+					} else {
+						let free_spot = matches_arr[index].commentators.indexOf(false)
+						if (free_spot != -1) {matches_arr[index].commentators[free_spot] = {id: check.user.id, name: check.user.username}}
 					}
 				}
 				
 				let a = await brackets_col.updateOne({name: bracket_to_add_to.name}, {$set: {matches: matches_arr}})
-				if (a.modifiedCount) {console.log(`${taken_matches[i]} is now being ${mode == "ref" ? "reffed" : "streamed"} by ${check.user.username}`)}
+				if (a.modifiedCount) {console.log(`${check.user.username} is now ${mode} of ${taken_matches[i]}`)}
 			}
 			return res.redirect("/layer01/matches")
 			break
 		case "ref_rem":
 		case "str_rem":
-			mode = req.body.act == "ref_rem" ? "ref" : "str"
-			check = mode == "ref" ? await userCheck(client, req.session.user, "referee") : await userCheck(client, req.session.user, "streamer")
+		case "com_rem":
+			mode = req.body.act == "ref_add" ? "ref" : req.body.act == "str_add" ? "str" : "com"
+			if (mode == "ref") {
+				check = await userCheck(client, req.session.user, "referee")
+			} else if (mode == "str") {
+				check = await userCheck(client, req.session.user, "streamer")
+			} else {
+				check = await userCheck(client, req.session.user, "commentator")
+			}
 			if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 			brackets_col = check.db.collection("brackets")
 			brackets = await brackets_col.find().toArray()
@@ -446,13 +464,16 @@ router.route("/matches")
 				if (index != -1) {
 					if (mode == "ref") {
 						matches_arr[index].referee = false
-					} else {
+					} else if (mode == "str") {
 						matches_arr[index].streamer = false
+					} else {
+						let freeing_spot = matches_arr[index].commentators.findIndex((c) => {return c.id == check.user.id})
+						if (freeing_spot != -1) {matches_arr[index].commentators[freeing_spot] = false}
 					}
 				}
 				
 				let a = await brackets_col.updateOne({name: bracket_to_remove_from.name}, {$set: {matches: matches_arr}})
-				if (a.modifiedCount) {console.log(`${dropped_matches[i]} has been dropped ${mode == "ref" ? "(referee)" : "(streamer)"} by ${check.user.username}`)}
+				if (a.modifiedCount) {console.log(`${check.user.username} is no longer ${mode} of ${dropped_matches[i]}`)}
 			}
 			return res.redirect("/layer01/matches")
 			break
