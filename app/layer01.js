@@ -381,9 +381,9 @@ router.route("/matches")
 
 				// worse code
 				let player1 = check.users.find((user) => {return user.username.toLowerCase() == req.body.c_player_1[i].toLowerCase()})
-				player1 = player1 ? {id: player1.id, username: player1.username} : {id: 0, username: "error"}
+				player1 = player1 ? {id: player1.id, username: player1.username} : {id: 0, username: "undetermined"}
 				let player2 = check.users.find((user) => {return user.username.toLowerCase() == req.body.c_player_2[i].toLowerCase()})
-				player2 = player2 ? {id: player2.id, username: player2.username} : {id: 0, username: "error"}
+				player2 = player2 ? {id: player2.id, username: player2.username} : {id: 0, username: "undetermined"}
 
 				let match = {
 					id: Number(req.body.c_id[i]),
