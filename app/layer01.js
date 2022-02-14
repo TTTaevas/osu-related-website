@@ -421,6 +421,7 @@ router.route("/matches")
 			let taken_matches = req.body.matches.replace(/ /g, "").split(",")
 			for (let i = 0; i < taken_matches.length; i++) {
 				let bracket_to_add_to = brackets.find((b) => {return b.matches.findIndex((m) => {return m.id == taken_matches[i]}) != -1})
+				if (!bracket_to_add_to) {console.log(`Couldn't add ${check.user.username} as ${mode}, didn't find ${taken_matches[i]}`); continue}
 				let matches_arr = bracket_to_add_to.matches
 				let index = matches_arr.findIndex((m) => {return m.id == taken_matches[i]})
 
@@ -458,6 +459,7 @@ router.route("/matches")
 			let dropped_matches = req.body.matches.replace(/ /g, "").split(",")
 			for (let i = 0; i < dropped_matches.length; i++) {
 				let bracket_to_remove_from = brackets.find((b) => {return b.matches.findIndex((m) => {return m.id == dropped_matches[i]}) != -1})
+				if (!bracket_to_remove_from) {console.log(`Couldn't remove ${check.user.username} as ${mode}, didn't find ${dropped_matches[i]}`); continue}
 				let matches_arr = bracket_to_remove_from.matches
 				let index = matches_arr.findIndex((m) => {return m.id == dropped_matches[i]})
 
