@@ -443,7 +443,7 @@ router.route("/matches")
 		case "ref_rem":
 		case "str_rem":
 		case "com_rem":
-			mode = req.body.act == "ref_add" ? "ref" : req.body.act == "str_add" ? "str" : "com"
+			mode = req.body.act == "ref_rem" ? "ref" : req.body.act == "str_rem" ? "str" : "com"
 			if (mode == "ref") {
 				check = await userCheck(client, req.session.user, "referee")
 			} else if (mode == "str") {
