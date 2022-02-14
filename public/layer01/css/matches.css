@@ -20,12 +20,12 @@
 #brackets {
 	width: fit-content;
 	margin: auto;
-	padding: 20px;
+	padding: 0 20px;
 	border: 1px solid;
 }
 
-#brackets h2 {
-	margin-top: 0;
+.bracket {
+	margin-bottom: 20px;
 }
 
 table {

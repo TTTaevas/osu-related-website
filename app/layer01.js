@@ -386,7 +386,7 @@ router.route("/matches")
 				player2 = player2 ? {id: player2.id, username: player2.username} : {id: 0, username: "undetermined"}
 
 				let match = {
-					id: Number(req.body.c_id[i]),
+					id: req.body.c_id[i],
 					players: [player1, player2],
 					scores: [0, 0],
 					schedule: date,
