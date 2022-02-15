@@ -1,9 +1,9 @@
 const mongodb = require("mongodb").MongoClient
-const request = require("./osu-requests.js")
-const sanitize = require("./sanitizer.js")
+const request = require("../../../functions//osu-requests.js")
+const sanitize = require("../../../functions/sanitizer.js")
 
-module.exports = async function fetchMatchData(type) {
-	let client_uri = type == "referee" ? process.env.REF_CONNECTIONSTRING : process.env.PLA_CONNECTIONSTRING
+module.exports = async function insertMatches(category) {
+	let client_uri = category == "referee" ? process.env.REF_CONNECTIONSTRING : process.env.PLA_CONNECTIONSTRING
 	const client = new mongodb(client_uri)
 	await client.connect()
 
@@ -15,22 +15,11 @@ module.exports = async function fetchMatchData(type) {
 	const players_collection = db.collection("players")
 	let players = await players_collection.find().toArray()
 
-	let token = false // If no match to request
+	let token = false // Don't request token if no match to request
 
 	for (let i = 0; i < tournaments.length; i++) {
 
-		while (!tournaments[i].matches) { // just in case:tm:
-			let fix = {matches: []}
-			let sanitized = sanitize(tournaments[i].name, "string")
-			if (sanitized.pass) {
-				await tournaments_collection.updateOne({name: sanitized.obj}, {$set: fix})
-				console.log(`/!\\ ${tournaments[i].name} had to be skipped and fixed by fetchMatchData because false-y instead of array for matches\n`)
-			}
-			i++
-		}
-
 		let matches_arr = []
-		
 		for (let e = 0; e < tournaments[i].matches.length; e++) {
 			let sanitized = sanitize(tournaments[i].matches[e], "id")
 			if (sanitized.pass) {
@@ -40,7 +29,7 @@ module.exports = async function fetchMatchData(type) {
 					if (!token) {token = await request.getToken()}
 					if (!token) {
 						await client.close()
-						return "Error; no token, cannot fetchMatchData"
+						return "Error; no token, cannot insertMatches"
 					}
 					let match = await request.getMatch(token, match_id, tournaments[i].name)
 					if (match) {

@@ -1,17 +1,30 @@
-const fs = require("fs")
-const path = require("path")
-const uploadPath = path.dirname(__dirname) + "/public/banners/"
+const client = require("../../database.js")
+const userCheck = require("../../functions/user-check.js")
+const sanitize = require("../../functions/sanitizer.js")
 
-const fetchMatchData = require("./fetch-match-data.js")
-const sanitize = require("./sanitizer.js")
+const getTournaments = require("./shared/getTournaments")
+const insertMatches = require("./shared/insertMatches")
+const tournamentsClient = require("./shared/tournamentsClient")
 
-async function addTournament(form, files, res) {
+exports.home = async (req, res) => {
+	let check = await userCheck(client, req.session.user)
+	let tournaments = await getTournaments("referee")
+	res.render("history/referee", {user: check.user, tournaments: tournaments})
+}
+
+exports.add = async (req, res) => {
+	let check = await userCheck(client, req.session.user, "admin")
+	if (!check.authorized) {return res.status(401).send("Unauthorized; not an admin")}
+
+	let form = req.body
+	let files = req.files
+
 	let file_name = false
 	if (!form || !form.add_name || !form.add_name.length) {return res.status(302).send("Missing tournament name")}
 	let tournament_name = sanitize(form.add_name, "string")
 	if (!tournament_name.pass) {return await res.status(500).send("Error regarding the tournament name", tournament_name.details)}
 
-	let stuff = await refClient()
+	let stuff = await tournamentsClient("referee")
 	const tournaments = await stuff.collection.find().toArray()
 
 	if (tournaments.find((tournament) => {return tournament.name == form.add_name})) {
@@ -23,7 +36,7 @@ async function addTournament(form, files, res) {
 		if (sanitized.pass) {
 			file_name = sanitized.obj
 			let banner = files.add_banner
-			banner.mv(`${uploadPath}${file_name}`, function(e) {if (e) {console.log("Could not treat banner", e)}})
+			banner.mv(`${process.cwd()}/public/banners/${file_name}`, function(e) {if (e) {console.log("Could not treat banner", e)}})
 		}
 	}
 
@@ -49,7 +62,7 @@ async function addTournament(form, files, res) {
 
 		if (mp_ids.length) {
 			console.log("(REFEREE) Now looking for match data due to", mp_ids)
-			fetchMatchData("referee")
+			insertMatches("referee")
 		}
 	} catch(e) {
 		console.log("Could not add tournament", e)
@@ -59,28 +72,64 @@ async function addTournament(form, files, res) {
 	}
 }
 
-async function removeTournament(form, res) {
+exports.addMatches = async (req, res) => {
+	let check = await userCheck(client, req.session.user, "admin")
+	if (!check.authorized) {return res.status(401).send("Unauthorized; not an admin")}
+
+	let form = req.body
+	if (!form || !form.mp_ids || !form.mp_ids.length) {return res.status(302).send("No match ID in input")}
+	if (!form.tournament_name || !form.tournament_name.length) {return res.status(302).send("Missing tournament name")}
+	let tournament_name = sanitize(form.tournament_name, "string")
+	if (!tournament_name.pass) {return await res.status(500).send("Error regarding the tournament name", tournament_name.details)}
+
+	let temp_mp_ids = form.mp_ids.split(",")
+	let mp_ids = []
+	for (let i = 0; i < temp_mp_ids.length; i++) {
+		let sanitized = sanitize(temp_mp_ids[i], "id")
+		if (sanitized.pass) {mp_ids.push(sanitized.obj)}
+	}
+	if (!mp_ids.length) {return res.status(302).send("No valid match ID in input")}
+
+	let stuff = await tournamentsClient("referee")
+	const tournaments = await stuff.collection.find().toArray()
+	let tournament = tournaments.find((tournament) => {return tournament.name == tournament_name.obj})
+	if (!tournament) {return res.status(302).send("This tournament does not exist!")}
+
+	mp_ids = mp_ids.filter((id) => {return tournament.matches.indexOf(id) == -1})
+	if (!mp_ids.length) {return res.status(302).send("Matches in input are already there")}
+
+	let updated = {matches: tournament.matches.concat(mp_ids)}
+	await stuff.collection.updateOne({name: tournament_name.obj}, {$set: updated})
+	res.status(201).send(`Finished adding ${mp_ids.length} match(es) for ${tournament_name.obj}\nWill now fetch multiplayer information`)
+	insertMatches("referee")
+}
+
+exports.remove = async (req, res) => {
+	let check = await userCheck(client, req.session.user, "admin")
+	if (!check.authorized) {return res.status(401).send("Unauthorized; not an admin")}
+
+	let form = req.body
 	if (!form || !form.remove_name || !form.remove_name.length) {return res.status(302).send("Missing tournament name")}
 	let tournament_name = sanitize(form.remove_name, "string")
 	if (!tournament_name.pass) {return await res.status(500).send("Error regarding the tournament name", tournament_name.details)}
-	let stuff = await refClient()
+	let stuff = await tournamentsClient("referee")
 	const tournaments = await stuff.collection.find().toArray()
 
-	let tournament = tournaments.find((tournament) => {return tournament.name == tournament_name})
+	let tournament = tournaments.find((tournament) => {return tournament.name == tournament_name.obj})
 	if (!tournament) {return res.status(302).send("This tournament does not exist!")}
 	let matches = tournament.matches
 	let matches_collection = stuff.db.collection("matches")
 
 	try {
-		await stuff.collection.deleteOne({name: tournament_name})
+		await stuff.collection.deleteOne({name: tournament_name.obj})
 		for (let i = 0; i < matches.length; i++) {
 			let sanitized = sanitize(matches[i], "id")
 			if (sanitized.pass) {
 				await matches_collection.deleteOne({id: sanitized.obj})
 			}
 		}
-		console.log(`${tournament_name} has been removed`)
-		await res.status(201).send(`${tournament_name} removed successfully`)
+		console.log(`${tournament_name.obj} has been removed`)
+		await res.status(201).send(`${tournament_name.obj} removed successfully`)
 	} catch(e) {
 		console.log("Could not remove tournament", e)
 		await res.status(201).send("Error, contact Taevas about it")
@@ -89,7 +138,12 @@ async function removeTournament(form, res) {
 	}
 }
 
-async function importTournament(files, res) {
+exports.import = async (req, res) => { // lol nice name
+	return await res.status(500).send("Not quite sure if it works or not, for now I'm making this unusable")
+	let check = await userCheck(client, req.session.user, "admin")
+	if (!check.authorized) {return res.status(401).send("Unauthorized; not an admin")}
+	
+	let files = req.files
 	if (!files || !files.import_json) {return res.status(302).send("No file")}
 	let temp_file = files.import_json
 
@@ -150,51 +204,4 @@ async function importTournament(files, res) {
 	await stuff.client.close()
 	res.status(201).send(`Finished, added ${counter_good}, failed ${counter_bad}\nWill now fetch multiplayer information`)
 	fetchMatchData("referee")
-}
-
-async function addMatches(form, res) {
-	if (!form || !form.mp_ids || !form.mp_ids.length) {return res.status(302).send("No match ID in input")}
-	if (!form.tournament_name || !form.tournament_name.length) {return res.status(302).send("Missing tournament name")}
-	let tournament_name = sanitize(form.tournament_name, "string")
-	if (!tournament_name.pass) {return await res.status(500).send("Error regarding the tournament name", tournament_name.details)}
-
-	let temp_mp_ids = form.mp_ids.split(",")
-	let mp_ids = []
-	for (let i = 0; i < temp_mp_ids.length; i++) {
-		let sanitized = sanitize(temp_mp_ids[i], "id")
-		if (sanitized.pass) {mp_ids.push(sanitized.obj)}
-	}
-	if (!mp_ids.length) {return res.status(302).send("No valid match ID in input")}
-
-	let stuff = await refClient()
-	const tournaments = await stuff.collection.find().toArray()
-	let tournament = tournaments.find((tournament) => {return tournament.name == tournament_name})
-	if (!tournament) {return res.status(302).send("This tournament does not exist!")}
-
-	mp_ids = mp_ids.filter((id) => {return tournament.matches.indexOf(id) == -1})
-	if (!mp_ids.length) {return res.status(302).send("Matches in input are already there")}
-
-	let updated = {matches: tournament.matches.concat(mp_ids)}
-	await stuff.collection.updateOne({name: tournament_name}, {$set: updated})
-	res.status(201).send(`Finished adding ${mp_ids.length} match(es) for ${tournament_name}\nWill now fetch multiplayer information`)
-	fetchMatchData("referee")
-}
-
-module.exports = {
-	addTournament,
-	removeTournament,
-	importTournament,
-	addMatches
-}
-
-async function refClient() {
-	require('dotenv').config()
-	const mongodb = require("mongodb").MongoClient
-
-	const client = new mongodb(process.env.REF_CONNECTIONSTRING)
-	await client.connect()
-	const db = client.db()
-	const tournaments_collection = db.collection("tournaments")
-
-	return {client: client, db: db, collection: tournaments_collection}
 }

@@ -1,8 +1,8 @@
 require('dotenv').config()
 const mongodb = require("mongodb").MongoClient
 
-module.exports = async function tournamentsHandle(type) {
-	let client_uri = type == "referee" ? process.env.REF_CONNECTIONSTRING : process.env.PLA_CONNECTIONSTRING
+module.exports = async function getTournaments(category) {
+	let client_uri = category == "referee" ? process.env.REF_CONNECTIONSTRING : process.env.PLA_CONNECTIONSTRING
 	const client = new mongodb(client_uri)
 	await client.connect()
 
@@ -25,15 +25,21 @@ module.exports = async function tournamentsHandle(type) {
 			if (match_find) {
 				for (let o = 0; o < match_find.players.length; o++) {
 					let player_id = match_find.players[o]
-					let player_find = players.find((player) => {return player.id == player_id})
+					let player_find = players.find((player) => {
+						return player.id == player_id
+					})
 
-					match_find.players[o] = player_find ? player_find : {
-						id: player_id,
-						name: "NOT_FOUND",
-						country_code: "AA",
-						matches_played: {
-							ids: match_id,
-							count: 1
+					if (player_find) {
+						match_find.players[o] = player_find
+					} else if (!(typeof player_id == "object" && player_id.id)) { // if id hasn't been replaced with player object already
+						match_find.players[o] = {
+							id: player_id,
+							name: "NOT_FOUND",
+							country_code: "AA",
+							matches_played: {
+								ids: match_id,
+								count: 1
+							}
 						}
 					}
 				}
@@ -44,9 +50,8 @@ module.exports = async function tournamentsHandle(type) {
 		tournaments[i].matches = matches_arr
 	}
 
-	// I'll need to write an actual and better id system, when I feel like it :^) Or I could just do index for id
 	tournaments.forEach((tournament, i) => {
-		tournament.id = String(i) //String(tournament._id).slice(String(tournament._id).length - 11)
+		tournament.id = String(i)
 		tournament.proper_date = properDate(tournament.date)
 	})
 	return tournaments

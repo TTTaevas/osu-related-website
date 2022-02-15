@@ -2,6 +2,7 @@ const production = process.env.PRODUCTION == "true" ? true : false
 const client = require("./database.js")
 
 require("dotenv").config()
+const glob = require("glob")
 const path = require("path")
 
 // express configuration stuff
@@ -58,18 +59,13 @@ app.use(rateLimiter)
 
 if (production) {app.set('trust proxy', 1)}
 
-const layer01 = require("./app/layer01")
-app.use("/layer01", layer01)
-
-const history = require("./app/history")
-app.use("/history", history)
-
-app.get("/", async (req, res) => {
-	res.render("home")
+glob.sync("./routes/*.js").forEach((f) => {
+	const p = f.substring(f.lastIndexOf("/"), f.lastIndexOf("."))
+	const callback = require(path.resolve(f))
+	app.use(p, callback)
 })
 
-app.use(function(req, res, next) {
-	res.status(404).render("fourofour")
-})
+app.get("/", async (req, res) => {res.render("home")})
+app.use(function(req, res, next) {res.status(404).render("fourofour")})
 
 module.exports = app
