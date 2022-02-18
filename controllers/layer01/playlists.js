@@ -1,59 +1,26 @@
-const sanitize = require("./sanitizer.js")
+const client = require("../../database.js")
+const userCheck = require("../../functions/user-check.js")
 
-async function staff(user, users, db, form) {
-	let sanitized_form = sanitize(form, "form")
-	if (!sanitized_form.pass) {return {ok: false, message: "Something seems to have gone wrong very wrong ><"}}
-	form = sanitized_form.obj
+const request = require("../../functions/osu-requests.js")
+const sanitize = require("../../functions/sanitizer.js")
 
-	let staff_roles = Object.keys(form).filter((key) => {return key == "pooler" || key == "referee" || key == "streamer" || key == "commentator"})
-	if (!staff_roles.length) {return {ok: false, message: "No staff role was selected :^)"}}
-	if (!form.discord) {return {ok: false, message: "No Discord was provided"}}
-	if (!form.experience) {return {ok: false, message: "No experience was provided"}}
-
-	let updated = {roles: user.roles}
-	updated.roles.registered_staff = true
-	await users.updateOne({_id: user._id}, {$set: updated})
-
-	let reg = {
-		id: user.id,
-		form: form,
-		date: new Date()
-	}
-	const staff_regs = db.collection("staff_regs")
-	const regs = await staff_regs.find().toArray()
-	if (regs.find((reg_a) => {return reg_a.id == reg.id})) {
-		console.log(`Updating staff reg ${reg.id}`)
-		await staff_regs.updateOne({id: user.id}, {$set: reg})
-	} else {
-		console.log(`Inserting staff reg ${reg.id}`)
-		await staff_regs.insertOne(reg)
-	}
-
-	return {ok: true, message: `Registered! (${String(staff_roles).replace(/,/g, ", ")}) | It may take some time for your registration to be looked at`}
+exports.home = async (req, res) => {
+	let check = await userCheck(client, req.session.user)
+	let playlists_col = check.db.collection("playlists")
+	let pools = await playlists_col.find().toArray()
+	res.status(200).render("layer01/playlists", {user: check.user, playlists: pools})
 }
 
-async function player(user, users, form) {
-	let sanitized_form = sanitize(form, "form")
-	if (!sanitized_form.pass) {return {ok: false, message: "Something seems to have gone wrong very wrong ><"}}
-	form = sanitized_form.obj
+exports.create = async (req, res) => {
+	let check = await userCheck(client, req.session.user, "admin")
+	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 
-	if (!form.discord) {return {ok: false, message: "No Discord was provided"}}
-	if (!form.timezone) {return {ok: false, message: "No timezone was provided"}}
-
-	let info = {
-		roles: user.roles,
-		discord: form.discord.substring(0, 40),
-		timezone: form.timezone.substring(0, 15)
-	}
-	info.roles.registered_player = true
-	info.roles.player = true
-
-	await users.updateOne({id: user.id}, {$set: info})
-	console.log(`(${user.id}) ${user.username} just registered as a player!`)
-	return {ok: true, message: `Registered! Welcome to the tournament, ${user.username}!`} // note that this message currently cannot be shown
+	let creation = await createPlaylist(check.db, req.body)
+	console.log(`Playlist creation: ${creation.message}`)
+	res.redirect("/layer01/playlists")
 }
 
-async function playlist(db, form) {
+async function createPlaylist(db, form) {
 	if (!form) {return {ok: false, message: "No form was provided"}}
 	if (!form.c_name) {return {ok: false, message: "No playlist name was provided"}}
 	if (!form.c_mod) {return {ok: false, message: "No mod was provided"}}
@@ -67,7 +34,6 @@ async function playlist(db, form) {
 	}
 	let maps = form.c_mod.map((a, index) => {return {mod_id: form.c_mod[index], mod: form.c_mod[index].substring(0, 2), id: form.c_id[index]}})
 
-	const request = require("./osu-requests.js")
 	let token = await request.getToken()
 	for (let i = 0; i < maps.length; i++) {
 		let map_data = await request.getBeatmap(token, maps[i].id)
@@ -111,13 +77,7 @@ async function playlist(db, form) {
 	}
 
 	let collection = db.collection("playlists")
-	await collection.insertOne(pool)
-	console.log(`The following playlist has been added: ${form.c_name}`)
-	return {ok: true, message: `Playlist created!`}
-}
-
-module.exports = {
-	staff,
-	player,
-	playlist
+	let insertion = await collection.insertOne(pool)
+	let end_message = insertion.insertedId ? "created!" : "insertion failed"
+	return {ok: true, message: `${form.c_name} ${end_message}`}
 }
