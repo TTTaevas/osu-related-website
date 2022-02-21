@@ -88,7 +88,7 @@
 						</tr>
 						<% for (let e = 0; e < brackets[i].matches.length; e++) { %>
 							<% let match = brackets[i].matches[e] %>
-							<tr class="match <%= match.type == 'lb' ? 'lb' : 'wb' %>">
+							<tr class="match <%= match.type %>">
 								<td><div class="id"><%= match.id %></div></td>
 								<td><div class="schedule">
 									<% let date = match.schedule %>

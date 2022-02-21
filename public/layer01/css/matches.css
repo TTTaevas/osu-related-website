@@ -61,12 +61,16 @@ td:last-child {
 	background-color: #411411;
 }
 
+.llb {
+	background-color: #550606;
+}
+
 .c_bracket_name {
 	margin-bottom: 10px;
 }
 
 .c_id {
-	width: 15px;
+	width: 25px;
 }
 
 .c_type {
