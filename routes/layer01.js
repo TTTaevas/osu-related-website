@@ -35,7 +35,10 @@ router.get("/referee", referee.home)
 
 const qualifiers = require("../controllers/layer01/qualifiers")
 router.get("/qualifiers", qualifiers.home)
-router.post("/qualifiers", qualifiers.update) // Need to rework that
+router.post("/qualifiers/create", qualifiers.create)
+router.post("/qualifiers/join", qualifiers.join)
+router.post("/qualifiers/referee/add", qualifiers.referee_add)
+router.post("/qualifiers/referee/remove", qualifiers.referee_remove)
 
 const qualifiersResults = require("../controllers/layer01/qualifiers-results")
 router.get("/qualifiers-results", qualifiersResults.home)

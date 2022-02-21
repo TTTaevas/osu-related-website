@@ -15,17 +15,15 @@
 			<h4 id="time"><%=a(date.getUTCFullYear())%>-<%=a(date.getUTCMonth()+1)%>-<%=a(date.getUTCDate())%> <%=a(date.getUTCHours())%>:<%=a(date.getUTCMinutes())%>:<%=a(date.getUTCSeconds())%> UTC+0</h4>
 			<% if (user && user.roles.referee) { %>
 				<div id="referee_div">
-					<form id="r_lobby_add" method="POST" action="">
+					<form id="r_lobby_add" method="POST" action="qualifiers/referee/add">
 						<h3>Type in the IDs of the lobbies you would like to ref! (comma separated)</h3>
 						<h5>(Example: ONION3, ONION4, ONION18)</h5>
-						<input type="hidden" name="act" class="act" value="ref_add">
 						<input type="text" name="r_lobbies" class="r_lobbies">
 						<input type="submit" id="submit" value="Ref lobbies!">
 					</form>
-					<form id="r_lobby_rem" method="POST" action="">
+					<form id="r_lobby_rem" method="POST" action="qualifiers/referee/remove">
 						<h3>Or if you would like to drop lobbies, use this: (comma separated)</h3>
 						<h5>(Example: ONION3, ONION4, ONION18)</h5>
-						<input type="hidden" name="act" class="act" value="ref_rem">
 						<input type="text" name="r_lobbies" class="r_lobbies">
 						<input type="submit" id="submit" value="Drop lobbies!">
 					</form>
@@ -33,7 +31,7 @@
 			<% } %>
 			<% if (user && user.roles.player) { %>
 				<div id="player_div">
-					<form id="p_lobby_join" method="POST" action="">
+					<form id="p_lobby_join" method="POST" action="qualifiers/join">
 						<h3>Type in the ID of the lobby you'd like to play in!</h3>
 						<h5>(Example: ONION3)</h5>
 						<input type="hidden" name="act" class="act" value="player_join">
@@ -75,8 +73,7 @@
 				</tbody>
 			</table>
 			<% if (user && user.roles.admin) { %>
-				<form id="c_lobby" method="POST" action="">
-					<input type="hidden" name="act" class="act" value="create">
+				<form id="c_lobby" method="POST" action="qualifiers/create">
 					<label for="c_prefix">Prefix<input type="text" name="c_prefix" class="c_prefix"></label>
 					<label for="c_min">First number<input type="number" name="c_min" class="c_min"></label>
 					<label for="c_max">Last number<input type="number" name="c_max" class="c_max"></label>
