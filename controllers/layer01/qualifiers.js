@@ -1,5 +1,6 @@
 const client = require("../../database.js")
 const userCheck = require("../../functions/user-check.js")
+const existenceCheck = require("../../functions/existence-check.js")
 
 exports.home = async (req, res) => {
 	let check = await userCheck(client, req.session.user)
@@ -10,7 +11,7 @@ exports.home = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
-	if (!req.body) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
+	if (!existenceCheck(req.body, ["c_min", "c_max", "c_prefix"])) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
 	let check = await userCheck(client, req.session.user, "admin")
 	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 
@@ -34,7 +35,7 @@ exports.create = async (req, res) => {
 }
 
 exports.join = async (req, res) => {
-	if (!req.body) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
+	if (!existenceCheck(req.body, ["p_lobby"])) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
 	let check = await userCheck(client, req.session.user, "player")
 	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 	
@@ -75,7 +76,7 @@ exports.join = async (req, res) => {
 }
 
 exports.referee_add = async (req, res) => {
-	if (!req.body) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
+	if (!existenceCheck(req.body, ["r_lobbies"])) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
 	let check = await userCheck(client, req.session.user, "referee")
 	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 	let lobbies_col = check.db.collection("quals_lobbies")
@@ -90,7 +91,7 @@ exports.referee_add = async (req, res) => {
 }
 
 exports.referee_remove = async (req, res) => {
-	if (!req.body) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
+	if (!existenceCheck(req.body, ["r_lobbies"])) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
 	let check = await userCheck(client, req.session.user, "referee")
 	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 	let lobbies_col = check.db.collection("quals_lobbies")

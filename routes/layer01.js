@@ -46,7 +46,9 @@ router.post("/qualifiers-results", qualifiersResults.create)
 
 const matches = require("../controllers/layer01/matches")
 router.get("/matches", matches.home)
-router.post("/matches", matches.update) // Need to rework that
+router.post("/matches/create", matches.create)
+router.post("/matches/staff/add", matches.staff_add)
+router.post("/matches/staff/remove", matches.staff_remove)
 
 router.get("/*", (req, res) => {
 	res.status(404).render("layer01/fourofour")
