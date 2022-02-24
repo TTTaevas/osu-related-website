@@ -1,22 +1,17 @@
-const client = require("../../database.js")
-const userCheck = require("../../functions/user-check.js")
-
 const sanitize = require("../../functions/sanitizer.js")
 
 exports.home = async (req, res) => {
-	let check = await userCheck(client, req.session.user, "admin")
-	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+	if (!req.user || !req.user.roles.admin) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 
-	let regs_col = check.db.collection("staff_regs")
+	let regs_col = req.db.collection("staff_regs")
 	let regs = await regs_col.find().toArray()
-	for (let i = 0; i < regs.length; i++) {regs[i].user = check.users.find((user) => user.id == regs[i].id)}
-	res.status(200).render("layer01/staff-regs", {user: check.user, regs: regs})
+	for (let i = 0; i < regs.length; i++) {regs[i].user = req.users.find((user) => user.id == regs[i].id)}
+	res.status(200).render("layer01/staff-regs", {user: req.user, regs: regs})
 }
 
 exports.update = async (req, res) => {
-	let check = await userCheck(client, req.session.user, "admin")
-	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
-	let update = await addStaff(check.db, check.collection, req.body)
+	if (!req.user || !req.user.roles.admin) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+	let update = await addStaff(req.db, req.collection, req.body)
 	console.log(`Adding to staff: ${update.message}`)
 	res.redirect("/layer01/staff-regs")
 }

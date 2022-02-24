@@ -1,21 +1,15 @@
-const client = require("../../database.js")
-const userCheck = require("../../functions/user-check.js")
-
 const request = require("../../functions/osu-requests.js")
 const sanitize = require("../../functions/sanitizer.js")
 
 exports.home = async (req, res) => {
-	let check = await userCheck(client, req.session.user)
-	let playlists_col = check.db.collection("playlists")
+	let playlists_col = req.db.collection("playlists")
 	let pools = await playlists_col.find().toArray()
-	res.status(200).render("layer01/playlists", {user: check.user, playlists: pools})
+	res.status(200).render("layer01/playlists", {user: req.user, playlists: pools})
 }
 
 exports.create = async (req, res) => {
-	let check = await userCheck(client, req.session.user, "admin")
-	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
-
-	let creation = await createPlaylist(check.db, req.body)
+	if (!req.user || !req.user.roles.admin) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+	let creation = await createPlaylist(req.db, req.body)
 	console.log(`Playlist creation: ${creation.message}`)
 	res.redirect("/layer01/playlists")
 }

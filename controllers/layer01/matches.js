@@ -1,20 +1,15 @@
-const client = require("../../database.js")
-const userCheck = require("../../functions/user-check.js")
 const existenceCheck = require("../../functions/existence-check.js")
 
 exports.home = async (req, res) => {
-	let check = await userCheck(client, req.session.user)
-	let brackets_col = check.db.collection("brackets")
+	let brackets_col = req.db.collection("brackets")
 	let brackets = await brackets_col.find().toArray()
-
-	res.status(200).render("layer01/matches", {user: check.user, brackets: brackets})
+	res.status(200).render("layer01/matches", {user: req.user, brackets: brackets})
 }
 
 exports.create = async (req, res) => {
 	if (!existenceCheck(req.body, ["c_bracket_name", "c_id", "c_time", "c_type"])) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
-	let check = await userCheck(client, req.session.user, "admin")
-	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
-	let brackets_col = check.db.collection("brackets")
+	if (!req.user || !req.user.roles.admin) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+	let brackets_col = req.db.collection("brackets")
 
 	let bracket = {
 		name: req.body.c_bracket_name,
@@ -30,9 +25,9 @@ exports.create = async (req, res) => {
 		let date = new Date(Date.UTC(2022, month, day, hour, minutes)) // yes it uses both integers and strings
 
 		// worse code
-		let player1 = check.users.find((user) => {return user.username.toLowerCase() == req.body.c_player_1[i].toLowerCase()})
+		let player1 = req.users.find((user) => {return user.username.toLowerCase() == req.body.c_player_1[i].toLowerCase()})
 		player1 = player1 ? {id: player1.id, username: player1.username} : {id: 0, username: "undetermined"}
-		let player2 = check.users.find((user) => {return user.username.toLowerCase() == req.body.c_player_2[i].toLowerCase()})
+		let player2 = req.users.find((user) => {return user.username.toLowerCase() == req.body.c_player_2[i].toLowerCase()})
 		player2 = player2 ? {id: player2.id, username: player2.username} : {id: 0, username: "undetermined"}
 
 		let match = {
@@ -57,43 +52,41 @@ exports.create = async (req, res) => {
 
 exports.staff_add = async (req, res) => {
 	if (!existenceCheck(req.body, ["act", "matches"])) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
-	var check
 
 	let mode = req.body.act
 	if (mode == "ref") {
-		check = await userCheck(client, req.session.user, "referee")
+		if (!req.user || !req.user.roles.referee) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 	} else if (mode == "str") {
-		check = await userCheck(client, req.session.user, "streamer")
+		if (!req.user || !req.user.roles.streamer) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 	} else if (mode == "com") {
-		check = await userCheck(client, req.session.user, "commentator")
+		if (!req.user || !req.user.roles.commentator) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 	} else {
 		return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})
 	}
-	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 
-	let brackets_col = check.db.collection("brackets")
+	let brackets_col = req.db.collection("brackets")
 	let brackets = await brackets_col.find().toArray()
 	let taken_matches = req.body.matches.replace(/ /g, "").split(",")
 	
 	for (let i = 0; i < taken_matches.length; i++) {
 		let bracket_to_add_to = brackets.find((b) => {return b.matches.findIndex((m) => {return m.id == taken_matches[i]}) != -1})
-		if (!bracket_to_add_to) {console.log(`Couldn't add ${check.user.username} as ${mode}, didn't find match ${taken_matches[i]}`); continue}
+		if (!bracket_to_add_to) {console.log(`Couldn't add ${req.user.username} as ${mode}, didn't find match ${taken_matches[i]}`); continue}
 		let matches_arr = bracket_to_add_to.matches
 		let index = matches_arr.findIndex((m) => {return m.id == taken_matches[i]})
 
 		if (index != -1) {
 			if (mode == "ref") {
-				matches_arr[index].referee = {id: check.user.id, name: check.user.username}
+				matches_arr[index].referee = {id: req.user.id, name: req.user.username}
 			} else if (mode == "str") {
-				matches_arr[index].streamer = {id: check.user.id, name: check.user.username}
+				matches_arr[index].streamer = {id: req.user.id, name: req.user.username}
 			} else {
 				let free_spot = matches_arr[index].commentators.indexOf(false)
-				if (free_spot != -1) {matches_arr[index].commentators[free_spot] = {id: check.user.id, name: check.user.username}}
+				if (free_spot != -1) {matches_arr[index].commentators[free_spot] = {id: req.user.id, name: req.user.username}}
 			}
 		}
 				
 		let update = await brackets_col.updateOne({name: bracket_to_add_to.name}, {$set: {matches: matches_arr}})
-		if (update.modifiedCount) {console.log(`${check.user.username} is now ${mode} of ${taken_matches[i]}`)}
+		if (update.modifiedCount) {console.log(`${req.user.username} is now ${mode} of ${taken_matches[i]}`)}
 	}
 
 	return res.redirect("/layer01/matches")
@@ -104,23 +97,22 @@ exports.staff_remove = async (req, res) => {
 
 	let mode = req.body.act
 	if (mode == "ref") {
-		check = await userCheck(client, req.session.user, "referee")
+		if (!req.user || !req.user.roles.referee) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 	} else if (mode == "str") {
-		check = await userCheck(client, req.session.user, "streamer")
+		if (!req.user || !req.user.roles.streamer) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 	} else if (mode == "com") {
-		check = await userCheck(client, req.session.user, "commentator")
+		if (!req.user || !req.user.roles.commentator) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 	} else {
 		return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})
 	}
-	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 	
-	let brackets_col = check.db.collection("brackets")
+	let brackets_col = req.db.collection("brackets")
 	let brackets = await brackets_col.find().toArray()
 	let dropped_matches = req.body.matches.replace(/ /g, "").split(",")
 
 	for (let i = 0; i < dropped_matches.length; i++) {
 		let bracket_to_remove_from = brackets.find((b) => {return b.matches.findIndex((m) => {return m.id == dropped_matches[i]}) != -1})
-		if (!bracket_to_remove_from) {console.log(`Couldn't remove ${check.user.username} as ${mode}, didn't find match ${dropped_matches[i]}`); continue}
+		if (!bracket_to_remove_from) {console.log(`Couldn't remove ${req.user.username} as ${mode}, didn't find match ${dropped_matches[i]}`); continue}
 		let matches_arr = bracket_to_remove_from.matches
 		let index = matches_arr.findIndex((m) => {return m.id == dropped_matches[i]})
 
@@ -130,13 +122,13 @@ exports.staff_remove = async (req, res) => {
 			} else if (mode == "str") {
 				matches_arr[index].streamer = false
 			} else {
-				let freeing_spot = matches_arr[index].commentators.findIndex((c) => {return c.id == check.user.id})
+				let freeing_spot = matches_arr[index].commentators.findIndex((c) => {return c.id == req.user.id})
 				if (freeing_spot != -1) {matches_arr[index].commentators[freeing_spot] = false}
 			}
 		}
 
 		let update = await brackets_col.updateOne({name: bracket_to_remove_from.name}, {$set: {matches: matches_arr}})
-		if (update.modifiedCount) {console.log(`${check.user.username} is no longer ${mode} of ${dropped_matches[i]}`)}
+		if (update.modifiedCount) {console.log(`${req.user.username} is no longer ${mode} of ${dropped_matches[i]}`)}
 	}
 
 	return res.redirect("/layer01/matches")

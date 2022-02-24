@@ -1,6 +1,4 @@
-const client = require("../../database.js")
 const request = require("../../functions/osu-requests.js").request
-const userCheck = require("../../functions/user-check.js")
 
 exports.home = async (req, res) => {
 	var response
@@ -13,7 +11,7 @@ exports.home = async (req, res) => {
 
 	// if not logged in, if code in url
 	if (req.query.code && !req.session.user) {
-		response = await codeHandler(req, client)
+		response = await codeHandler(req)
 		if (typeof response == "string") {
 			status.ok = false
 			status.reason = response
@@ -28,14 +26,13 @@ exports.home = async (req, res) => {
 
 	// if logged in, no matter if code 
 	} else if (req.session.user) {
-		let data = await userCheck(client, req.session.user)
-		status.user = data.user
+		status.user = req.user
 	}
 	
 	status.ok ? res.status(200).redirect("/layer01") : res.status(201).render("layer01/login", {status: status})
 }
 
-async function codeHandler(req, client) {
+async function codeHandler(req) {
 	var token_object
 	try {
 		token_object = await request(
@@ -67,9 +64,10 @@ async function codeHandler(req, client) {
 	
 	// deal with users db stuff
 	if (user_object && user_object.id) {
-		let data = await userCheck(client, user_object.id)
+
 		// if user is not in db, put them in db
-		if (!data.user) {
+		let userCheck = req.users.find((u) => {return u.id == user_object.id})
+		if (!userCheck) {
 			user = {
 				id: user_object.id,
 				username: user_object.username,
@@ -91,18 +89,20 @@ async function codeHandler(req, client) {
 				},
 				user_object: user_object
 			}
-			await data.collection.insertOne(user)
-		} else { // if user is in db, update their profile
-			const filter = {_id: data.user._id}
+			let insertion = await req.collection.insertOne(user)
+			insertion.insertedId ? console.log(`New user: ${user_object.id} | ${user_object.username}`) : console.log(`Couldn't add new user: ${user_object.id} | ${user_object.username}`)
+
+		// if user is in db, update their profile
+		} else { 
+			const filter = {_id: userCheck._id}
 			const updated = {
 				username: user_object.username,
 				country: user_object.country_code,
 				rank: user_object.statistics.global_rank,
 				user_object: user_object
 			}
-			await data.collection.updateOne(filter, {$set: updated})
-			const findResultAgain = await data.collection.find({id: user_object.id}).toArray()
-			user = findResultAgain[0] // if only updateOne could return full updated doc
+			let update = await req.collection.updateOne(filter, {$set: updated}) // Legit cannot bother to learn findOneAndUpdate()
+			const findResultAgain = await req.collection.findOne({id: user_object.id})
 		}
 	}
 

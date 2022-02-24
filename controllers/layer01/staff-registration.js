@@ -1,26 +1,21 @@
-const client = require("../../database.js")
-const userCheck = require("../../functions/user-check.js")
-
 const sanitize = require("../../functions/sanitizer.js")
 
 exports.home = async (req, res) => {
-	let check = await userCheck(client, req.session.user)
-	let message = null
-	if (check.user) {
-		if (check.user.roles.registered_staff) {message = "You have already registered as staff, but feel free to reregister if you need to change something :3"}
-		if (check.user.roles.staff) {message = "You are already staff! You should ask Taevas if you want to change something :3c"}
-		res.status(200).render("layer01/staff-registration", {user: check.user, message: message})
+	if (req.user) {
+		let message = null
+		if (req.user.roles.registered_staff) {message = "You have already registered as staff, but feel free to reregister if you need to change something :3"}
+		if (req.user.roles.staff) {message = "You are already staff! You should ask Taevas if you want to change something :3c"}
+		res.status(200).render("layer01/staff-registration", {user: req.user, message: message})
 	} else {
 		res.redirect("/layer01")
 	}
 }
 
 exports.update = async (req, res) => {
-	let check = await userCheck(client, req.session.user)
-	if (!check.user) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Probably not logged in"}})}
-	let update = await staffUpdate(check.user, check.collection, check.db, req.body)
+	if (!req.user) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Please login first"}})}
+	let update = await staffUpdate(req.user, req.collection, req.db, req.body)
 	console.log(`Staff reg: ${update.message}`)
-	res.status(200).render("layer01/staff-registration", {user: check.user, message: update.message})
+	res.status(200).render("layer01/staff-registration", {user: req.user, message: update.message})
 }
 
 async function staffUpdate(user, users, db, form) {

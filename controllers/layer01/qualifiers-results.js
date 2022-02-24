@@ -1,18 +1,13 @@
-const client = require("../../database.js")
-const userCheck = require("../../functions/user-check.js")
-
 const request = require("../../functions/osu-requests.js")
 
 exports.home = async (req, res) => {
-	let check = await userCheck(client, req.session.user)
-	
-	let playlists_col = check.db.collection("playlists")
+	let playlists_col = req.db.collection("playlists")
 	let pools = await playlists_col.find().toArray()
-	playlist = pools.find((p) => {return p.name.toLowerCase() == "qualifiers playlist"})
+	let playlist = pools.find((p) => {return p.name.toLowerCase() == "qualifiers playlist"})
 
 	let maps = playlist.maps.map((map) => {return {mod_id: map.mod_id, id: map.id, scores: []}})
 
-	let quals_mps = check.db.collection("quals_mps")
+	let quals_mps = req.db.collection("quals_mps")
 	let matches = await quals_mps.find().toArray()
 	for (let i = 0; i < matches.length; i++) {
 		let players = matches[i].players
@@ -80,15 +75,14 @@ exports.home = async (req, res) => {
 	}
 	seeds.sort((a, b) => {return a.avg_rank - b.avg_rank})
 
-	res.status(200).render("layer01/qualifiers-results", {user: check.user, maps: maps, seeds: seeds})
+	res.status(200).render("layer01/qualifiers-results", {user: req.user, maps: maps, seeds: seeds})
 }
 
 exports.create = async (req, res) => {
-	let check = await userCheck(client, req.session.user, "admin")
-	if (!check.authorized) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+	if (!req.user || !req.user.roles.admin) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 
 	let mp_id = Number(req.body.new_mplink.replace(/[^0-9]/g, ""))
-	let quals_mps = check.db.collection("quals_mps")
+	let quals_mps = req.db.collection("quals_mps")
 
 	let creation = await createMatch(mp_id, quals_mps)
 	console.log(`Adding match to qualifiers results: ${creation.message}`)

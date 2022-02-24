@@ -59,6 +59,24 @@ app.use(rateLimiter)
 
 if (production) {app.set('trust proxy', 1)}
 
+
+// ROUTES STUFF
+
+app.all("*", async (req, res, next) => { // Previously known as "userCheck"
+	const db = client.db()
+	const collection = db.collection("users")
+
+	const users = await collection.find().toArray()
+	const user = users.find((u) => {return u.id == req.session.user})
+
+	req.user = user ? user : false
+	req.users = users
+	req.collection = collection
+	req.db = db
+
+	next()
+})
+
 glob.sync("./routes/*.js").forEach((f) => {
 	const p = f.substring(f.lastIndexOf("/"), f.lastIndexOf("."))
 	const callback = require(path.resolve(f))

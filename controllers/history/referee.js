@@ -1,5 +1,3 @@
-const client = require("../../database.js")
-const userCheck = require("../../functions/user-check.js")
 const sanitize = require("../../functions/sanitizer.js")
 
 const getTournaments = require("./shared/getTournaments")
@@ -7,14 +5,12 @@ const insertMatches = require("./shared/insertMatches")
 const tournamentsClient = require("./shared/tournamentsClient")
 
 exports.home = async (req, res) => {
-	let check = await userCheck(client, req.session.user)
 	let tournaments = await getTournaments("referee")
-	res.render("history/referee", {user: check.user, tournaments: tournaments})
+	res.render("history/referee", {user: req.user, tournaments: tournaments})
 }
 
 exports.add = async (req, res) => {
-	let check = await userCheck(client, req.session.user, "admin")
-	if (!check.authorized) {return res.status(401).send("Unauthorized; not an admin")}
+	if (!req.user || !req.user.roles.admin) {return res.status(401).send("Unauthorized; not an admin")}
 
 	let form = req.body
 	let files = req.files
@@ -73,8 +69,7 @@ exports.add = async (req, res) => {
 }
 
 exports.addMatches = async (req, res) => {
-	let check = await userCheck(client, req.session.user, "admin")
-	if (!check.authorized) {return res.status(401).send("Unauthorized; not an admin")}
+	if (!req.user || !req.user.roles.admin) {return res.status(401).send("Unauthorized; not an admin")}
 
 	let form = req.body
 	if (!form || !form.mp_ids || !form.mp_ids.length) {return res.status(302).send("No match ID in input")}
@@ -105,8 +100,7 @@ exports.addMatches = async (req, res) => {
 }
 
 exports.remove = async (req, res) => {
-	let check = await userCheck(client, req.session.user, "admin")
-	if (!check.authorized) {return res.status(401).send("Unauthorized; not an admin")}
+	if (!req.user || !req.user.roles.admin) {return res.status(401).send("Unauthorized; not an admin")}
 
 	let form = req.body
 	if (!form || !form.remove_name || !form.remove_name.length) {return res.status(302).send("Missing tournament name")}
@@ -140,8 +134,7 @@ exports.remove = async (req, res) => {
 
 exports.import = async (req, res) => { // lol nice name
 	return await res.status(500).send("Not quite sure if it works or not, for now I'm making this unusable")
-	let check = await userCheck(client, req.session.user, "admin")
-	if (!check.authorized) {return res.status(401).send("Unauthorized; not an admin")}
+	if (!req.user || !req.user.roles.admin) {return res.status(401).send("Unauthorized; not an admin")}
 	
 	let files = req.files
 	if (!files || !files.import_json) {return res.status(302).send("No file")}
