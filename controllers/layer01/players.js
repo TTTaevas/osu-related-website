@@ -7,9 +7,7 @@ exports.home = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-	if (!req.user || !req.user.roles.admin) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 	let count = 0
-	
 	let token = await request.getToken()
 	for (let i = 0; i < req.users.length; i++) {
 		let user_object = await request.getUser(token, req.users[i].id, "osu")

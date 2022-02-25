@@ -18,8 +18,8 @@ exports.home = async (req, res) => {
 exports.create = async (req, res) => {
 	let time_now = new Date()
 	if (time_now > end_of_regs) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "We are no longer accepting player registrations! Sorry ><"}})}
+	if (req.user.roles.pooler) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Poolers cannot play in the tournament"}})}
 
-	if (!req.user) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Probably not logged in"}})}
 	let creation = await createPlayer(req.user, req.collection, req.body)
 	console.log(`Player creation: ${creation.message}`)
 	res.redirect("/layer01/players")

@@ -8,7 +8,6 @@ exports.home = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
-	if (!req.user || !req.user.roles.admin) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 	let creation = await createPlaylist(req.db, req.body)
 	console.log(`Playlist creation: ${creation.message}`)
 	res.redirect("/layer01/playlists")

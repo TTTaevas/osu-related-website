@@ -1,8 +1,6 @@
 const sanitize = require("../../functions/sanitizer.js")
 
 exports.home = async (req, res) => {
-	if (!req.user || !req.user.roles.admin) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
-
 	let regs_col = req.db.collection("staff_regs")
 	let regs = await regs_col.find().toArray()
 	for (let i = 0; i < regs.length; i++) {regs[i].user = req.users.find((user) => user.id == regs[i].id)}
@@ -10,7 +8,6 @@ exports.home = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-	if (!req.user || !req.user.roles.admin) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 	let update = await addStaff(req.db, req.collection, req.body)
 	console.log(`Adding to staff: ${update.message}`)
 	res.redirect("/layer01/staff-regs")

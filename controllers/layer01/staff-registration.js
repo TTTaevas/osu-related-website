@@ -12,7 +12,6 @@ exports.home = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-	if (!req.user) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Please login first"}})}
 	let update = await staffUpdate(req.user, req.collection, req.db, req.body)
 	console.log(`Staff reg: ${update.message}`)
 	res.status(200).render("layer01/staff-registration", {user: req.user, message: update.message})

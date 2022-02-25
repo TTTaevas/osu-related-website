@@ -79,8 +79,6 @@ exports.home = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
-	if (!req.user || !req.user.roles.admin) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
-
 	let mp_id = Number(req.body.new_mplink.replace(/[^0-9]/g, ""))
 	let quals_mps = req.db.collection("quals_mps")
 

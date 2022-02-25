@@ -8,7 +8,6 @@ exports.home = async (req, res) => {
 
 exports.create = async (req, res) => {
 	if (!existenceCheck(req.body, ["c_bracket_name", "c_id", "c_time", "c_type"])) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
-	if (!req.user || !req.user.roles.admin) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
 	let brackets_col = req.db.collection("brackets")
 
 	let bracket = {
@@ -55,11 +54,11 @@ exports.staff_add = async (req, res) => {
 
 	let mode = req.body.act
 	if (mode == "ref") {
-		if (!req.user || !req.user.roles.referee) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+		if (!req.user.roles.referee) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
 	} else if (mode == "str") {
-		if (!req.user || !req.user.roles.streamer) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+		if (!req.user.roles.streamer) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
 	} else if (mode == "com") {
-		if (!req.user || !req.user.roles.commentator) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+		if (!req.user.roles.commentator) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
 	} else {
 		return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})
 	}
@@ -97,11 +96,11 @@ exports.staff_remove = async (req, res) => {
 
 	let mode = req.body.act
 	if (mode == "ref") {
-		if (!req.user || !req.user.roles.referee) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+		if (!req.user.roles.referee) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
 	} else if (mode == "str") {
-		if (!req.user || !req.user.roles.streamer) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+		if (!req.user.roles.streamer) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
 	} else if (mode == "com") {
-		if (!req.user || !req.user.roles.commentator) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you shouldn't be there :3c"}})}
+		if (!req.user.roles.commentator) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
 	} else {
 		return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})
 	}

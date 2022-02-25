@@ -10,8 +10,6 @@ exports.home = async (req, res) => {
 }
 
 exports.add = async (req, res) => {
-	if (!req.user || !req.user.roles.admin) {return res.status(401).send("Unauthorized; not an admin")}
-
 	let form = req.body
 	let files = req.files
 
@@ -69,8 +67,6 @@ exports.add = async (req, res) => {
 }
 
 exports.addMatches = async (req, res) => {
-	if (!req.user || !req.user.roles.admin) {return res.status(401).send("Unauthorized; not an admin")}
-
 	let form = req.body
 	if (!form || !form.mp_ids || !form.mp_ids.length) {return res.status(302).send("No match ID in input")}
 	if (!form.tournament_name || !form.tournament_name.length) {return res.status(302).send("Missing tournament name")}
@@ -100,8 +96,6 @@ exports.addMatches = async (req, res) => {
 }
 
 exports.remove = async (req, res) => {
-	if (!req.user || !req.user.roles.admin) {return res.status(401).send("Unauthorized; not an admin")}
-
 	let form = req.body
 	if (!form || !form.remove_name || !form.remove_name.length) {return res.status(302).send("Missing tournament name")}
 	let tournament_name = sanitize(form.remove_name, "string")
@@ -134,7 +128,6 @@ exports.remove = async (req, res) => {
 
 exports.import = async (req, res) => { // lol nice name
 	return await res.status(500).send("Not quite sure if it works or not, for now I'm making this unusable")
-	if (!req.user || !req.user.roles.admin) {return res.status(401).send("Unauthorized; not an admin")}
 	
 	let files = req.files
 	if (!files || !files.import_json) {return res.status(302).send("No file")}
