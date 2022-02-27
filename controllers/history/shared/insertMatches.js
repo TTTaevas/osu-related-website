@@ -1,56 +1,39 @@
-const mongodb = require("mongodb").MongoClient
 const request = require("../../../functions//osu-requests.js")
 const sanitize = require("../../../functions/sanitizer.js")
 
-module.exports = async function insertMatches(category) {
-	let client_uri = category == "referee" ? process.env.REF_CONNECTIONSTRING : process.env.PLA_CONNECTIONSTRING
-	const client = new mongodb(client_uri)
-	await client.connect()
-
-	const db = client.db()
-	const tournaments_collection = db.collection("tournaments")
-	const tournaments = await tournaments_collection.find().toArray()
-	const matches_collection = db.collection("matches")
-	const matches = await matches_collection.find().toArray()
-	const players_collection = db.collection("players")
-	let players = await players_collection.find().toArray()
-
+module.exports = async function insertMatches(history) {
 	let token = false // Don't request token if no match to request
 
-	for (let i = 0; i < tournaments.length; i++) {
-
+	for (let i = 0; i < history.tournaments.array.length; i++) {
 		let matches_arr = []
-		for (let e = 0; e < tournaments[i].matches.length; e++) {
-			let sanitized = sanitize(tournaments[i].matches[e], "id")
+		for (let e = 0; e < history.tournaments.array[i].matches.length; e++) {
+			let sanitized = sanitize(history.tournaments.array[i].matches[e], "id")
 			if (sanitized.pass) {
 				let match_id = sanitized.obj
-				let find = matches.find((match) => {return match.id == match_id})
+				let find = history.matches.array.find((match) => {return match.id == match_id})
 				if (!find) {
 					if (!token) {token = await request.getToken()}
 					if (!token) {
-						await client.close()
 						return "Error; no token, cannot insertMatches"
 					}
-					let match = await request.getMatch(token, match_id, tournaments[i].name)
+					let match = await request.getMatch(token, match_id, history.tournaments.array[i].name)
 					if (match) {
-						players = await playersArrHandler(match.players, players, match_id)
+						history.players.array = await playersArrHandler(match.players, history.players.array, match_id)
 						for (let o = 0; o < match.players.length; o++) {match.players[o] = match.players[o].id}
 						matches_arr.push(match)
-					} else {console.log(`/!\\ ${tournaments[i].name}'s match ${match_id} was NOT found, consider removing it from the database\n`)}
+					} else {console.log(`/!\\ ${history.tournaments.array[i].name}'s match ${match_id} was NOT found, consider removing it from the database\n`)}
 				}
 
 			}
-			
 		}
-		if (matches_arr.length) {await matches_collection.insertMany(matches_arr)}
+		if (matches_arr.length) {await history.matches.collection.insertMany(matches_arr)}
 	}
 
-	if (players.length) {
-		await players_collection.deleteMany()
-		await players_collection.insertMany(players)
+	if (history.players.array.length) {
+		await history.players.collection.deleteMany()
+		await history.players.collection.insertMany(history.players.array)
 	}
 
-	await client.close()
 	return "Success"
 }
 

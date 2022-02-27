@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node database.js"
+    "start": "node db-clients.js"
   },
   "author": "Taevas",
   "license": "WTFPL",

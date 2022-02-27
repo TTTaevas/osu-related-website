@@ -1,6 +1,41 @@
 const express = require("express")
 const router = express.Router()
 
+const { history } = require("../db-clients.js")
+router.all("*", (req, res, next) => {
+	req.history = {
+		client: history,
+		db: history.db(),
+		tournaments: {
+			collection: undefined,
+			array: undefined
+		},
+		matches: {
+			collection: undefined,
+			array: undefined
+		},
+		players: {
+			collection: undefined,
+			array: undefined
+		}
+	}
+	next()
+})
+
+router.all("/referee*", async (req, res, next) => {
+	req.history.tournaments.collection = req.history.db.collection("tournaments")
+	req.history.matches.collection = req.history.db.collection("matches")
+	req.history.players.collection = req.history.db.collection("players")
+	
+	await Promise.all([
+		req.history.tournaments.array = await req.history.db.collection("tournaments").find().toArray(),
+		req.history.matches.array = await req.history.db.collection("matches").find().toArray(),
+		req.history.players.array = await req.history.db.collection("players").find().toArray()
+	])
+
+	next()
+})
+
 const root = require("../controllers/history/root")
 router.get("/", root.home)
 

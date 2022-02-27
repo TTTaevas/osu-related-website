@@ -1,31 +1,16 @@
-require('dotenv').config()
-const mongodb = require("mongodb").MongoClient
-
-module.exports = async function getTournaments(category) {
-	let client_uri = category == "referee" ? process.env.REF_CONNECTIONSTRING : process.env.PLA_CONNECTIONSTRING
-	const client = new mongodb(client_uri)
-	await client.connect()
-
-	const db = client.db()
-	const tournaments_collection = db.collection("tournaments")
-	const tournaments = await tournaments_collection.find().toArray()
-	const matches_collection = db.collection("matches")
-	const matches = await matches_collection.find().toArray()
-	const players_collection = db.collection("players")
-	const players = await players_collection.find().toArray()
-	await client.close()
-
-	for (let i = 0; i < tournaments.length; i++) {
+module.exports = async function getTournaments(history) {
+	for (let i = 0; i < history.tournaments.array.length; i++) {
+		let tournament = history.tournaments.array[i]
 		let matches_arr = []
 
-		for (let e = 0; e < tournaments[i].matches.length; e++) {
-			let match_id = tournaments[i].matches[e]
-			let match_find = matches.find((match) => {return match.id == match_id})
+		for (let e = 0; e < tournament.matches.length; e++) {
+			let match_id = tournament.matches[e]
+			let match_find = history.matches.array.find((match) => {return match.id == match_id})
 
 			if (match_find) {
 				for (let o = 0; o < match_find.players.length; o++) {
 					let player_id = match_find.players[o]
-					let player_find = players.find((player) => {
+					let player_find = history.players.array.find((player) => {
 						return player.id == player_id
 					})
 
@@ -47,14 +32,14 @@ module.exports = async function getTournaments(category) {
 			}
 		}
 
-		tournaments[i].matches = matches_arr
+		history.tournaments.array[i].matches = matches_arr
 	}
 
-	tournaments.forEach((tournament, i) => {
+	history.tournaments.array.forEach((tournament, i) => {
 		tournament.id = String(i)
 		tournament.proper_date = properDate(tournament.date)
 	})
-	return tournaments
+	return history.tournaments.array
 }
 
 function properDate(date) {

@@ -1,11 +1,11 @@
 const sanitize = require("../../functions/sanitizer.js")
+const existenceCheck = require("../../functions/existence-check.js")
 
 const getTournaments = require("./shared/getTournaments")
 const insertMatches = require("./shared/insertMatches")
-const tournamentsClient = require("./shared/tournamentsClient")
 
 exports.home = async (req, res) => {
-	let tournaments = await getTournaments("referee")
+	let tournaments = await getTournaments(req.history)
 	res.render("history/referee", {user: req.user, tournaments: tournaments})
 }
 
@@ -14,14 +14,11 @@ exports.add = async (req, res) => {
 	let files = req.files
 
 	let file_name = false
-	if (!form || !form.add_name || !form.add_name.length) {return res.status(302).send("Missing tournament name")}
+	if (!existenceCheck(form, ["add_name"])) {return res.status(400).send("Missing tournament name")}
 	let tournament_name = sanitize(form.add_name, "string")
 	if (!tournament_name.pass) {return await res.status(500).send("Error regarding the tournament name", tournament_name.details)}
 
-	let stuff = await tournamentsClient("referee")
-	const tournaments = await stuff.collection.find().toArray()
-
-	if (tournaments.find((tournament) => {return tournament.name == form.add_name})) {
+	if (req.history.tournaments.array.find((tournament) => {return tournament.name == form.add_name})) {
 		return res.status(302).send("This tournament already exists!")
 	}
 
@@ -51,25 +48,23 @@ exports.add = async (req, res) => {
 			banner: file_name
 		}
 
-		await stuff.collection.insertOne(tournament)
+		let insertion = await req.history.tournaments.collection.insertOne(tournament)
+		insertion.insertedId ? console.log(`${tournament.name} has been added`) : console.log(`${tournament.name} could not be added`)
 		await res.status(201).send(`${tournament.name} added successfully`)
 
 		if (mp_ids.length) {
 			console.log("(REFEREE) Now looking for match data due to", mp_ids)
-			insertMatches("referee")
+			insertMatches(req.history)
 		}
 	} catch(e) {
 		console.log("Could not add tournament", e)
 		await res.status(500).send("Error, contact Taevas about it")
-	} finally {
-		await stuff.client.close()
 	}
 }
 
 exports.addMatches = async (req, res) => {
 	let form = req.body
-	if (!form || !form.mp_ids || !form.mp_ids.length) {return res.status(302).send("No match ID in input")}
-	if (!form.tournament_name || !form.tournament_name.length) {return res.status(302).send("Missing tournament name")}
+	if (!existenceCheck(form, ["mp_ids", "tournament_name"])) {return res.status(400).send("Missing match ID or tournament name")}
 	let tournament_name = sanitize(form.tournament_name, "string")
 	if (!tournament_name.pass) {return await res.status(500).send("Error regarding the tournament name", tournament_name.details)}
 
@@ -81,48 +76,41 @@ exports.addMatches = async (req, res) => {
 	}
 	if (!mp_ids.length) {return res.status(302).send("No valid match ID in input")}
 
-	let stuff = await tournamentsClient("referee")
-	const tournaments = await stuff.collection.find().toArray()
-	let tournament = tournaments.find((tournament) => {return tournament.name == tournament_name.obj})
+	let tournament = req.history.tournaments.array.find((tournament) => {return tournament.name == tournament_name.obj})
 	if (!tournament) {return res.status(302).send("This tournament does not exist!")}
 
 	mp_ids = mp_ids.filter((id) => {return tournament.matches.indexOf(id) == -1})
 	if (!mp_ids.length) {return res.status(302).send("Matches in input are already there")}
 
 	let updated = {matches: tournament.matches.concat(mp_ids)}
-	await stuff.collection.updateOne({name: tournament_name.obj}, {$set: updated})
+	await req.history.tournaments.collection.updateOne({name: tournament_name.obj}, {$set: updated})
 	res.status(201).send(`Finished adding ${mp_ids.length} match(es) for ${tournament_name.obj}\nWill now fetch multiplayer information`)
 	insertMatches("referee")
 }
 
 exports.remove = async (req, res) => {
 	let form = req.body
-	if (!form || !form.remove_name || !form.remove_name.length) {return res.status(302).send("Missing tournament name")}
+	if (!existenceCheck(form, ["remove_name"])) {return res.status(400).send("Missing tournament name")}
 	let tournament_name = sanitize(form.remove_name, "string")
 	if (!tournament_name.pass) {return await res.status(500).send("Error regarding the tournament name", tournament_name.details)}
-	let stuff = await tournamentsClient("referee")
-	const tournaments = await stuff.collection.find().toArray()
 
-	let tournament = tournaments.find((tournament) => {return tournament.name == tournament_name.obj})
+	let tournament = req.history.tournaments.array.find((tournament) => {return tournament.name == tournament_name.obj})
 	if (!tournament) {return res.status(302).send("This tournament does not exist!")}
 	let matches = tournament.matches
-	let matches_collection = stuff.db.collection("matches")
 
 	try {
-		await stuff.collection.deleteOne({name: tournament_name.obj})
+		let deletion = await req.history.tournaments.collection.deleteOne({name: tournament_name.obj})
+		deletion.deletedCount ? console.log(`${tournament_name.obj} has been removed`) : console.log(`${tournament_name.obj} could not be removed`)
 		for (let i = 0; i < matches.length; i++) {
 			let sanitized = sanitize(matches[i], "id")
 			if (sanitized.pass) {
-				await matches_collection.deleteOne({id: sanitized.obj})
+				await req.history.matches.collection.deleteOne({id: sanitized.obj})
 			}
 		}
-		console.log(`${tournament_name.obj} has been removed`)
 		await res.status(201).send(`${tournament_name.obj} removed successfully`)
 	} catch(e) {
 		console.log("Could not remove tournament", e)
 		await res.status(201).send("Error, contact Taevas about it")
-	} finally {
-		await stuff.client.close()
 	}
 }
 
@@ -163,7 +151,6 @@ exports.import = async (req, res) => { // lol nice name
 		return await res.status(500).send("Error, json seems empty, contact Taevas about it if needed")
 	}
 
-	let stuff = await refClient()
 	let tournaments = json_file.tournaments
 	var counter_good = 0
 	var counter_bad = 0
@@ -178,7 +165,7 @@ exports.import = async (req, res) => { // lol nice name
 				banner: false
 			}
 
-			await stuff.collection.insertOne(tournament)
+			await req.history.tournaments.collection.insertOne(tournament)
 			console.log(`${tournaments[i].name} added successfully`)
 			counter_good++
 		} catch(e) {
@@ -187,7 +174,6 @@ exports.import = async (req, res) => { // lol nice name
 		}
 	}
 
-	await stuff.client.close()
 	res.status(201).send(`Finished, added ${counter_good}, failed ${counter_bad}\nWill now fetch multiplayer information`)
-	fetchMatchData("referee")
+	insertMatches(req.history)
 }

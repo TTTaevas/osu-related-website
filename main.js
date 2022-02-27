@@ -1,5 +1,5 @@
 const production = process.env.PRODUCTION == "true" ? true : false
-const client = require("./database.js")
+const { auth } = require("./db-clients.js")
 
 require("dotenv").config()
 const glob = require("glob")
@@ -23,7 +23,7 @@ app.use(session({
 		secure: production,
 		expires: 14 * 24 * 3600000
 	},
-	store: new MongoStore({client: client})
+	store: new MongoStore({client: auth})
 }))
 
 const helmet = require('helmet')
@@ -63,7 +63,7 @@ if (production) {app.set('trust proxy', 1)}
 // ROUTES STUFF
 
 app.all("*", async (req, res, next) => { // Previously known as "userCheck"
-	const db = client.db()
+	const db = auth.db()
 	const collection = db.collection("users")
 
 	const users = await collection.find().toArray()
