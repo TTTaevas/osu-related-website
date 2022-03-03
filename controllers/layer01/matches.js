@@ -24,9 +24,9 @@ exports.create = async (req, res) => {
 		let date = new Date(Date.UTC(2022, month, day, hour, minutes)) // yes it uses both integers and strings
 
 		// worse code
-		let player1 = req.auth.users.find((user) => {return user.username.toLowerCase() == req.body.c_player_1[i].toLowerCase()})
+		let player1 = req.auth.users.array.find((user) => {return user.username.toLowerCase() == req.body.c_player_1[i].toLowerCase()})
 		player1 = player1 ? {id: player1.id, username: player1.username} : {id: 0, username: "undetermined"}
-		let player2 = req.auth.users.find((user) => {return user.username.toLowerCase() == req.body.c_player_2[i].toLowerCase()})
+		let player2 = req.auth.users.array.find((user) => {return user.username.toLowerCase() == req.body.c_player_2[i].toLowerCase()})
 		player2 = player2 ? {id: player2.id, username: player2.username} : {id: 0, username: "undetermined"}
 
 		let match = {

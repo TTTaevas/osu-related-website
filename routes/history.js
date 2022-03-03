@@ -23,7 +23,7 @@ router.all("*", (req, res, next) => {
 })
 
 router.all("/:type*", async (req, res, next) => {
-	let prefix = type == "referee" ? "r_" : type == "player" ? "p_" : undefined
+	let prefix = req.params.type == "referee" ? "r_" : req.params.type == "player" ? "p_" : undefined
 
 	if (prefix) {
 		req.history.tournaments.collection = req.history.db.collection(`${prefix}tournaments`)
