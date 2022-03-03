@@ -77,7 +77,7 @@ router.post("/matches/staff/add", (r,a,n)=>uc(r,a,n,["referee","streamer","comme
 router.post("/matches/staff/remove", (r,a,n)=>uc(r,a,n,["referee","streamer","commentator"]), matches.staff_remove)
 
 router.get("/*", (req, res) => {
-	res.status(404).render("layer01/fourofour")
+	res.status(404).render("layer01/error", {status: {code: 404, reason: "This part of the website does not exist"}})
 })
 
 module.exports = router
