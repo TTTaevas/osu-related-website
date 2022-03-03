@@ -1,13 +1,13 @@
 const request = require("../../functions/osu-requests.js")
 
 exports.home = async (req, res) => {
-	let playlists_col = req.db.collection("playlists")
+	let playlists_col = req.layer01.db.collection("playlists")
 	let pools = await playlists_col.find().toArray()
 	let playlist = pools.find((p) => {return p.name.toLowerCase() == "qualifiers playlist"})
 
 	let maps = playlist.maps.map((map) => {return {mod_id: map.mod_id, id: map.id, scores: []}})
 
-	let quals_mps = req.db.collection("quals_mps")
+	let quals_mps = req.layer01.db.collection("quals_mps")
 	let matches = await quals_mps.find().toArray()
 	for (let i = 0; i < matches.length; i++) {
 		let players = matches[i].players
@@ -75,12 +75,12 @@ exports.home = async (req, res) => {
 	}
 	seeds.sort((a, b) => {return a.avg_rank - b.avg_rank})
 
-	res.status(200).render("layer01/qualifiers-results", {user: req.user, maps: maps, seeds: seeds})
+	res.status(200).render("layer01/qualifiers-results", {user: req.auth.user, maps: maps, seeds: seeds})
 }
 
 exports.create = async (req, res) => {
 	let mp_id = Number(req.body.new_mplink.replace(/[^0-9]/g, ""))
-	let quals_mps = req.db.collection("quals_mps")
+	let quals_mps = req.layer01.db.collection("quals_mps")
 
 	let creation = await createMatch(mp_id, quals_mps)
 	console.log(`Adding match to qualifiers results: ${creation.message}`)

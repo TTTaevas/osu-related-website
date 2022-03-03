@@ -1,15 +1,24 @@
 const express = require("express")
 const router = express.Router()
 
+const { layer01 } = require("../db-clients.js")
+router.all("*", (req, res, next) => {
+	req.layer01 = {
+		client: layer01,
+		db: layer01.db()
+	}
+	next()
+})
+
 // Might wanna migrate that to ../functions
 const uc = function(req, res, next, roles) {
-	if (!req.user) {return res.status(401).render("layer01/error", {status: {code: 401, reason: "Unauthorized; Please login first"}})}
+	if (!req.auth.user) {return res.status(401).render("layer01/error", {status: {code: 401, reason: "Unauthorized; Please login first"}})}
 	if (!roles) {return next()} // Being logged in is required, no specific role is needed
 
 	// Any of the roles specified in `roles` is needed
 	let user_roles = []
-	for (let i = 0; i < Object.keys(req.user.roles).length; i++) {
-		if (Object.values(req.user.roles)[i]) {user_roles.push(Object.keys(req.user.roles)[i])}
+	for (let i = 0; i < Object.keys(req.auth.user.roles).length; i++) {
+		if (Object.values(req.auth.user.roles)[i]) {user_roles.push(Object.keys(req.auth.user.roles)[i])}
 	}
 	for (let i = 0; i < user_roles.length; i++) {
 		if (roles.indexOf(user_roles[i]) != -1) {return next()}

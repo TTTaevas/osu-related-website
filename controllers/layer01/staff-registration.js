@@ -1,23 +1,23 @@
 const sanitize = require("../../functions/sanitizer.js")
 
 exports.home = async (req, res) => {
-	if (req.user) {
+	if (req.auth.user) {
 		let message = null
-		if (req.user.roles.registered_staff) {message = "You have already registered as staff, but feel free to reregister if you need to change something :3"}
-		if (req.user.roles.staff) {message = "You are already staff! You should ask Taevas if you want to change something :3c"}
-		res.status(200).render("layer01/staff-registration", {user: req.user, message: message})
+		if (req.auth.user.roles.registered_staff) {message = "You have already registered as staff, but feel free to reregister if you need to change something :3"}
+		if (req.auth.user.roles.staff) {message = "You are already staff! You should ask Taevas if you want to change something :3c"}
+		res.status(200).render("layer01/staff-registration", {user: req.auth.user, message: message})
 	} else {
 		res.redirect("/layer01")
 	}
 }
 
 exports.update = async (req, res) => {
-	let update = await staffUpdate(req.user, req.collection, req.db, req.body)
+	let update = await staffUpdate(req.layer01.db, req.auth.user, req.auth.users.collection, req.body)
 	console.log(`Staff reg: ${update.message}`)
-	res.status(200).render("layer01/staff-registration", {user: req.user, message: update.message})
+	res.status(200).render("layer01/staff-registration", {user: req.auth.user, message: update.message})
 }
 
-async function staffUpdate(user, users, db, form) {
+async function staffUpdate(db, user, users_col, form) {
 	let sanitized_form = sanitize(form, "form")
 	if (!sanitized_form.pass) {return {ok: false, message: "Something seems to have gone wrong very wrong ><"}}
 	form = sanitized_form.obj
@@ -29,7 +29,7 @@ async function staffUpdate(user, users, db, form) {
 
 	let updated = {roles: user.roles}
 	updated.roles.registered_staff = true
-	await users.updateOne({_id: user._id}, {$set: updated})
+	await users_col.updateOne({_id: user._id}, {$set: updated})
 
 	let reg = {
 		id: user.id,

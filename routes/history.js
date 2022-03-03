@@ -22,16 +22,20 @@ router.all("*", (req, res, next) => {
 	next()
 })
 
-router.all("/referee*", async (req, res, next) => {
-	req.history.tournaments.collection = req.history.db.collection("tournaments")
-	req.history.matches.collection = req.history.db.collection("matches")
-	req.history.players.collection = req.history.db.collection("players")
-	
-	await Promise.all([
-		req.history.tournaments.array = await req.history.db.collection("tournaments").find().toArray(),
-		req.history.matches.array = await req.history.db.collection("matches").find().toArray(),
-		req.history.players.array = await req.history.db.collection("players").find().toArray()
-	])
+router.all("/:type*", async (req, res, next) => {
+	let prefix = type == "referee" ? "r_" : type == "player" ? "p_" : undefined
+
+	if (prefix) {
+		req.history.tournaments.collection = req.history.db.collection(`${prefix}tournaments`)
+		req.history.matches.collection = req.history.db.collection(`${prefix}matches`)
+		req.history.players.collection = req.history.db.collection(`${prefix}players`)
+		
+		await Promise.all([
+			req.history.tournaments.array = await req.history.db.collection(`${prefix}tournaments`).find().toArray(),
+			req.history.matches.array = await req.history.db.collection(`${prefix}matches`).find().toArray(),
+			req.history.players.array = await req.history.db.collection(`${prefix}players`).find().toArray()
+		])
+	}
 
 	next()
 })
@@ -42,7 +46,7 @@ router.get("/", root.home)
 const referee = require("../controllers/history/referee")
 router.get("/referee", referee.home)
 router.post("/referee/*", (req, res, next) => {
-	if (!req.user || !req.user.roles.admin) {return res.status(403).send("Unauthorized; not an admin")}
+	if (!req.auth.user || !req.auth.user.roles.admin) {return res.status(403).send("Unauthorized; not an admin")}
 	next()
 })
 router.post("/referee/add", referee.add)

@@ -26,7 +26,7 @@ exports.home = async (req, res) => {
 
 	// if logged in, no matter if code 
 	} else if (req.session.user) {
-		status.user = req.user
+		status.user = req.auth.user
 	}
 	
 	status.ok ? res.status(200).redirect("/layer01") : res.status(201).render("layer01/login", {status: status})
@@ -66,7 +66,7 @@ async function codeHandler(req) {
 	if (user_object && user_object.id) {
 
 		// if user is not in db, put them in db
-		let userCheck = req.users.find((u) => {return u.id == user_object.id})
+		let userCheck = req.auth.users.array.find((u) => {return u.id == user_object.id})
 		if (!userCheck) {
 			user = {
 				id: user_object.id,
@@ -89,7 +89,7 @@ async function codeHandler(req) {
 				},
 				user_object: user_object
 			}
-			let insertion = await req.collection.insertOne(user)
+			let insertion = await req.auth.users.collection.insertOne(user)
 			insertion.insertedId ? console.log(`New user: ${user_object.id} | ${user_object.username}`) : console.log(`Couldn't add new user: ${user_object.id} | ${user_object.username}`)
 
 		// if user is in db, update their profile
@@ -101,8 +101,8 @@ async function codeHandler(req) {
 				rank: user_object.statistics.global_rank,
 				user_object: user_object
 			}
-			let update = await req.collection.updateOne(filter, {$set: updated}) // Legit cannot bother to learn findOneAndUpdate()
-			const findResultAgain = await req.collection.findOne({id: user_object.id})
+			let update = await req.auth.users.collection.updateOne(filter, {$set: updated}) // Legit cannot bother to learn findOneAndUpdate()
+			const findResultAgain = await req.auth.users.collection.findOne({id: user_object.id})
 		}
 	}
 

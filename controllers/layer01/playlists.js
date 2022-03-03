@@ -2,13 +2,13 @@ const request = require("../../functions/osu-requests.js")
 const sanitize = require("../../functions/sanitizer.js")
 
 exports.home = async (req, res) => {
-	let playlists_col = req.db.collection("playlists")
+	let playlists_col = req.layer01.db.collection("playlists")
 	let pools = await playlists_col.find().toArray()
-	res.status(200).render("layer01/playlists", {user: req.user, playlists: pools})
+	res.status(200).render("layer01/playlists", {user: req.auth.user, playlists: pools})
 }
 
 exports.create = async (req, res) => {
-	let creation = await createPlaylist(req.db, req.body)
+	let creation = await createPlaylist(req.layer01.db, req.body)
 	console.log(`Playlist creation: ${creation.message}`)
 	res.redirect("/layer01/playlists")
 }

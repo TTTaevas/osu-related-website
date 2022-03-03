@@ -1,14 +1,14 @@
 const sanitize = require("../../functions/sanitizer.js")
 
 exports.home = async (req, res) => {
-	let regs_col = req.db.collection("staff_regs")
+	let regs_col = req.layer01.db.collection("staff_regs")
 	let regs = await regs_col.find().toArray()
-	for (let i = 0; i < regs.length; i++) {regs[i].user = req.users.find((user) => user.id == regs[i].id)}
-	res.status(200).render("layer01/staff-regs", {user: req.user, regs: regs})
+	for (let i = 0; i < regs.length; i++) {regs[i].user = req.auth.users.array.find((user) => user.id == regs[i].id)}
+	res.status(200).render("layer01/staff-regs", {user: req.auth.user, regs: regs})
 }
 
 exports.update = async (req, res) => {
-	let update = await addStaff(req.db, req.collection, req.body)
+	let update = await addStaff(req.layer01.db, req.auth.users.collection, req.body)
 	console.log(`Adding to staff: ${update.message}`)
 	res.redirect("/layer01/staff-regs")
 }

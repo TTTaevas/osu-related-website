@@ -69,10 +69,15 @@ app.all("*", async (req, res, next) => { // Previously known as "userCheck"
 	const users = await collection.find().toArray()
 	const user = users.find((u) => {return u.id == req.session.user})
 
-	req.user = user ? user : false
-	req.users = users
-	req.collection = collection
-	req.db = db
+	req.auth = {
+		client: auth,
+		db: auth.db(),
+		user: user ? user : false,
+		users: {
+			collection: collection,
+			array: users
+		}
+	}
 
 	next()
 })
