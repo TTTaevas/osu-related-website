@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 
 const { history } = require("../db-clients.js")
-router.all("*", (req, res, next) => {
+router.all("*", async (req, res, next) => {
 	req.history = {
 		client: history,
 		db: history.db(),
@@ -19,6 +19,14 @@ router.all("*", (req, res, next) => {
 			array: undefined
 		}
 	}
+
+	let roles = {}
+	if (req.auth.user) {
+		let found_roles = await req.history.db.collection(`roles`).findOne({id: req.auth.user.id})
+		if (found_roles) {roles = found_roles.roles}
+	}
+	req.roles = roles
+	
 	next()
 })
 
@@ -35,6 +43,8 @@ router.all("/:type*", async (req, res, next) => {
 			req.history.matches.array = await req.history.db.collection(`${prefix}matches`).find().toArray(),
 			req.history.players.array = await req.history.db.collection(`${prefix}players`).find().toArray()
 		])
+
+		req.history.tournaments.array = req.history.tournaments.array.sort((a, b) => {return Number(a.date) - Number(b.date)})
 	}
 
 	next()
@@ -46,7 +56,7 @@ router.get("/", root.home)
 const referee = require("../controllers/history/referee")
 router.get("/referee", referee.home)
 router.post("/referee/*", (req, res, next) => {
-	if (!req.auth.user || !req.auth.user.roles.admin) {return res.status(403).send("Unauthorized; not an admin")}
+	if (!req.roles.admin) {return res.status(403).send("Unauthorized; not an admin")}
 	next()
 })
 router.post("/referee/add", referee.add)

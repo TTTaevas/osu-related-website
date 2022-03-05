@@ -6,7 +6,7 @@ const insertMatches = require("./shared/insertMatches")
 
 exports.home = async (req, res) => {
 	let tournaments = await getTournaments(req.history)
-	res.render("history/referee", {user: req.auth.user, tournaments: tournaments})
+	res.render("history/referee", {user: req.auth.user, roles: req.roles, tournaments})
 }
 
 exports.add = async (req, res) => {

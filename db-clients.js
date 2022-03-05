@@ -10,7 +10,8 @@ const { MongoClient } = require("mongodb");
 	await Promise.all(clients.map(async c => {await c.connect()}))
 	.then(() => {console.log("Connected to the databases!")})
 
-	await dbUpdater(clients)
+	let update = await dbUpdater(clients)
+	console.log(update)
 
 	module.exports = {
 		auth,
@@ -60,6 +61,25 @@ async function dbUpdater(c) {
 		}
 	}
 
-	return "ok"
+	// Roles used to be a part of the user object in `auth`
+	// Now each part of the website has its own roles for each user in their own db
+
+	/// history
+	let h_roles = await history.collection("roles").find().toArray()
+	if (!h_roles.length) {
+		let origin_users = await auth.collection("users").find().toArray() // filter to find if a value in an object in an object is true is pain
+		let users = origin_users.filter((user) => {if (user.roles) {return user.roles.admin}})
+		let counter = 0
+		for (let i = 0; i < users.length; i++) {
+			let insertion = await history.collection("roles").insertOne({
+				id: users[i].id,
+				roles: {admin: true}
+			})
+			if (insertion.insertedId) {counter++}
+		}
+		console.log(`(TOURNAMENT HISTORY) ${counter}/${users.length} users now using the new authorization system!`)
+	}
+
+	return "Database updater finished to run, now running server!"
 
 }

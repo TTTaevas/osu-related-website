@@ -13,7 +13,7 @@
 			<h1>Matches reffed by Taevas</h1>
 		</div>
 
-		<% if (user && user.roles.admin) { %>
+		<% if (roles.admin) { %>
 			<div class="admin" id="tournament_add">
 				<form id="add" action="referee/add" method="POST" encType="multipart/form-data" target="add_response">
 					<label for="add_name"> Name
@@ -102,7 +102,7 @@
 						<% } %>
 					</div>
 
-					<% if (user && user.roles.admin) { %>
+					<% if (roles.admin) { %>
 						<form class="addMatches" id="addMatchesTo<%= tournaments[i].id %>" action="referee/addMatches" method="POST" target="addMatches_responseFor<%= tournaments[i].id %>">
 							<label for="mp_ids"> Match IDs, separated with ,
 								<input type="text" name="mp_ids" style="min-width: 40vw;">

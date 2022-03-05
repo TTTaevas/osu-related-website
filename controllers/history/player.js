@@ -1,3 +1,3 @@
 exports.home = async (req, res) => {
-	res.status(200).render("history/player", {user: req.user})
+	res.status(200).render("history/player", {user: req.auth.user})
 }
