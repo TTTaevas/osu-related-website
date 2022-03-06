@@ -76,17 +76,6 @@ async function codeHandler(req) {
 				rank: user_object.statistics.global_rank,
 				discord: user_object.discord != null ? user_object.discord : "not specified",
 				timezone: "not specified",
-				roles: {
-					admin: false,
-					referee: false,
-					pooler: false,
-					streamer: false,
-					commentator: false,
-					staff: false,
-					registered_staff: false,
-					player: false,
-					registered_player: false
-				},
 				user_object: user_object
 			}
 			let insertion = await req.auth.users.collection.insertOne(user)

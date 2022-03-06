@@ -14,7 +14,7 @@
 			<% function a(b) {return b>9?b:"0".concat(b)} %>
 			<h4 id="time"><%=a(date.getUTCFullYear())%>-<%=a(date.getUTCMonth()+1)%>-<%=a(date.getUTCDate())%> <%=a(date.getUTCHours())%>:<%=a(date.getUTCMinutes())%>:<%=a(date.getUTCSeconds())%> UTC+0</h4>
 
-			<% if (user && user.roles.referee) { %>
+			<% if (roles.referee) { %>
 				<div class="staff" id="referee_div">
 					<form id="r_match_add" method="POST" action="matches/staff/add">
 						<h3>Type in the IDs of the matches you would like to ref! (comma separated)</h3>
@@ -33,7 +33,7 @@
 				</div>
 			<% } %>
 
-			<% if (user && user.roles.streamer) { %>
+			<% if (roles.streamer) { %>
 				<div class="staff" id="streamer_div">
 					<form id="s_match_add" method="POST" action="matches/staff/add">
 						<h3>Type in the IDs of the matches you would like to stream! (comma separated)</h3>
@@ -52,7 +52,7 @@
 				</div>
 			<% } %>
 
-			<% if (user && user.roles.commentator) { %>
+			<% if (roles.commentator) { %>
 				<div class="staff" id="commentator_div">
 					<form id="sc_match_add" method="POST" action="matches/staff/add">
 						<h3>Type in the IDs of the matches you would like to commentate! (comma separated)</h3>
@@ -125,7 +125,7 @@
 				<% } %>
 			</div>
 
-			<% if (user && user.roles.admin) { %>
+			<% if (roles.admin) { %>
 				<form id="c_bracket" method="POST" action="matches/create">
 					<label for="c_bracket_name">Bracket<input type="text" name="c_bracket_name" class="c_bracket_name"></label>
 					<div class="c_match" id="c_0">

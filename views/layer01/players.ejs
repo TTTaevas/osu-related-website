@@ -10,7 +10,7 @@
 		<%- include("partials/menu") %>
 		<div id="main">
 			<h1>PLAYERS (<%= players.length %>)</h1>
-			<% if (user && user.roles.admin) { %>
+			<% if (roles.admin) { %>
 				<form method="POST" action=""><input type="submit" id="submit" value="Update ranks!"></form>
 			<% } %>
 			<ul id="regs">

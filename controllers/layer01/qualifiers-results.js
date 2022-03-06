@@ -75,7 +75,7 @@ exports.home = async (req, res) => {
 	}
 	seeds.sort((a, b) => {return a.avg_rank - b.avg_rank})
 
-	res.status(200).render("layer01/qualifiers-results", {user: req.auth.user, maps: maps, seeds: seeds})
+	res.status(200).render("layer01/qualifiers-results", {user: req.auth.user, roles: req.roles, maps, seeds})
 }
 
 exports.create = async (req, res) => {

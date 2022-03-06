@@ -13,5 +13,5 @@ exports.home = async (req, res) => {
 		playlist = pools.find((p) => {return p.name.toLowerCase() == "qualifiers playlist"})
 	}
 
-	res.status(200).render("layer01/referee", {user: req.auth.user, lobby: lobby, lobbies: lobbies, playlist: playlist})
+	res.status(200).render("layer01/referee", {user: req.auth.user, roles: req.roles, lobby, lobbies, playlist})
 }

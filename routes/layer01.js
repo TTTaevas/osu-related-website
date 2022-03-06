@@ -2,11 +2,19 @@ const express = require("express")
 const router = express.Router()
 
 const { layer01 } = require("../db-clients.js")
-router.all("*", (req, res, next) => {
+router.all("*", async (req, res, next) => {
 	req.layer01 = {
 		client: layer01,
 		db: layer01.db()
 	}
+
+	let roles = {}
+	if (req.auth.user) {
+		let found_roles = await req.layer01.db.collection(`roles`).findOne({id: req.auth.user.id})
+		if (found_roles) {roles = found_roles.roles}
+	}
+	req.roles = roles
+
 	next()
 })
 
@@ -17,8 +25,8 @@ const uc = function(req, res, next, roles) {
 
 	// Any of the roles specified in `roles` is needed
 	let user_roles = []
-	for (let i = 0; i < Object.keys(req.auth.user.roles).length; i++) {
-		if (Object.values(req.auth.user.roles)[i]) {user_roles.push(Object.keys(req.auth.user.roles)[i])}
+	for (let i = 0; i < Object.keys(req.roles).length; i++) {
+		if (Object.values(req.roles)[i]) {user_roles.push(Object.keys(req.roles)[i])}
 	}
 	for (let i = 0; i < user_roles.length; i++) {
 		if (roles.indexOf(user_roles[i]) != -1) {return next()}

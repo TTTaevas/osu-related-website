@@ -4,14 +4,14 @@
 	<% if (!user) { %>
 		<li class="menu-list-element"><a class="menu-button" href="https://osu.ppy.sh/oauth/authorize?response_type=code&client_id=11451&redirect_uri=https://taevas.xyz/layer01/login">LOGIN</a></li>
 	<% } %>
-	<% if (user && user.roles.admin) { %>
+	<% if (roles.admin) { %>
 		<li class="menu-list-element"><a class="menu-button" href="/layer01/staff-regs">STAFF REGS</a></li>
 	<% } %>
 	<li class="menu-list-element"><a class="menu-button" href="/layer01/rules">RULES</a></li>
 	<li class="menu-list-element"><a class="menu-button" href="/layer01/players">PLAYERS</a></li>
 	<li class="menu-list-element"><a class="menu-button" href="/layer01/playlists">PLAYLISTS</a></li>
 	<li class="menu-list-element"><a class="menu-button" href="/layer01/matches">MATCHES</a></li>
-	<% if (user && user.roles.admin) { %>
+	<% if (roles.admin) { %>
 		<li class="menu-list-element"><a class="menu-button" href="/layer01/qualifiers">QUALIFIERS LOBBIES</a></li>
 		<li class="menu-list-element"><a class="menu-button" href="/layer01/referee">REFEREE HELPER</a></li>
 	<% } %>

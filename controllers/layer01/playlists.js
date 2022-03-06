@@ -3,8 +3,8 @@ const sanitize = require("../../functions/sanitizer.js")
 
 exports.home = async (req, res) => {
 	let playlists_col = req.layer01.db.collection("playlists")
-	let pools = await playlists_col.find().toArray()
-	res.status(200).render("layer01/playlists", {user: req.auth.user, playlists: pools})
+	let playlists = await playlists_col.find().toArray()
+	res.status(200).render("layer01/playlists", {user: req.auth.user, roles: req.roles, playlists})
 }
 
 exports.create = async (req, res) => {

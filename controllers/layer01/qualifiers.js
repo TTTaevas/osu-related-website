@@ -4,7 +4,7 @@ exports.home = async (req, res) => {
 	let lobbies_col = req.layer01.db.collection("quals_lobbies")
 	let lobbies = await lobbies_col.find().toArray()
 	lobbies = lobbies.sort((a, b) => {return Number(a.schedule) - Number(b.schedule)})
-	res.status(200).render("layer01/qualifiers", {user: req.auth.user, lobbies: lobbies})
+	res.status(200).render("layer01/qualifiers", {user: req.auth.user, roles: req.roles, lobbies})
 }
 
 exports.create = async (req, res) => {

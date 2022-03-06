@@ -10,7 +10,7 @@
 		<%- include("partials/menu") %>
 		<div id="main">
 			<h1><span>QUALIFIERS</span> RESULTS</h1>
-			<% if (user && user.roles.admin) { %>
+			<% if (roles.admin) { %>
 				<form method="POST" action="">
 					<label for="new_mplink">MP Link<input type="text" name="new_mplink" class="new_mplink"></label>
 					<input type="submit" id="submit" value="Add to qualifiers results!">

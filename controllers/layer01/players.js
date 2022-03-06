@@ -3,7 +3,7 @@ const request = require("../../functions/osu-requests.js")
 exports.home = async (req, res) => {
 	let players = req.auth.users.array.filter((user) => {return user.roles.player})
 	players = players.sort((a, b) => {return a.rank - b.rank}) // sort by rank
-	res.status(200).render("layer01/players", {user: req.auth.user, players: players})
+	res.status(200).render("layer01/players", {user: req.auth.user, roles: req.roles, players})
 }
 
 exports.update = async (req, res) => {

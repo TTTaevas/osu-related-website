@@ -80,6 +80,21 @@ async function dbUpdater(c) {
 		console.log(`(TOURNAMENT HISTORY) ${counter}/${users.length} users now using the new authorization system!`)
 	}
 
+	/// referee
+	let l_roles = await layer01.collection("roles").find().toArray()
+	if (!l_roles.length) {
+		let users = await auth.collection("users").find().toArray()
+		let counter = 0
+		for (let i = 0; i < users.length; i++) {
+			let insertion = await layer01.collection("roles").insertOne({
+				id: users[i].id,
+				roles: users[i].roles
+			})
+			if (insertion.insertedId) {counter++}
+		}
+		console.log(`(LAYER01) ${counter}/${users.length} users now using the new authorization system!`)
+	}
+
 	return "Database updater finished to run, now running server!"
 
 }
