@@ -10,8 +10,8 @@ const { MongoClient } = require("mongodb");
 	await Promise.all(clients.map(async c => {await c.connect()}))
 	.then(() => {console.log("Connected to the databases!")})
 
-	let update = await dbUpdater(clients)
-	console.log(update)
+	// let update = await dbUpdater(clients)
+	// console.log(update)
 
 	module.exports = {
 		auth,

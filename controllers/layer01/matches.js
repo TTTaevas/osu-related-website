@@ -54,11 +54,11 @@ exports.staff_add = async (req, res) => {
 
 	let mode = req.body.act
 	if (mode == "ref") {
-		if (!req.auth.user.roles.referee) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
+		if (!req.roles.referee) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
 	} else if (mode == "str") {
-		if (!req.auth.user.roles.streamer) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
+		if (!req.roles.streamer) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
 	} else if (mode == "com") {
-		if (!req.auth.user.roles.commentator) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
+		if (!req.roles.commentator) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
 	} else {
 		return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})
 	}
@@ -96,11 +96,11 @@ exports.staff_remove = async (req, res) => {
 
 	let mode = req.body.act
 	if (mode == "ref") {
-		if (!req.auth.user.roles.referee) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
+		if (!req.roles.referee) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
 	} else if (mode == "str") {
-		if (!req.auth.user.roles.streamer) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
+		if (!req.roles.streamer) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
 	} else if (mode == "com") {
-		if (!req.auth.user.roles.commentator) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
+		if (!req.roles.commentator) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
 	} else {
 		return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})
 	}
