@@ -1,7 +1,10 @@
 const request = require("../../functions/osu-requests.js")
 
 exports.home = async (req, res) => {
-	let players = req.auth.users.array.filter((user) => {return user.roles.player})
+	let roles = await req.layer01.db.collection("roles").find().toArray()
+	let players_roles = roles.filter((r) => {return r.roles.player})
+	let players_roles_ids = players_roles.map((p) => {return p.id})
+	let players = req.auth.users.array.filter((p) => {return players_roles_ids.indexOf(p.id) >= 0})
 	players = players.sort((a, b) => {return a.rank - b.rank}) // sort by rank
 	res.status(200).render("layer01/players", {user: req.auth.user, roles: req.roles, players})
 }
