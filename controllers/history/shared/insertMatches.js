@@ -1,5 +1,4 @@
 const request = require("../../../functions//osu-requests.js")
-const sanitize = require("../../../functions/sanitizer.js")
 
 module.exports = async function insertMatches(history) {
 	let token = false // Don't request token if no match to request
@@ -7,23 +6,17 @@ module.exports = async function insertMatches(history) {
 	for (let i = 0; i < history.tournaments.array.length; i++) {
 		let matches_arr = []
 		for (let e = 0; e < history.tournaments.array[i].matches.length; e++) {
-			let sanitized = sanitize(history.tournaments.array[i].matches[e], "id")
-			if (sanitized.pass) {
-				let match_id = sanitized.obj
-				let find = history.matches.array.find((match) => {return match.id == match_id})
-				if (!find) {
-					if (!token) {token = await request.getToken()}
-					if (!token) {
-						return "Error; no token, cannot insertMatches"
-					}
-					let match = await request.getMatch(token, match_id, history.tournaments.array[i].name)
-					if (match) {
-						history.players.array = await playersArrHandler(match.players, history.players.array, match_id)
-						for (let o = 0; o < match.players.length; o++) {match.players[o] = match.players[o].id}
-						matches_arr.push(match)
-					} else {console.log(`/!\\ ${history.tournaments.array[i].name}'s match ${match_id} was NOT found, consider removing it from the database\n`)}
-				}
-
+			let match_id = history.tournaments.array[i].matches[e]
+			let find = history.matches.array.find((match) => {return match.id == match_id})
+			if (!find) {
+				if (!token) {token = await request.getToken()}
+				if (!token) {return "Error; no token, cannot insertMatches"}
+				let match = await request.getMatch(token, match_id, history.tournaments.array[i].name)
+				if (match) {
+					history.players.array = await playersArrHandler(match.players, history.players.array, match_id)
+					for (let o = 0; o < match.players.length; o++) {match.players[o] = match.players[o].id}
+					matches_arr.push(match)
+				} else {console.log(`/!\\ ${history.tournaments.array[i].name}'s match ${match_id} was NOT found, consider removing it from the database\n`)}
 			}
 		}
 		if (matches_arr.length) {await history.matches.collection.insertMany(matches_arr)}

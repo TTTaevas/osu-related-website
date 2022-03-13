@@ -1,11 +1,9 @@
 require('dotenv').config()
-const sanitize = require("./sanitizer.js")
 
 async function request(main, header_part, data) {
 	const axios = require("axios")
 
 	// FOR SOME REASON, WHERE DOCUMENTATION INDICATES `body`, WE NEED TO REPLACE WITH `data`
-
 	const resp = await axios({
 		method: main.method,
 		baseURL: `https://osu.ppy.sh/${main.base_url_part}/`,
@@ -43,8 +41,6 @@ async function request(main, header_part, data) {
 	})
 	
 	if (resp) {
-		// let sanitized = sanitize(resp, "response") Seems useless to me :^) I wasn't even checking the pass smh
-		//console.log(sanitized.obj.statusText, sanitized.obj.status, main)
 		console.log(resp.statusText, resp.status, main)
 		return resp.data
 	} else {
@@ -73,9 +69,6 @@ async function getToken() {
 }
 
 async function getUser(token, user_id, mode) {
-	let sanitized = sanitize(user_id, "id")
-	if (sanitized.pass) {user_id = sanitized.obj} else {return false}
-
 	if (!mode) {mode == "osu"}
 
 	var response
@@ -102,9 +95,6 @@ async function getUser(token, user_id, mode) {
 }
 
 async function getBeatmap(token, diff_id) {
-	let sanitized = sanitize(diff_id, "id")
-	if (sanitized.pass) {diff_id = sanitized.obj} else {return false}
-
 	var response
 	try {
 		response = await request(
@@ -119,8 +109,6 @@ async function getBeatmap(token, diff_id) {
 
 async function v1Beatmap(diff_id, mods) { // the need for this function to exist is extremely yikes
 	const axios = require("axios")
-	let sanitized = sanitize(diff_id, "id")
-	if (sanitized.pass) {diff_id = sanitized.obj} else {return false}
 
 	console.log(`Requesting v1 data for map ${diff_id} with mods ${mods}`)
 	var response
@@ -143,9 +131,6 @@ async function v1Beatmap(diff_id, mods) { // the need for this function to exist
 }
 
 async function getMatch(token, match_id, tournament) {
-	let sanitized = sanitize(match_id, "id")
-	if (sanitized.pass) {match_id = sanitized.obj} else {return false}
-
 	var response
 	try {
 		response = await request(
@@ -154,7 +139,7 @@ async function getMatch(token, match_id, tournament) {
 			{}
 		)
 	} catch {return false}
-	if (!response) {return false}
+	if (!response || !response.events) {return false}
 
 	var return_object
 	let games = response.events.filter((event) => {if (event.game) {return event}})

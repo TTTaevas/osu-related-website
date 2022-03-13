@@ -50,6 +50,59 @@ router.all("/:type*", async (req, res, next) => {
 	next()
 })
 
+
+// Sanitizing 
+const { check, validationResult } = require("express-validator")
+
+const san_addTournaments = [
+	check("add_name")
+	.trim()
+	.isLength({min: 3, max: 150}),
+	check("add_forum").optional({checkFalsy: true})
+	.trim()
+	.isURL()
+	.isLength({min: 0, max: 59}),
+	check("add_date")
+	.trim()
+	.isDate()
+	.isLength({min: 0, max: 59}),
+	check("add_mp_ids").optional({checkFalsy: true})
+	.trim()
+	.isLength({min: 0, max: 420}),
+	(req, res, next) => {
+		const errors = validationResult(req)
+		if (!errors.isEmpty()) {return res.status(400).json({errors: errors.array()})}
+		next()
+	}
+]
+
+const san_removeTournaments = [
+	check("remove_name")
+	.trim()
+	.isLength({min: 3, max: 150}),
+	(req, res, next) => {
+		const errors = validationResult(req)
+		if (!errors.isEmpty()) {return res.status(400).json({errors: errors.array()})}
+		next()
+	}
+]
+
+const san_addMatches = [
+	check("tournament_name")
+	.trim()
+	.isLength({min: 3, max: 150}),
+	check("mp_ids").optional({checkFalsy: true})
+	.trim()
+	.isLength({min: 0, max: 420}),
+	(req, res, next) => {
+		const errors = validationResult(req)
+		if (!errors.isEmpty()) {return res.status(400).json({errors: errors.array()})}
+		next()
+	}
+]
+
+
+// Routes
 const root = require("../controllers/history/root")
 router.get("/", root.home)
 
@@ -59,9 +112,9 @@ router.post("/referee/*", (req, res, next) => {
 	if (!req.roles.admin) {return res.status(403).send("Unauthorized; not an admin")}
 	next()
 })
-router.post("/referee/add", referee.add)
-router.post("/referee/addMatches", referee.addMatches)
-router.post("/referee/remove", referee.remove)
+router.post("/referee/add", san_addTournaments, referee.add)
+router.post("/referee/addMatches", san_addMatches, referee.addMatches)
+router.post("/referee/remove", san_removeTournaments, referee.remove)
 router.post("/referee/import", referee.import)
 
 const player = require("../controllers/history/player")

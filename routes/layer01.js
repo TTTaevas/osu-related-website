@@ -1,5 +1,6 @@
 const express = require("express")
 const router = express.Router()
+const end_of_tourney = new Date(Date.UTC(2022, 2, 13))
 
 const { layer01 } = require("../db-clients.js")
 router.all("*", async (req, res, next) => {
@@ -20,6 +21,9 @@ router.all("*", async (req, res, next) => {
 
 // Might wanna migrate that to ../functions
 const uc = function(req, res, next, roles) {
+	let time_now = new Date()
+	if (time_now > end_of_tourney) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Tournament has ended!"}})}
+
 	if (!req.auth.user) {return res.status(401).render("layer01/error", {status: {code: 401, reason: "Unauthorized; Please login first"}})}
 	if (!roles) {return next()} // Being logged in is required, no specific role is needed
 

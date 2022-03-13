@@ -1,5 +1,3 @@
-const sanitize = require("../../functions/sanitizer.js")
-
 const Roles = require("./classes/roles.js")
 
 exports.home = async (req, res) => {
@@ -16,10 +14,6 @@ exports.update = async (req, res) => {
 }
 
 async function addStaff(users_col, layer01, form) {
-	let san_form = sanitize(form, "form")
-	if (!san_form.pass) {return {ok: false, message: `Failed sanity check: ${san_form.details}`}}
-	form = san_form.obj
-
 	// Delete the registration
 	let deletion = await layer01.collection("staff_regs").deleteOne({id: form.id})
 	let message = deletion.deletedCount ? `Deleted staff registration ${form.id} | ` : `Could not delete staff registration ${form.id} | `

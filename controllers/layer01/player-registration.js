@@ -1,6 +1,4 @@
-const sanitize = require("../../functions/sanitizer.js")
 const end_of_regs = new Date(Date.UTC(2022, 0, 31))
-
 const Roles = require("./classes/roles.js")
 
 exports.home = async (req, res) => {
@@ -28,10 +26,6 @@ exports.create = async (req, res) => {
 }
 
 async function createPlayer(user, users_col, layer01, roles, form) {
-	let sanitized_form = sanitize(form, "form")
-	if (!sanitized_form.pass) {return {ok: false, message: "Something seems to have gone wrong very wrong ><"}}
-	form = sanitized_form.obj
-
 	if (!form.discord) {return {ok: false, message: "No Discord was provided"}}
 	if (!form.timezone) {return {ok: false, message: "No timezone was provided"}}
 

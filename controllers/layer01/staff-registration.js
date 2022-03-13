@@ -1,5 +1,3 @@
-const sanitize = require("../../functions/sanitizer.js")
-
 const Roles = require("./classes/roles.js")
 
 exports.home = async (req, res) => {
@@ -20,10 +18,6 @@ exports.update = async (req, res) => {
 }
 
 async function staffUpdate(layer01, user, roles, form) {
-	let sanitized_form = sanitize(form, "form")
-	if (!sanitized_form.pass) {return {ok: false, message: "Something seems to have gone wrong very wrong ><"}}
-	form = sanitized_form.obj
-
 	let staff_roles = Object.keys(form).filter((key) => {return key == "pooler" || key == "referee" || key == "streamer" || key == "commentator"})
 	if (!staff_roles.length) {return {ok: false, message: "No staff role was selected :^)"}}
 	if (!form.discord) {return {ok: false, message: "No Discord was provided"}}

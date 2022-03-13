@@ -1,4 +1,3 @@
-const sanitize = require("../../functions/sanitizer.js")
 const existenceCheck = require("../../functions/existence-check.js")
 
 const getTournaments = require("./shared/getTournaments")
@@ -15,33 +14,28 @@ exports.add = async (req, res) => {
 
 	let file_name = false
 	if (!existenceCheck(form, ["add_name"])) {return res.status(400).send("Missing tournament name")}
-	let tournament_name = sanitize(form.add_name, "string")
-	if (!tournament_name.pass) {return await res.status(500).send("Error regarding the tournament name", tournament_name.details)}
 
 	if (req.history.tournaments.array.find((tournament) => {return tournament.name == form.add_name})) {
 		return res.status(302).send("This tournament already exists!")
 	}
 
 	if (files && files.add_banner) {
-		let sanitized = sanitize(files.add_banner.name, "filename")
-		if (sanitized.pass) {
-			file_name = sanitized.obj
-			let banner = files.add_banner
-			banner.mv(`${process.cwd()}/public/banners/${file_name}`, function(e) {if (e) {console.log("Could not treat banner", e)}})
-		}
+		file_name = files.add_banner.name
+		let banner = files.add_banner
+		banner.mv(`${process.cwd()}/public/banners/${file_name}`, function(e) {if (e) {console.log("Could not treat banner", e)}})
 	}
 
 	var mp_ids
 	if (!form.add_mp_ids || !form.add_mp_ids.length) {
 		mp_ids = []
 	} else {
-		mp_ids = form.add_mp_ids.split(",").filter((id) => {return !isNaN(id)})
+		mp_ids = form.add_mp_ids.replace(/ /g, "").split(",").filter((id) => {return !isNaN(id) && id.length})
 		for (let i = 0; i < mp_ids.length; i++) {mp_ids[i] = Number(mp_ids[i])}
 	}
 
 	try {
 		let tournament = {
-			name: tournament_name.obj,
+			name: form.add_name,
 			forum: form.add_forum,
 			date: new Date(form.add_date),
 			matches: mp_ids,
@@ -54,6 +48,7 @@ exports.add = async (req, res) => {
 
 		if (mp_ids.length) {
 			console.log("(REFEREE) Now looking for match data due to", mp_ids)
+			req.history.tournaments.array = await req.history.tournaments.collection.find().toArray()
 			insertMatches(req.history)
 		}
 	} catch(e) {
@@ -65,49 +60,40 @@ exports.add = async (req, res) => {
 exports.addMatches = async (req, res) => {
 	let form = req.body
 	if (!existenceCheck(form, ["mp_ids", "tournament_name"])) {return res.status(400).send("Missing match ID or tournament name")}
-	let tournament_name = sanitize(form.tournament_name, "string")
-	if (!tournament_name.pass) {return await res.status(500).send("Error regarding the tournament name", tournament_name.details)}
 
-	let temp_mp_ids = form.mp_ids.split(",")
-	let mp_ids = []
-	for (let i = 0; i < temp_mp_ids.length; i++) {
-		let sanitized = sanitize(temp_mp_ids[i], "id")
-		if (sanitized.pass) {mp_ids.push(sanitized.obj)}
-	}
+	let mp_ids = form.mp_ids.replace(/ /g, "").split(",").filter((id) => {return !isNaN(id) && id.length})
 	if (!mp_ids.length) {return res.status(302).send("No valid match ID in input")}
 
-	let tournament = req.history.tournaments.array.find((tournament) => {return tournament.name == tournament_name.obj})
+	let tournament = req.history.tournaments.array.find((tournament) => {return tournament.name == form.tournament_name})
 	if (!tournament) {return res.status(302).send("This tournament does not exist!")}
 
 	mp_ids = mp_ids.filter((id) => {return tournament.matches.indexOf(id) == -1})
 	if (!mp_ids.length) {return res.status(302).send("Matches in input are already there")}
 
+	for (let i = 0; i < mp_ids.length; i++) {mp_ids[i] = Number(mp_ids[i])}
 	let updated = {matches: tournament.matches.concat(mp_ids)}
-	await req.history.tournaments.collection.updateOne({name: tournament_name.obj}, {$set: updated})
-	res.status(201).send(`Finished adding ${mp_ids.length} match(es) for ${tournament_name.obj}\nWill now fetch multiplayer information`)
-	insertMatches("referee")
+	await req.history.tournaments.collection.updateOne({name: form.tournament_name}, {$set: updated})
+
+	res.status(201).send(`Finished adding ${mp_ids.length} match(es) for ${form.tournament_name}\nWill now fetch multiplayer information`)
+	req.history.tournaments.array = await req.history.tournaments.collection.find().toArray()
+	insertMatches(req.history)
 }
 
 exports.remove = async (req, res) => {
 	let form = req.body
 	if (!existenceCheck(form, ["remove_name"])) {return res.status(400).send("Missing tournament name")}
-	let tournament_name = sanitize(form.remove_name, "string")
-	if (!tournament_name.pass) {return await res.status(500).send("Error regarding the tournament name", tournament_name.details)}
 
-	let tournament = req.history.tournaments.array.find((tournament) => {return tournament.name == tournament_name.obj})
+	let tournament = req.history.tournaments.array.find((tournament) => {return tournament.name == form.remove_name})
 	if (!tournament) {return res.status(302).send("This tournament does not exist!")}
 	let matches = tournament.matches
 
 	try {
-		let deletion = await req.history.tournaments.collection.deleteOne({name: tournament_name.obj})
-		deletion.deletedCount ? console.log(`${tournament_name.obj} has been removed`) : console.log(`${tournament_name.obj} could not be removed`)
+		let deletion = await req.history.tournaments.collection.deleteOne({name: form.remove_name})
+		deletion.deletedCount ? console.log(`${form.remove_name} has been removed`) : console.log(`${form.remove_name} could not be removed`)
 		for (let i = 0; i < matches.length; i++) {
-			let sanitized = sanitize(matches[i], "id")
-			if (sanitized.pass) {
-				await req.history.matches.collection.deleteOne({id: sanitized.obj})
-			}
+			await req.history.matches.collection.deleteOne({id: matches[i]})
 		}
-		await res.status(201).send(`${tournament_name.obj} removed successfully`)
+		await res.status(201).send(`${form.remove_name} removed successfully`)
 	} catch(e) {
 		console.log("Could not remove tournament", e)
 		await res.status(201).send("Error, contact Taevas about it")
@@ -121,10 +107,7 @@ exports.import = async (req, res) => { // lol nice name
 	if (!files || !files.import_json) {return res.status(302).send("No file")}
 	let temp_file = files.import_json
 
-	var partial_file_name
-	let sanitized = sanitize(temp_file.md5, "filename")
-	if (sanitized.pass) {partial_file_name = sanitized.obj} else {return await res.status(500).send(`Error: ${sanitized.details}`)}
-	let file_name = __dirname + `/temp_files/${partial_file_name}.json`
+	let file_name = __dirname + `/temp_files/${temp_file.md5}.json`
 	await temp_file.mv(file_name)
 
 	var json_file
@@ -175,5 +158,6 @@ exports.import = async (req, res) => { // lol nice name
 	}
 
 	res.status(201).send(`Finished, added ${counter_good}, failed ${counter_bad}\nWill now fetch multiplayer information`)
+	req.history.tournaments.array = await req.history.tournaments.collection.find().toArray()
 	insertMatches(req.history)
 }
