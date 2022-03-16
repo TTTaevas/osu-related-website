@@ -21,7 +21,7 @@ app.use(session({
 	saveUninitialized: false,
 	cookie: {
 		secure: production,
-		expires: 14 * 24 * 3600000
+		expires: 61 * 24 * 3600000
 	},
 	store: new MongoStore({client: auth})
 }))
@@ -65,17 +65,15 @@ if (production) {app.set('trust proxy', 1)}
 app.all("*", async (req, res, next) => { // Previously known as "userCheck"
 	const db = auth.db()
 	const collection = db.collection("users")
-
-	const users = await collection.find().toArray()
-	const user = users.find((u) => {return u.id == req.session.user})
+	const user = await collection.findOne({id: req.session.user})
 
 	req.auth = {
 		client: auth,
 		db: auth.db(),
 		user: user ? user : false,
-		users: {
+		users: { // For optimization reasons, only request all users when needed
 			collection: collection,
-			array: users
+			array: async function() {return await collection.find().toArray()}
 		}
 	}
 
@@ -83,12 +81,10 @@ app.all("*", async (req, res, next) => { // Previously known as "userCheck"
 })
 
 glob.sync("./routes/*.js").forEach((f) => {
-	const p = f.substring(f.lastIndexOf("/"), f.lastIndexOf("."))
-	const callback = require(path.resolve(f))
+	let p = f.substring(f.lastIndexOf("/"), f.lastIndexOf("."))
+	if (p == "/root") {p = "/"}
+	let callback = require(path.resolve(f))
 	app.use(p, callback)
 })
-
-app.get("/", async (req, res) => {res.render("home")})
-app.use(function(req, res, next) {res.status(404).render("fourofour")})
 
 module.exports = app

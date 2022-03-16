@@ -29,7 +29,7 @@ exports.home = async (req, res) => {
 		status.user = req.auth.user
 	}
 	
-	status.ok ? res.status(200).redirect("/layer01") : res.status(201).render("layer01/login", {status: status})
+	status.ok ? res.status(200).redirect("/") : res.status(201).render("root/login", {status: status})
 }
 
 async function codeHandler(req) {
@@ -42,7 +42,7 @@ async function codeHandler(req) {
 				"grant_type": "authorization_code",
 				"client_id": 11451,
 				"client_secret": process.env.OSU_CLIENT_SECRET,
-				"redirect_uri": "https://taevas.xyz/layer01/login",
+				"redirect_uri": "https://taevas.xyz/login",
 				"code": req.query.code
 			})
 		)
@@ -58,7 +58,10 @@ async function codeHandler(req) {
 			{"Authorization": `Bearer ${token_object.access_token}`},
 			{}
 		)
-	} catch {return "You don't seem to exist... wait what, contact Taevas immediately"}
+	} catch (e) {
+		console.log(e)
+		return "something very wrong happened, contact taevas"
+	}
 
 	var user
 	

@@ -11,7 +11,7 @@ router.all("*", async (req, res, next) => {
 
 	let roles = {}
 	if (req.auth.user) {
-		let found_roles = await req.layer01.db.collection(`roles`).findOne({id: req.auth.user.id})
+		let found_roles = await req.layer01.db.collection("roles").findOne({id: req.auth.user.id})
 		if (found_roles) {roles = found_roles.roles}
 	}
 	req.roles = roles
@@ -42,8 +42,8 @@ const uc = function(req, res, next, roles) {
 const root = require("../controllers/layer01/root")
 router.get("/", root.home)
 
-const login = require("../controllers/layer01/login")
-router.get("/login", login.home)
+//const login = require("../controllers/layer01/login")
+router.get("/login", (req, res) => {res.redirect(308, "../login")})
 
 const rules = require("../controllers/layer01/rules")
 router.get("/rules", rules.home)

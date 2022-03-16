@@ -2,7 +2,7 @@
 	<link rel="stylesheet" type="text/css" href="./css/menu.css">
 	<li class="menu-list-element"><a class="menu-button logo" href="/layer01">LAYER01</a></li>
 	<% if (!user) { %>
-		<li class="menu-list-element"><a class="menu-button" href="https://osu.ppy.sh/oauth/authorize?response_type=code&client_id=11451&redirect_uri=https://taevas.xyz/layer01/login">LOGIN</a></li>
+		<li class="menu-list-element"><a class="menu-button" href="https://osu.ppy.sh/oauth/authorize?response_type=code&client_id=11451&redirect_uri=https://taevas.xyz/login">LOGIN</a></li>
 	<% } %>
 	<% if (roles.admin) { %>
 		<li class="menu-list-element"><a class="menu-button" href="/layer01/staff-regs">STAFF REGS</a></li>
