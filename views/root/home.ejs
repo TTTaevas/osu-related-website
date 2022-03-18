@@ -1,19 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>taevas.xyz</title>
+		<title>taevas.xyz | root</title>
 		<link rel="stylesheet" type="text/css" href="./root/css/home.css">
 	</head>
 	<body>
-		<div id="main">
-			<a id="left" href="/history">
-				<span>TOURNAMENT HISTORY</span>
-			</a>
-			<a id="right" href="/layer01">
-				<span>LAYER01</span>
-			</a>
+		<header id="top">
+			<div id="site_name">taevas.xyz</div>
+			<div id="logged_in_as">
+				<% if (!user) { %>
+					<a href="https://osu.ppy.sh/oauth/authorize?response_type=code&client_id=11451&redirect_uri=https://taevas.xyz/login">Click to login</a>
+				<% } else { %>
+					Logged in as <%= user.username %>
+				<% } %>
+			</div>
+		</header>
+		<div class="container blue">
+			<div class="section_name">Tournaments</div>
+			<div class="section_content" id="tournaments">
+				<a class="tournament item" id="layer01" href="/layer01">
+					<div class="item_name">LAYER01</div>
+					<div class="schedule">2022-02-05 to 2022-03-13</div>
+					<div class="description">A solo tournament where only 16 players could qualify, with all matches being BO13 and the entire tournament always using the same 3 "playlists" (mappools)</div>
+				</a>
+				<div class="tournament item" id="unknown">
+					<div class="item_name">?</div>
+					<div class="schedule">????-??-?? to ????-??-??</div>
+					<div class="description">?</div>
+				</div>
+			</div>
 		</div>
+		<div class="container red">
+			<div class="section_name">Projects</div>
+			<div class="section_content" id="projects">
+				<a class="project item" id="andmeid" href="/andmeid">
+					<div class="item_name">Andmeid</div>
+					<div class="description">Stats for everyone</div>
+				</a>
+				<a class="project item" id="turniir" href="/turniir">
+					<div class="item_name">Turniir</div>
+					<div class="description">Tournament trees</div>
+				</a>
+			</div>
+		</div>
+		<div class="container green">
+			<div class="section_name">Tournament History</div>
+			<div class="section_content" id="history">
+				<a class="piece_of_history item" id="referee" href="/history/referee">
+					<div class="item_name">Referee</div>
+				</a>
+				<a class="piece_of_history item" id="player" href="/history/player">
+					<div class="item_name">Player</div>
+				</a>
+			</div>
+		</div>
+		<footer>
+			<a id="discord" href="https://discord.gg/evQHgAy2Sp" target="_blank"><img src="./root/images/discord.png" alt="Discord"></a>
+			<a id="github" href="https://github.com/TTTaevas/taevas.xyz" target="_blank"><img src="./root/images/github.png"alt="GitHub"></a>
+		</footer>
 	</body>
 </html>

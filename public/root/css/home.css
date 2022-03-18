@@ -8,50 +8,140 @@ html {
 }
 
 body {
-	background: purple;
 	margin: 0;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
 }
 
-#main {
-	display: flex;
-	height: 100vh;
-	width: 100%;
-	font-size: 48px;
-}
-
-#left, #right {
-	display: flex;
-	height: 100vh;
-	width: 50%;
-	justify-content: center;
-	align-items: center;
+#top {
 	text-align: center;
-	position: relative;
-	text-decoration: none;
+	text-transform: lowercase;
+	font-weight: bold;
+	margin: 40px 20px;
 }
 
-#left {
-	background: #1b2a33;
-	color: #ba55d3;
+#site_name {
+	font-size: 32px;
 }
 
-#right {
+#logged_in_as a {
+	color: inherit;
+}
+
+/* MAIN PART */
+
+.container > * {
+	width: 100%;
+	display: flex;
+	border-top: 1px solid white;
+}
+
+.container:last-of-type {
+	border-bottom: 1px solid white;
+}
+
+.blue {
+	background-color: #000333;
+}
+
+.red {
+	background-color: #300000;
+}
+
+.green {
+	background-color: #082018;
+}
+
+.section_name {
+	display: block;
+	text-align: center;
+	transition: ease 0.1s;
+	color: #FFFFFF;
+	font-size: 24px;
+	padding: 5px 0;
+}
+
+.container:hover .section_name {
+	text-decoration: underline;
+}
+
+/* SECTION CONTENT */
+
+.item:nth-child(1) {
+	border-right: 1px solid white;
+}
+
+#layer01 {
 	background: #000;
 	color: #FFF;
-	text-shadow:-5px 5px #FFF;
 }
 
-#left span {
-	transform: rotate(-90deg);
-	text-decoration: underline dashed;
+#layer01 .item_name {
+	text-shadow: -5px 5px #FFF;
 }
 
-#right span {
-	transform: rotate(90deg);
-	
+#layer01:hover .item_name {
+	animation-duration: 0.3s;
+	animation-name: l01;
+	text-shadow: -10px -5px #FFF;
 }
 
-@keyframes left {
+#unknown {
+	background: #420420;
+	color: #FFF;
+}
+
+#andmeid {
+	background: #151a2d;
+	color: #df2e2e;
+}
+
+#andmeid:hover .item_name {
+	animation-duration: 0.3s;
+	animation-name: ami;
+}
+
+#turniir {
+	background: #aec3e3;
+	color: #0166c8;
+}
+
+#turniir:hover .item_name {
+	animation-duration: 0.7s;
+	animation-name: tur;
+}
+
+/* ANIMATIONS */
+
+@keyframes l01 {
+	0% {
+		text-shadow:-5px 5px #FFF;
+	}
+	100% {
+		text-shadow: -10px -5px #FFF;
+	}
+}
+
+@keyframes ami {
+	0% {
+		transform: rotate(10deg);
+	}
+	100% {
+		transform: rotate(0deg);
+	}
+}
+
+@keyframes tur {
+	0% {
+		color: #FFF;
+	}
+	100% {
+		color: #0166c8;
+	}
+}
+
+@keyframes history {
 	0% {
 		background-color: #1b2a33;
 		color: #ba55d3;
@@ -64,28 +154,82 @@ body {
 	}
 }
 
-#left:hover {
+
+
+.item_name {
+	font-size: 48px;
+}
+
+.item {
+	display: grid;
+	padding: 10px;
+	transition: .1s ease;
+	width: 50%;
+	text-align: center;
+	text-decoration: none;
+	overflow: hidden;
+}
+
+@media screen and (max-width: 750px) {
+	.tournament {
+		height: auto;
+		min-height: 300px;
+	}
+}
+
+.tournament {
+	height: 200px;
+}
+
+.piece_of_history {
+	background-color: #1b2a33;
+	color: #ba55d3;
+	padding: 20px;
+}
+
+.item:hover {
+	width: 100%;
+}
+
+#tournaments {
+	display: flex;
+	width: 100%;
+}
+
+.tournament .description {
+	margin-top: 30px;
+}
+
+
+
+.piece_of_history:hover {
 	animation-duration: 0.1s;
-	animation-name: left;
+	animation-name: history;
 	background-color: #ba55d3;
 	color: #1b2a33;
 	font-size: 60px;
 }
 
-@keyframes right {
-	0% {
-		font-size: 48px;
-		text-shadow:-5px 5px #FFF;
-	}
-	100% {
-		font-size: 60px;
-		text-shadow: 5px 20px #FFF;
-	}
+/* FOOTER */
+
+footer {
+	background-color: #111;
+	flex: 1;
+	text-align: center;
 }
 
-#right:hover {
-	animation-duration: 0.1s;
-	animation-name: right;
-	font-size: 60px;
-	text-shadow: 5px 20px #FFF;
+footer a {
+	display: contents;
+}
+
+footer img {
+	height: 50px;
+	width: 50px;
+	margin: 20px 10px;
+	transition-duration: 0.3s;
+	transform: rotate(0deg);
+}
+
+footer img:hover {
+	transform: rotate(360deg);
 }

@@ -2,13 +2,14 @@ require('dotenv').config()
 const { MongoClient } = require("mongodb");
 
 (async () => {
+	console.time("Connected to the databases")
 	const auth = new MongoClient(process.env.CONNECTIONSTRING)
 	const history = new MongoClient(process.env.REF_CONNECTIONSTRING)
 	const layer01 = new MongoClient(process.env.LAYER01_CONNECTIONSTRING)
 
 	const clients = [auth, history, layer01]
 	await Promise.all(clients.map(async c => {await c.connect()}))
-	.then(() => {console.log("Connected to the databases!")})
+	.then(() => {console.timeEnd("Connected to the databases")})
 
 	// let update = await dbUpdater(clients)
 	// console.log(update)
@@ -19,8 +20,9 @@ const { MongoClient } = require("mongodb");
 		layer01
 	}
 
+	console.time("Server up and running")
 	const app = require("./main.js")
-	app.listen(process.env.PORT || 3000)
+	app.listen(process.env.PORT || 3000, () => console.timeEnd("Server up and running"))
 })()
 
 
