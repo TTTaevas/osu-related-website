@@ -2,7 +2,7 @@
 	border: 1px solid;
 	width: fit-content;
 	margin: 50px auto;
-	padding: 0 25px 25px 25px;
+	padding: 0 25px 25px;
 }
 
 td {
@@ -11,11 +11,11 @@ td {
 }
 
 td:first-child {
-	border-left: 0px none;
+	border-left: none;
 }
 
 td:last-child {
-	border-right: 0px none;
+	border-right: none;
 }
 
 .playlist {
@@ -118,7 +118,7 @@ input {
 
 @media screen and (max-width: 750px) {
 	.playlist_container {
-		padding: 0px 10px 25px 10px;
+		padding: 0px 10px 25px;
 	}
 
 	td:nth-child(8), td:nth-child(9), td:nth-child(10) {

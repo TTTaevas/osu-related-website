@@ -1,6 +1,6 @@
 const request = require("../../functions/osu-requests.js")
 
-exports.home = async (req, res) => {
+exports.main = async (req, res) => {
 	let roles = await req.layer01.db.collection("roles").find().toArray()
 	let players_roles = roles.filter((r) => {return r.roles.player})
 	let players_roles_ids = players_roles.map((p) => {return p.id})

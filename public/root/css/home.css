@@ -154,11 +154,7 @@ body {
 	}
 }
 
-
-
-.item_name {
-	font-size: 48px;
-}
+/* ITEMS */
 
 .item {
 	display: grid;
@@ -170,6 +166,18 @@ body {
 	overflow: hidden;
 }
 
+.item:hover {
+	width: 100%;
+}
+
+.item_name {
+	font-size: 48px;
+}
+
+.tournament {
+	height: 200px;
+}
+
 @media screen and (max-width: 750px) {
 	.tournament {
 		height: auto;
@@ -177,8 +185,8 @@ body {
 	}
 }
 
-.tournament {
-	height: 200px;
+.tournament .description {
+	margin-top: 30px;
 }
 
 .piece_of_history {
@@ -186,21 +194,6 @@ body {
 	color: #ba55d3;
 	padding: 20px;
 }
-
-.item:hover {
-	width: 100%;
-}
-
-#tournaments {
-	display: flex;
-	width: 100%;
-}
-
-.tournament .description {
-	margin-top: 30px;
-}
-
-
 
 .piece_of_history:hover {
 	animation-duration: 0.1s;

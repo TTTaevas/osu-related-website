@@ -1,7 +1,7 @@
 html * {
 	font-family: Arial;
 	text-align: center;
-	margin: 0px;
+	margin: 0;
 }
 
 body {
@@ -20,7 +20,7 @@ iframe {
 	width: fit-content;
 	max-width: 70vw;
 	margin: 0 auto;
-	padding: 70px 10px 0 10px;
+	padding: 70px 10px 0;
 	border-bottom: 2px solid;
 }
 
@@ -69,8 +69,8 @@ label {
 
 .details {
 	width: fit-content;
-	margin: 0px auto 15px;
-	padding: 5px 0px 10px 15px;
+	margin: 0 auto 15px;
+	padding: 5px 0 10px 15px;
 	border-left: 5px solid blue;
 	border-radius: 5px;
 }

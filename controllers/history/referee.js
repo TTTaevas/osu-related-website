@@ -3,7 +3,7 @@ const existenceCheck = require("../../functions/existence-check.js")
 const getTournaments = require("./shared/getTournaments")
 const insertMatches = require("./shared/insertMatches")
 
-exports.home = async (req, res) => {
+exports.main = async (req, res) => {
 	let tournaments = await getTournaments(req.history)
 	res.render("history/referee", {user: req.auth.user, roles: req.roles, tournaments})
 }

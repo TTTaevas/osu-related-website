@@ -1,6 +1,6 @@
 const Roles = require("./classes/roles.js")
 
-exports.home = async (req, res) => {
+exports.main = async (req, res) => {
 	let regs_col = req.layer01.db.collection("staff_regs")
 	let regs = await regs_col.find().toArray()
 	let users = await req.auth.users.array()

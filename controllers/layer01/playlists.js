@@ -1,6 +1,6 @@
 const request = require("../../functions/osu-requests.js")
 
-exports.home = async (req, res) => {
+exports.main = async (req, res) => {
 	let playlists = await req.layer01.db.collection("playlists").find().toArray()
 	res.status(200).render("layer01/playlists", {user: req.auth.user, roles: req.roles, playlists})
 }

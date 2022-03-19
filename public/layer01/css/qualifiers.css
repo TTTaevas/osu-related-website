@@ -1,7 +1,6 @@
 h1 {
-	margin-bottom: 0px;
+	margin-bottom: 0;
 }
-
 
 #referee_div, #player_div {
 	border: 1px solid;
@@ -31,12 +30,12 @@ td {
 }
 
 td:first-child {
-	border-left: 0px none;
+	border-left: none;
 }
 
 td:last-child {
-	border-left: 0px none;
-	border-right: 0px none;
+	border-left: none;
+	border-right: none;
 }
 
 input {

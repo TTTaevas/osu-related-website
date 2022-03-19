@@ -1,6 +1,6 @@
 const Roles = require("./classes/roles.js")
 
-exports.home = async (req, res) => {
+exports.main = async (req, res) => {
 	if (req.auth.user) {
 		let message = null
 		if (req.roles.registered_staff) {message = "You have already registered as staff, but feel free to reregister if you need to change something :3"}

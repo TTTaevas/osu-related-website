@@ -1,7 +1,7 @@
 const end_of_regs = new Date(Date.UTC(2022, 0, 31))
 const Roles = require("./classes/roles.js")
 
-exports.home = async (req, res) => {
+exports.main = async (req, res) => {
 	let time_now = new Date()
 	if (time_now > end_of_regs) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "We are no longer accepting player registrations! Sorry ><"}})}
 

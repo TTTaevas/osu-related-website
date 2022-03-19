@@ -103,11 +103,11 @@ const san_addMatches = [
 
 
 // Routes
-const root = require("../controllers/history/root")
-router.get("/", root.home)
+const home = require("../controllers/history/home")
+router.get("/", home.main)
 
 const referee = require("../controllers/history/referee")
-router.get("/referee", referee.home)
+router.get("/referee", referee.main)
 router.post("/referee/*", (req, res, next) => {
 	if (!req.roles.admin) {return res.status(403).send("Unauthorized; not an admin")}
 	next()
@@ -118,7 +118,7 @@ router.post("/referee/remove", san_removeTournaments, referee.remove)
 router.post("/referee/import", referee.import)
 
 const player = require("../controllers/history/player")
-router.get("/player", player.home)
+router.get("/player", player.main)
 
 router.get("/*", (req, res) => {
 	res.status(404).render("history/fourofour")

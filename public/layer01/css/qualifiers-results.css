@@ -25,17 +25,17 @@ td {
 }
 
 td:first-child {
-	border-left: 0px none;
+	border-left: none;
 }
 
 td:last-child {
-	border-left: 0px none;
-	border-right: 0px none;
+	border-left: none;
+	border-right: none;
 }
 
 #seedings_container td {
-	border-left: 0px none;
-	border-right: 0px none;
+	border-left: none;
+	border-right: none;
 }
 
 .green {

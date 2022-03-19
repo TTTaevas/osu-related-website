@@ -1,6 +1,6 @@
 const request = require("../../functions/osu-requests.js")
 
-exports.home = async (req, res) => {
+exports.main = async (req, res) => {
 	let playlists_col = req.layer01.db.collection("playlists")
 	let pools = await playlists_col.find().toArray()
 	let playlist = pools.find((p) => {return p.name.toLowerCase() == "qualifiers playlist"})

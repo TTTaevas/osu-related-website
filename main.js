@@ -80,11 +80,17 @@ app.all("*", async (req, res, next) => { // Previously known as "userCheck"
 	next()
 })
 
-glob.sync("./routes/*.js").forEach((f) => {
-	let p = f.substring(f.lastIndexOf("/"), f.lastIndexOf("."))
-	if (p == "/root") {p = "/"}
+// Because of a **very** funny bug where every route alphabetically after "root" doesn't work
+// (as glob.sync.forEach treats everything alphabetically)
+// the root is treated after every other route
+let root = "./routes/root.js"
+
+glob.sync("./routes/*.js").filter((r) => r != root).forEach((f) => {
 	let callback = require(path.resolve(f))
-	app.use(p, callback)
+	app.use(f.substring(f.lastIndexOf("/"), f.lastIndexOf(".")), callback)
 })
+
+let callback = require(path.resolve(root))
+app.use("/", callback)
 
 module.exports = app

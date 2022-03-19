@@ -1,4 +1,4 @@
-exports.home = async (req, res) => {
+exports.main = async (req, res) => {
 	let lobbies_col = req.layer01.db.collection("quals_lobbies")
 	let lobbies = await lobbies_col.find().toArray()
 	lobbies = lobbies.sort((a, b) => {return Number(a.schedule) - Number(b.schedule)})

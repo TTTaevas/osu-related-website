@@ -1,6 +1,6 @@
 const existenceCheck = require("../../functions/existence-check.js")
 
-exports.home = async (req, res) => {
+exports.main = async (req, res) => {
 	let brackets_col = req.layer01.db.collection("brackets")
 	let brackets = await brackets_col.find().toArray()
 	res.status(200).render("layer01/matches", {user: req.auth.user, roles: req.roles, brackets})
