@@ -43,7 +43,9 @@ const home = require("../controllers/layer01/home")
 router.get("/", home.main)
 
 // Legacy login system was through LAYER01, now redirect to the current system at root
-router.get("/login", (req, res) => {res.redirect(308, "../login")})
+router.get("/login", (req, res) => {
+	res.redirect(308, `../login${req.query.code ? "?code=" + req.query.code : ""}`)
+})
 
 const rules = require("../controllers/layer01/rules")
 router.get("/rules", rules.main)

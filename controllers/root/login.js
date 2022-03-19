@@ -1,38 +1,30 @@
 const request = require("../../functions/osu-requests.js").request
 
 exports.home = async (req, res) => {
-	var response
 	let status = {
 		ok: true,
-		user: undefined,
-		reason: null,
-		code: null
+		reason: null
 	}
 
 	// if not logged in, if code in url
 	if (req.query.code && !req.session.user) {
-		response = await codeHandler(req)
-		if (typeof response == "string") {
+		let response = await codeHandler(req)
+		if (response != "ok") {
 			status.ok = false
-			status.reason = response
-		} else {
-			status.user = response
+			status.reason = `${response}, could not login`
 		}
 
 	// if not logged in, if no code in url
 	} else if (!req.query.code && !req.session.user) {
 		status.ok = false
 		status.reason = "not logged in"
-
-	// if logged in, no matter if code 
-	} else if (req.session.user) {
-		status.user = req.auth.user
 	}
 	
 	status.ok ? res.status(200).redirect("/") : res.status(201).render("root/login", {status: status})
 }
 
 async function codeHandler(req) {
+	// create user_object through requesting "token" and "me(/osu)"
 	var token_object
 	try {
 		token_object = await request(
@@ -60,18 +52,16 @@ async function codeHandler(req) {
 		)
 	} catch (e) {
 		console.log(e)
-		return "something very wrong happened, contact taevas"
+		return "could not fetch user data"
 	}
 
-	var user
-	
 	// deal with users db stuff
 	if (user_object && user_object.id) {
 
 		// if user is not in db, put them in db
-		let userCheck = req.auth.users.array.find((u) => {return u.id == user_object.id})
+		let userCheck = await req.auth.users.collection.findOne({id: user_object.id})
 		if (!userCheck) {
-			user = {
+			const user = {
 				id: user_object.id,
 				username: user_object.username,
 				avatar: user_object.avatar_url,
@@ -82,7 +72,11 @@ async function codeHandler(req) {
 				user_object: user_object
 			}
 			let insertion = await req.auth.users.collection.insertOne(user)
-			insertion.insertedId ? console.log(`New user: ${user_object.id} | ${user_object.username}`) : console.log(`Couldn't add new user: ${user_object.id} | ${user_object.username}`)
+			if (!insertion.insertedId) {
+				console.warn(`/!\\ Couldn't add new user: ${user_object.id} | ${user_object.username}`)
+				return "issue with database"
+			}
+			console.log(`New user: ${user_object.id} | ${user_object.username}`)
 
 		// if user is in db, update their profile
 		} else { 
@@ -94,10 +88,11 @@ async function codeHandler(req) {
 				user_object: user_object
 			}
 			let update = await req.auth.users.collection.updateOne(filter, {$set: updated}) // Legit cannot bother to learn findOneAndUpdate()
-			const findResultAgain = await req.auth.users.collection.findOne({id: user_object.id})
+			update.modifiedCount ? console.log(`User logged in: ${user_object.id} | ${user_object.username}`) : console.warn(`/!\\ Couldn't update user: ${user_object.id} | ${user_object.username}`)
 		}
 	}
 
+	// set a cookie and associate it to the user; create a session
 	req.session.user = user_object.id
-	return user
+	return "ok"
 }

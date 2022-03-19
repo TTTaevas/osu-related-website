@@ -8,6 +8,9 @@
 	</head>
 	<body>
 		<div id="message">
+			<% if (status) { %>
+				<p style="text-transform: lowercase;"><%= status.reason %></p>
+			<% } %>
 			<a href="https://osu.ppy.sh/oauth/authorize?response_type=code&client_id=11451&redirect_uri=https://taevas.xyz/login">login</a>
 			<a href="/">root</a>
 		</div>
