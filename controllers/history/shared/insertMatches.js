@@ -1,4 +1,4 @@
-const request = require("../../../functions//osu-requests.js")
+const v2 = require("../../../apis/osu-v2.js")
 
 module.exports = async function insertMatches(history) {
 	let token = false // Don't request token if no match to request
@@ -9,9 +9,9 @@ module.exports = async function insertMatches(history) {
 			let match_id = history.tournaments.array[i].matches[e]
 			let find = history.matches.array.find((match) => {return match.id == match_id})
 			if (!find) {
-				if (!token) {token = await request.getToken()}
+				if (!token) {token = await v2.getToken()}
 				if (!token) {return "Error; no token, cannot insertMatches"}
-				let match = await request.getMatch(token, match_id, history.tournaments.array[i].name)
+				let match = await v2.getMatch(token, match_id, history.tournaments.array[i].name)
 				if (match) {
 					history.players.array = await playersArrHandler(match.players, history.players.array, match_id)
 					for (let o = 0; o < match.players.length; o++) {match.players[o] = match.players[o].id}

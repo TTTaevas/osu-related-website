@@ -1,4 +1,4 @@
-const request = require("../../functions/osu-requests.js").request
+const { request } = require("../../apis/osu-v2.js")
 
 exports.home = async (req, res) => {
 	let status = {

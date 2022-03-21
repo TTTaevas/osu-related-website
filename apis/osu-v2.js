@@ -27,11 +27,10 @@ async function request(main, header_part, data) {
 			if (error.response.config) {err.config = error.response.config.data}
 		} else if (error.request) {
 			err.type = "Request made but server did not respond"
-			err.public = "osu!api seems to be down currently"
+			err.public = "osu!api v2 seems to be down currently"
 			err.main = main
 			err.message = error.message
-		} else {
-			// Something happened in setting up the request that triggered an error
+		} else { // Something happened in setting up the request that triggered an error
 			err.type = "Setting up the request caused an (axios?) error"
 			err.public = "Unknown error"
 			err.main = main
@@ -41,7 +40,7 @@ async function request(main, header_part, data) {
 	})
 	
 	if (resp) {
-		console.log(resp.statusText, resp.status, main)
+		console.log("osu!api v2 ->", resp.statusText, resp.status, main)
 		return resp.data
 	} else {
 		return false
@@ -62,14 +61,14 @@ async function getToken() {
 				"scope": "public"
 			})
 		)
-	} catch {return false}
+	} catch(e) {console.log(e)}
 
 	if (!response) {return false}
 	return response.access_token
 }
 
 async function getUser(token, user_id, mode) {
-	if (!mode) {mode == "osu"}
+	if (!mode) {mode == "osu"} // We always want osu mode over a user's "favourite" mode
 
 	var response
 	try {
@@ -78,7 +77,7 @@ async function getUser(token, user_id, mode) {
 			{"Authorization": `Bearer ${token}`},
 			{}
 		)
-	} catch {response = false}
+	} catch(e) {if (e.status != 404) {console.log(e)}}
 
 	if (!response) {
 		response = {
@@ -102,32 +101,9 @@ async function getBeatmap(token, diff_id) {
 			{"Authorization": `Bearer ${token}`},
 			{}
 		)
-	} catch {response = false}
+	} catch(e) {if (e.status != 404) {console.log(e)}}
 
 	return response
-}
-
-async function v1Beatmap(diff_id, mods) { // the need for this function to exist is extremely yikes
-	const axios = require("axios")
-
-	console.log(`Requesting v1 data for map ${diff_id} with mods ${mods}`)
-	var response
-	try {
-		response = await axios({
-			method: "get",
-			baseURL: "https://osu.ppy.sh/api/",
-			url: `/get_beatmaps?b=${diff_id}&mods=${mods}&k=${process.env.OSU_V1_KEY}`,
-			headers: {
-				"Content-Type": "application/json",
-				"Accept": "application/json",
-			}
-		})
-	} catch (e) {
-		console.log(e)
-		response = {data: false}
-	}
-
-	return response.data
 }
 
 async function getMatch(token, match_id, tournament) {
@@ -138,32 +114,24 @@ async function getMatch(token, match_id, tournament) {
 			{"Authorization": `Bearer ${token}`},
 			{}
 		)
-	} catch {return false}
+	} catch(e) {if (e.status != 404) {console.log(e)}}
 	if (!response || !response.events) {return false}
 
-	var return_object
 	let games = response.events.filter((event) => {if (event.game) {return event}})
 	let players = []
 
-	if (tournament) { // HISTORY
-		let custom = {
-			name: response.match.name,
-			id: response.match.id,
-			tournament: tournament,
-			url: `https://osu.ppy.sh/community/matches/${response.match.id}`,
-			date: new Date(response.match.start_time)
-		}
+	let return_object = {
+		name: response.match.name,
+		id: response.match.id,
+		url: `https://osu.ppy.sh/community/matches/${response.match.id}`,
+	}
 
-		return_object = custom
-	} else { // LAYER01
+	if (tournament) { // Tournament History stuff
+		return_object.tournament = tournament
+		return_object.date = new Date(response.match.start_time)
+	} else {
 		let c_games = games.map((e) => {return e.game})
-		let custom = {
-			name: response.match.name,
-			id: response.match.id,
-			url: `https://osu.ppy.sh/community/matches/${response.match.id}`,
-			games: c_games
-		}
-		return_object = custom
+		return_object = c_games
 	}
 
 	// The users object of the response include at least the referee, which we do not want
@@ -185,6 +153,5 @@ module.exports = {
 	getToken,
 	getUser,
 	getBeatmap,
-	v1Beatmap,
 	getMatch
 }

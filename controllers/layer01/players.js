@@ -1,4 +1,4 @@
-const request = require("../../functions/osu-requests.js")
+const v2 = require("../../apis/osu-v2.js")
 
 exports.main = async (req, res) => {
 	let roles = await req.layer01.db.collection("roles").find().toArray()
@@ -11,10 +11,10 @@ exports.main = async (req, res) => {
 
 exports.update = async (req, res) => {
 	let count = 0
-	let token = await request.getToken()
+	let token = await v2.getToken()
 	let users = await req.auth.users.array()
 	for (let i = 0; i < users.length; i++) {
-		let user_object = await request.getUser(token, users[i].id, "osu")
+		let user_object = await v2.getUser(token, users[i].id, "osu")
 		let updated = {
 			username: user_object.username,
 			country: user_object.country_code,

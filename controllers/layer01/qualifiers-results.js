@@ -1,4 +1,4 @@
-const request = require("../../functions/osu-requests.js")
+const v2 = require("../../apis/osu-v2.js")
 
 exports.main = async (req, res) => {
 	let playlists_col = req.layer01.db.collection("playlists")
@@ -88,8 +88,8 @@ exports.create = async (req, res) => {
 }
 
 async function createMatch(id, match_col) {
-	let token = await request.getToken()
-	let match = await request.getMatch(token, id)
+	let token = await v2.getToken()
+	let match = await v2.getMatch(token, id)
 
 	if (match && match.games) {
 		for (let i = 0; i < match.games.length; i++) {
