@@ -3,11 +3,13 @@ const { MongoClient } = require("mongodb");
 
 (async () => {
 	console.time("Connected to the databases")
-	const auth = new MongoClient(process.env.CONNECTIONSTRING)
-	const history = new MongoClient(process.env.REF_CONNECTIONSTRING)
-	const layer01 = new MongoClient(process.env.LAYER01_CONNECTIONSTRING)
+	const auth    = new MongoClient(process.env.DB_AUTH)
+	const history = new MongoClient(process.env.DB_HISTORY)
+	const layer01 = new MongoClient(process.env.DB_LAYER01)
+	const andmeid = new MongoClient(process.env.DB_ANDMEID)
+	const turniir = new MongoClient(process.env.DB_TURNIIR)
 
-	const clients = [auth, history, layer01]
+	const clients = [auth, history, layer01, andmeid, turniir]
 	await Promise.all(clients.map(async c => {await c.connect()}))
 	.then(() => {console.timeEnd("Connected to the databases")})
 
@@ -17,7 +19,9 @@ const { MongoClient } = require("mongodb");
 	module.exports = {
 		auth,
 		history,
-		layer01
+		layer01,
+		andmeid,
+		turniir
 	}
 
 	console.time("Server up and running")

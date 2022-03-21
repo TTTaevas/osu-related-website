@@ -33,7 +33,7 @@ async function codeHandler(req) {
 			JSON.stringify({
 				"grant_type": "authorization_code",
 				"client_id": 11451,
-				"client_secret": process.env.OSU_CLIENT_SECRET,
+				"client_secret": process.env.API_OSU_V2,
 				"redirect_uri": "https://taevas.xyz/login",
 				"code": req.query.code
 			})

@@ -6,7 +6,7 @@ async function request(type, params) {
 	const resp = await axios({
 		method: "get",
 		baseURL: "https://osu.ppy.sh/api/",
-		url: `/${type}?k=${process.env.OSU_V1_KEY}&${params}`,
+		url: `/${type}?k=${process.env.API_OSU_V1}&${params}`,
 		headers: { // In theory not needed, still cool to have though imo
 			"Accept": "application/json",
 			"Content-Type": "application/json"
