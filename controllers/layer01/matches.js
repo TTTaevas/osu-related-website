@@ -1,5 +1,3 @@
-const existenceCheck = require("../../functions/existence-check.js")
-
 exports.main = async (req, res) => {
 	let brackets_col = req.layer01.db.collection("brackets")
 	let brackets = await brackets_col.find().toArray()
@@ -7,9 +5,7 @@ exports.main = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
-	if (!existenceCheck(req.body, ["c_bracket_name", "c_id", "c_time", "c_type"])) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
 	let brackets_col = req.layer01.db.collection("brackets")
-
 	let bracket = {
 		name: req.body.c_bracket_name,
 		matches: []
@@ -50,8 +46,6 @@ exports.create = async (req, res) => {
 }
 
 exports.staff_add = async (req, res) => {
-	if (!existenceCheck(req.body, ["act", "matches"])) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
-
 	let mode = req.body.act
 	if (mode == "ref") {
 		if (!req.roles.referee) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}
@@ -92,8 +86,6 @@ exports.staff_add = async (req, res) => {
 }
 
 exports.staff_remove = async (req, res) => {
-	if (!existenceCheck(req.body, ["act", "matches"])) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
-
 	let mode = req.body.act
 	if (mode == "ref") {
 		if (!req.roles.referee) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Unauthorized; you're not authorized to do this :3c"}})}

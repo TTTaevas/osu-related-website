@@ -1,5 +1,3 @@
-const existenceCheck = require("../../functions/existence-check.js")
-
 const getTournaments = require("./shared/getTournaments")
 const insertMatches = require("./shared/insertMatches")
 
@@ -12,13 +10,11 @@ exports.add = async (req, res) => {
 	let form = req.body
 	let files = req.files
 
-	let file_name = false
-	if (!existenceCheck(form, ["add_name"])) {return res.status(400).send("Missing tournament name")}
-
 	if (req.history.tournaments.array.find((tournament) => {return tournament.name == form.add_name})) {
 		return res.status(302).send("This tournament already exists!")
 	}
 
+	let file_name = false
 	if (files && files.add_banner) {
 		file_name = files.add_banner.name
 		let banner = files.add_banner
@@ -59,8 +55,6 @@ exports.add = async (req, res) => {
 
 exports.addMatches = async (req, res) => {
 	let form = req.body
-	if (!existenceCheck(form, ["mp_ids", "tournament_name"])) {return res.status(400).send("Missing match ID or tournament name")}
-
 	let mp_ids = form.mp_ids.replace(/ /g, "").split(",").filter((id) => {return !isNaN(id) && id.length})
 	if (!mp_ids.length) {return res.status(302).send("No valid match ID in input")}
 
@@ -81,8 +75,6 @@ exports.addMatches = async (req, res) => {
 
 exports.remove = async (req, res) => {
 	let form = req.body
-	if (!existenceCheck(form, ["remove_name"])) {return res.status(400).send("Missing tournament name")}
-
 	let tournament = req.history.tournaments.array.find((tournament) => {return tournament.name == form.remove_name})
 	if (!tournament) {return res.status(302).send("This tournament does not exist!")}
 	let matches = tournament.matches

@@ -1,5 +1,3 @@
-const existenceCheck = require("../../functions/existence-check.js")
-
 exports.main = async (req, res) => {
 	let lobbies_col = req.layer01.db.collection("quals_lobbies")
 	let lobbies = await lobbies_col.find().toArray()
@@ -8,8 +6,6 @@ exports.main = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
-	if (!existenceCheck(req.body, ["c_min", "c_max", "c_prefix"])) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
-
 	let lobbies_col = req.layer01.db.collection("quals_lobbies")
 	let new_lobbies = []
 	for (let i = req.body.c_min; i <= req.body.c_max; i++) {
@@ -30,8 +26,6 @@ exports.create = async (req, res) => {
 }
 
 exports.join = async (req, res) => {
-	if (!existenceCheck(req.body, ["p_lobby"])) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
-	
 	let lobbies_col = req.layer01.db.collection("quals_lobbies")
 	let lobbies = await lobbies_col.find().toArray()
 	let lobby_name = req.body.p_lobby.toUpperCase().replace(/ /g, "")
@@ -69,9 +63,7 @@ exports.join = async (req, res) => {
 }
 
 exports.referee_add = async (req, res) => {
-	if (!existenceCheck(req.body, ["r_lobbies"])) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
 	let lobbies_col = req.layer01.db.collection("quals_lobbies")
-
 	let reffed_lobbies = req.body.r_lobbies.toUpperCase().replace(/ /g, "").split(",")
 	let referee = {referee: {id: req.auth.user.id, name: req.auth.user.username}}
 	for (let i = 0; i < reffed_lobbies.length; i++) {
@@ -82,9 +74,7 @@ exports.referee_add = async (req, res) => {
 }
 
 exports.referee_remove = async (req, res) => {
-	if (!existenceCheck(req.body, ["r_lobbies"])) {return res.status(400).render("layer01/error", {status: {code: 400, reason: "Bad request"}})}
 	let lobbies_col = req.layer01.db.collection("quals_lobbies")
-
 	let dropped_lobbies = req.body.r_lobbies.toUpperCase().replace(/ /g, "").split(",")
 	for (let i = 0; i < dropped_lobbies.length; i++) {
 		// Note that I could add to filter `referee: {id: req.auth.user.id, name: req.auth.user.username}`

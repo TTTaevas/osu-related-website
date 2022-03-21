@@ -26,13 +26,10 @@ exports.create = async (req, res) => {
 }
 
 async function createPlayer(user, users_col, layer01, roles, form) {
-	if (!form.discord) {return {ok: false, message: "No Discord was provided"}}
-	if (!form.timezone) {return {ok: false, message: "No timezone was provided"}}
-
 	// Update the user's Discord and Timezone (global information across the website)
 	let global_info = {
-		discord: form.discord.substring(0, 40),
-		timezone: form.timezone.substring(0, 15)
+		discord: form.discord,
+		timezone: form.timezone
 	}
 	let global_update = await users_col.updateOne({id: user.id}, {$set: global_info})
 

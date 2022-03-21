@@ -13,12 +13,6 @@ exports.create = async (req, res) => {
 }
 
 async function createPlaylist(db, form) {
-	if (!form) {return {ok: false, message: "No form was provided"}}
-	if (!form.c_name) {return {ok: false, message: "No playlist name was provided"}}
-	if (!form.c_mod) {return {ok: false, message: "No mod was provided"}}
-	if (!form.c_id) {return {ok: false, message: "No map id was provided"}}
-	if (form.c_mod.length != form.c_id.length) {return {ok: false, message: "Mod length != Map length"}}
-
 	let maps = form.c_mod.map((a, index) => {return {mod_id: form.c_mod[index], mod: form.c_mod[index].substring(0, 2), id: form.c_id[index]}})
 	let token = await v2.getToken()
 

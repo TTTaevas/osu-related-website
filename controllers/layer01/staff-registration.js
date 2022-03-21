@@ -20,8 +20,6 @@ exports.update = async (req, res) => {
 async function staffUpdate(layer01, user, roles, form) {
 	let staff_roles = Object.keys(form).filter((key) => {return key == "pooler" || key == "referee" || key == "streamer" || key == "commentator"})
 	if (!staff_roles.length) {return {ok: false, message: "No staff role was selected :^)"}}
-	if (!form.discord) {return {ok: false, message: "No Discord was provided"}}
-	if (!form.experience) {return {ok: false, message: "No experience was provided"}}
 
 	let new_roles = new Roles(roles, ["registered_staff"])
 	await layer01.collection("roles").updateOne({id: user.id}, {$set: {id: user.id, roles: new_roles}}, {upsert: true})
