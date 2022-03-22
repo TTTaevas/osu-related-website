@@ -1,0 +1,31 @@
+#error {
+	width: fit-content;
+	margin: 50px auto;
+	padding: 0 40px;
+	border-left: 5px solid;
+	border-right: 5px solid;
+}
+
+#error_code {
+	font-size: 96px;
+	height: 100px;
+}
+
+#redirect {
+	width: fit-content;
+	margin: 20px auto;
+	padding: 5px;
+	font-size: 32px;
+}
+
+@media screen and (max-width: 727px) {
+	#error {
+		width: auto;
+		margin: 50px 20px;
+	}
+
+	#redirect {
+		width: auto;
+		margin: 20px;
+	}
+}

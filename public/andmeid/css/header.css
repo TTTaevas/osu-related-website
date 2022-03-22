@@ -1,0 +1,52 @@
+/* ALL ANDMEID CONTENT */
+
+@font-face {
+	font-family: LeagueSpartan;
+	src: url(../fonts/LeagueSpartan.ttf);
+}
+
+html {
+	font-family: LeagueSpartan, Arial, sans-serif;
+	font-size: 24px;
+	background: #151a2d;
+	color: #df2e2e;
+	transition-duration: 0.2s;
+}
+
+body {
+	margin: 0;
+	/*min-height: 100vh;*/
+	text-align: center;
+}
+
+header {
+	margin: 20px auto;
+	font-size: 64px;
+	border-bottom: 5px solid;
+	width: 30rem;
+	max-width: 80vw;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.link {
+	background-color: #171a24;
+	color: #c8620c;
+}
+
+.link:after {
+	content: " =>";
+}
+
+.notification {
+	margin: 50px auto;
+	padding: 20px;
+	border: 5px solid;
+	border-radius: 53px; /* dang it grandpa */
+	width: min-content;
+	transform: rotate(4deg);
+	box-shadow: 10px 10px black;
+}

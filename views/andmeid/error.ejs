@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Andmeid</title>
+		<link rel="stylesheet" type="text/css" href="./css/error.css">
+	</head>
+	<body>
+		<%- include("partials/header") %>
+		<div class="notification">You have encountered an error! @_@</div>
+		<div id="error">
+			<div id="error_code"><%= error.code %></div>
+			<div id="error_message"><%= error.message %></div>
+		</div>
+		<div id="redirect">
+			<a class="link" href="/andmeid">Let's get you right back on track, alright?</a>
+		</div>
+	</body>
+</html>
