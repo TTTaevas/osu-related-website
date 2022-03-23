@@ -4,9 +4,13 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Andmeid</title>
-		<link rel="stylesheet" type="text/css" href="./css/home.css">
+		<link rel="stylesheet" type="text/css" href="/andmeid/css/home.css">
 	</head>
-	<body>
+	<body onload="initForm()">
 		<%- include("partials/header") %>
+		<% if (user.id != 7276846) { %>
+			<div class="notification">Currently WIP! This does NOT properly work!</div>
+		<% } %>
+		<%- include("partials/form") %>
 	</body>
 </html>
