@@ -1,35 +1,44 @@
-function addMatch(n) {
+function addMatch(n, position) {
 	const div_matches = document.getElementById("matches")
+	let matches = document.getElementsByClassName("match")
+
 	for (let i = 0; i < n; i++) {
 		let new_match = document.createElement("input")
 		new_match.setAttribute("type", "text")
 		new_match.setAttribute("class", "match")
 		new_match.setAttribute("name", "matches")
-		div_matches.appendChild(new_match)
+
+		if (position == undefined || (!matches || matches[position] == undefined)) {
+			div_matches.appendChild(new_match)
+		} else {
+			div_matches.insertBefore(new_match, matches[position])
+		}
 	}
+
+	fixButtonsIndex(div_matches)
 }
 
-function addMap(n) {
+function addMap(n, position) {
 	const div_maps = document.getElementById("mappool")
-	const existing_maps = document.getElementsByClassName("map")
+	let maps = document.getElementsByClassName("map")
+	let elements = ["mod_id", "map_id"]
 
-	for (let i = 0; i < n; i++) { // fun fact, `existing_maps.length` changes with each iteration
+	for (let i = 0; i < n; i++) { // fun fact, `maps.length` changes with each iteration
 		let new_map = document.createElement("div")
 		new_map.setAttribute("class", "map")
 
-		let elements = ["mod_id", "map_id"]
 		elements.forEach((a) => {
 			let new_element = document.createElement("input")
 			new_element.setAttribute("type", "text")
 			new_element.setAttribute("class", a)
-			new_element.setAttribute("name", `maps[${existing_maps.length}][${a}]`)
+			new_element.setAttribute("name", `maps[${maps.length}][${a}]`)
 
 			if (a == "mod_id") {
-				let map = existing_maps[existing_maps.length - 1]
-				if (existing_maps[existing_maps.length - 1]) {
+				let map = maps[maps.length - 1]
+				if (maps[maps.length - 1]) {
 					map = map.getElementsByClassName("mod_id")[0]
 					let mod = map.value.replace(/[0-9]/g, '')
-					let number = Number(map.value.replace(/[^0-9]/g, ''))
+					let number = Number(map.value.replace(/[^0-9]/g, ""))
 
 					if (mod == "NM") {
 						new_element.value = number == 4 ? "HD1" : map.value.replace(number, number + 1)
@@ -45,7 +54,33 @@ function addMap(n) {
 			new_map.appendChild(new_element)
 		})
 
-		div_maps.appendChild(new_map)
+		if (position == undefined || (!maps || maps[position] == undefined)) {
+			div_maps.appendChild(new_map)
+		} else {
+			div_maps.insertBefore(new_map, maps[position])
+		}
+	}
+
+	for (let i = 0; i < maps.length; i++) {
+		elements.forEach((a) => maps[i].getElementsByClassName(a)[0].setAttribute("name", `maps[${i}][${a}]`))
+	}
+
+	fixButtonsIndex(div_maps)
+}
+
+function fixButtonsIndex(parent) {
+	let type = parent.id == "matches" ? "Match" : "Map"
+	let to_delete = [...parent.getElementsByClassName("insert")] // Transforms HTMLCollection to Array for forEach
+	to_delete.forEach((e) => parent.removeChild(e))
+
+	let elements = parent.getElementsByClassName(type.toLowerCase())
+	for (let i = 0; i < elements.length; i++) {
+		let button_insert = document.createElement("button")
+		button_insert.setAttribute("type", "button")
+		button_insert.setAttribute("class", "insert")
+		button_insert.setAttribute("onclick", `add${type}(1, ${i+1})`)
+
+		elements[i+1] ? parent.insertBefore(button_insert, elements[i+1]) : parent.appendChild(button_insert)
 	}
 }
 
