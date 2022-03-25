@@ -3,8 +3,9 @@ const router = express.Router()
 const end_of_tourney = new Date(Date.UTC(2022, 3, 13))
 
 const { layer01 } = require("../db-clients.js")
-const validator = require("../validators/layer01.js")
+const validator = require("./validators/layer01.js")
 
+// Similar stuff is being required in Andmeid; keep it in mind
 router.all("*", async (req, res, next) => {
 	req.layer01 = {
 		client: layer01,
@@ -21,7 +22,6 @@ router.all("*", async (req, res, next) => {
 	next()
 })
 
-// A similar function may end up being required in some other part of the website; keep it in mind
 const uc = function(req, res, next, roles) {
 	let time_now = new Date()
 	if (time_now > end_of_tourney) {return res.status(403).render("layer01/error", {status: {code: 403, reason: "Tournament has ended!"}})}

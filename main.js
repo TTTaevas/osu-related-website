@@ -62,7 +62,7 @@ if (production) {app.set('trust proxy', 1)}
 
 // ROUTES STUFF
 
-app.all("*", async (req, res, next) => { // Previously known as "userCheck"
+app.all("*", async (req, res, next) => {
 	const db = auth.db()
 	const collection = db.collection("users")
 	const user = await collection.findOne({id: req.session.user})
@@ -77,6 +77,13 @@ app.all("*", async (req, res, next) => { // Previously known as "userCheck"
 		}
 	}
 
+	next()
+})
+
+app.use((err, req, res, next) => {
+	if (err instanceof SyntaxError && err.status == 400 && "body" in err) { // prevents default body-parser error
+		return res.status(400).json({status: false, error: "Not a valid request"})
+	}
 	next()
 })
 

@@ -1,3 +1,5 @@
+// Creating and modifying the form properly
+
 function addMatch(n, position) {
 	const div_matches = document.getElementById("matches")
 	let matches = document.getElementsByClassName("match")
@@ -7,6 +9,7 @@ function addMatch(n, position) {
 		new_match.setAttribute("type", "text")
 		new_match.setAttribute("class", "match")
 		new_match.setAttribute("name", "matches")
+		new_match.setAttribute("onblur", "sendId('matches', this.value)")
 
 		if (position == undefined || (!matches || matches[position] == undefined)) {
 			div_matches.appendChild(new_match)
@@ -34,7 +37,7 @@ function addMap(n, position) {
 			new_element.setAttribute("name", `maps[${maps.length}][${a}]`)
 
 			if (a == "mod_id") {
-				let map = maps[maps.length - 1]
+				let map = maps[(position || maps.length) - 1]
 				if (maps[maps.length - 1]) {
 					map = map.getElementsByClassName("mod_id")[0]
 					let mod = map.value.replace(/[0-9]/g, '')
@@ -49,7 +52,7 @@ function addMap(n, position) {
 					}
 
 				} else {new_element.value = "NM1"}
-			}
+			} else {new_element.setAttribute("onblur", "sendId('beatmaps', this.value)")}
 
 			new_map.appendChild(new_element)
 		})
@@ -87,4 +90,26 @@ function fixButtonsIndex(parent) {
 function initForm() {
 	addMatch(1)
 	addMap(10)
+}
+
+// Send match IDs in form before form submission for lesser wait time
+
+function sendId(type, id) {
+	if (!id || id.length < 2) return
+	if (isNaN(id)) return
+
+	let xhr = new XMLHttpRequest()
+	xhr.open("POST", `/andmeid/${type}`)
+
+	xhr.setRequestHeader("Accept", "application/json")
+	xhr.setRequestHeader("Content-Type", "application/json")
+
+	// let's not spam the console with html while error handling stuff isn't 100% figured out
+	// xhr.onreadystatechange = () => {
+	// 	if (xhr.readyState == 4) {
+	// 		console.log(xhr.responseText) 
+	// 	}
+	// }
+
+	xhr.send(`{"id": ${id}}`)
 }

@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 
 const { history } = require("../db-clients.js")
-const validator = require("../validators/history.js")
+const validator = require("./validators/history.js")
 
 router.all("*", async (req, res, next) => {
 	req.history = {
