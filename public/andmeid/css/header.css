@@ -10,7 +10,6 @@ html {
 	font-size: 24px;
 	background: #151a2d;
 	color: #df2e2e;
-	transition-duration: 0.2s;
 }
 
 body {
@@ -24,6 +23,11 @@ header {
 	border-bottom: 5px solid;
 	width: 30rem;
 	max-width: 80vw;
+}
+
+::selection {
+	background-color: #df2e2e;
+	color: #FFF;
 }
 
 a {
@@ -47,5 +51,65 @@ a {
 	border-radius: 53px; /* dang it grandpa */
 	width: 128px;
 	transform: rotate(4deg);
-	box-shadow: 10px 10px black;
+	box-shadow: 10px 10px #000;
+}
+
+
+/* FORM/INPUT STUFF */
+
+@media screen and (min-width: 720px) {
+	#main {
+		display: flex;
+		max-width: 1080px;
+		margin: auto;
+	}
+
+	#left, #right {
+		display: block;
+		margin: auto;
+	}
+
+	#matches {
+		display: grid;
+	}
+}
+
+input[type=submit], button {
+	display: none; /* CSS not stable enough yet to show those */
+}
+
+input, button {
+	font-family: inherit;
+	font-weight: bold;
+	outline: none;
+}
+
+.insert {
+	width: 360px;
+}
+
+input[type=text] {
+	background: #171a24;
+	border-top: none;
+	border-right: none;
+	border-bottom: 5px solid #c8620c;
+	border-left: 5px solid #c8620c;
+	color: #FFF;
+	font-size: 16px;
+	padding: 10px 0 10px 15px;
+	margin: 10px;
+	resize: both;
+	overflow: hidden;
+}
+
+input[type=text]:hover {
+	border-color: #df2e2e;
+}
+
+.match, .map_id {
+	width: 180px;
+}
+
+.mod_id {
+	width: 120px;
 }

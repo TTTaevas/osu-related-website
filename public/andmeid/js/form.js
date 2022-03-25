@@ -9,6 +9,8 @@ function addMatch(n, position) {
 		new_match.setAttribute("type", "text")
 		new_match.setAttribute("class", "match")
 		new_match.setAttribute("name", "matches")
+		new_match.setAttribute("placeholder", "Match ID")
+		new_match.setAttribute("onclick", "this.select()")
 		new_match.setAttribute("onblur", "sendId('matches', this.value)")
 
 		if (position == undefined || (!matches || matches[position] == undefined)) {
@@ -35,6 +37,8 @@ function addMap(n, position) {
 			new_element.setAttribute("type", "text")
 			new_element.setAttribute("class", a)
 			new_element.setAttribute("name", `maps[${maps.length}][${a}]`)
+			new_element.setAttribute("placeholder", a == "mod_id" ? "Mod ID" : "Beatmap difficulty ID")
+			new_element.setAttribute("onclick", "this.select()")
 
 			if (a == "mod_id") {
 				let map = maps[(position || maps.length) - 1]
@@ -43,7 +47,9 @@ function addMap(n, position) {
 					let mod = map.value.replace(/[0-9]/g, '')
 					let number = Number(map.value.replace(/[^0-9]/g, ""))
 
-					if (mod == "NM") {
+					if (position != undefined) {
+						new_element.value = map.value.replace(number, number + 1)
+					} else if (mod == "NM") {
 						new_element.value = number == 4 ? "HD1" : map.value.replace(number, number + 1)
 					} else {
 						let mods = ["HD", "HR", "DT", "FM", "TB"]
@@ -79,6 +85,7 @@ function fixButtonsIndex(parent) {
 	let elements = parent.getElementsByClassName(type.toLowerCase())
 	for (let i = 0; i < elements.length; i++) {
 		let button_insert = document.createElement("button")
+		button_insert.innerHTML = "+"
 		button_insert.setAttribute("type", "button")
 		button_insert.setAttribute("class", "insert")
 		button_insert.setAttribute("onclick", `add${type}(1, ${i+1})`)
@@ -103,13 +110,6 @@ function sendId(type, id) {
 
 	xhr.setRequestHeader("Accept", "application/json")
 	xhr.setRequestHeader("Content-Type", "application/json")
-
-	// let's not spam the console with html while error handling stuff isn't 100% figured out
-	// xhr.onreadystatechange = () => {
-	// 	if (xhr.readyState == 4) {
-	// 		console.log(xhr.responseText) 
-	// 	}
-	// }
 
 	xhr.send(`{"id": ${id}}`)
 }

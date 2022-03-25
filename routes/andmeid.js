@@ -22,7 +22,8 @@ router.all("*", async (req, res, next) => {
 })
 
 const uc = function(req, res, next, roles) {
-	if (!req.auth.user) {return res.status(401).render("andmeid/error", {error: {code: 401, message: "Unauthorized; Please login first"}})}
+	if (!req.auth.user) {return req.method == "POST" ? res.status(401).json({status: false, error: "Unauthorized; Please login first"})
+	: res.status(401).render("andmeid/error", {error: {code: 401, message: "Unauthorized; Please login first"}})}
 	if (!roles) {return next()} // Being logged in is required, no specific role is needed
 
 	// Any of the roles specified in `roles` is needed
@@ -34,7 +35,8 @@ const uc = function(req, res, next, roles) {
 		if (roles.indexOf(user_roles[i]) != -1) {return next()}
 	}
 
-	return res.status(403).render("andmeid/error", {error: {code: 403, message: `Unauthorized; You are not: ${roles}`}})
+	return req.method == "POST" ? res.status(403).json({status: false, error: `Unauthorized; You are not: ${roles}`})
+	: res.status(403).render("andmeid/error", {error: {code: 403, message: `Unauthorized; You are not: ${roles}`}})
 }
 
 const home = require("../controllers/andmeid/home")
@@ -43,12 +45,13 @@ router.get("/", home.main)
 // The admin requirement is temporary
 const matches = require("../controllers/andmeid/matches")
 router.get("/matches", matches.main)
-router.post("/matches", (r,a,n)=>uc(r,a,n,["admin"]), validator.id, matches.create)
+router.post("/matches", validator.id, matches.create)
 
 const beatmaps = require("../controllers/andmeid/beatmaps")
 router.get("/beatmaps", matches.main)
-router.post("/beatmaps", (r,a,n)=>uc(r,a,n,["admin"]), validator.id, beatmaps.create)
+router.post("/beatmaps", validator.id, beatmaps.create)
 
-router.use((req, res) => res.status(404).render("andmeid/error", {error: {code: 404, message: "The content you're looking for does not exist"}}))
+router.get("*", (req, res) => res.status(404).render("andmeid/error", {error: {code: 404, message: "The content you're looking for does not exist"}}))
+router.post("*", (req, res) => res.status(404).json({status: false, error: "The content you're looking for does not exist"}))
 
 module.exports = router
