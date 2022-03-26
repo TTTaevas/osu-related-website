@@ -54,28 +54,37 @@ a {
 	box-shadow: 10px 10px #000;
 }
 
+.hover {
+	height: 7px;
+	width: auto;
+}
+
+.hover * {
+	display: none;
+	transform: translate(0px, -17px);
+	height: 10px;
+	width: 70%;
+}
+
+.hover:hover * {
+	display: inline-block;
+}
+
 
 /* FORM/INPUT STUFF */
 
-@media screen and (min-width: 720px) {
-	#main {
-		display: flex;
-		max-width: 1080px;
-		margin: auto;
-	}
-
-	#left, #right {
-		display: block;
-		margin: auto;
-	}
-
-	#matches {
-		display: grid;
-	}
+#right {
+	margin-top: 40px;
 }
 
-input[type=submit], button {
-	display: none; /* CSS not stable enough yet to show those */
+.index {
+	cursor: pointer;
+	display: none;
+	border-right: 5px solid;
+	width: 40px;
+	padding-right: 7px;
+	vertical-align: sub;
+	text-align: right;
 }
 
 input, button {
@@ -84,8 +93,15 @@ input, button {
 	outline: none;
 }
 
-.insert {
-	width: 360px;
+button {
+	background-color: #171a24;
+	border: 5px solid #c8620c;
+	border-radius: 20px;
+	color: #FFF;
+	cursor: pointer;
+	font-size: 16px;
+	padding: 5px 10px;
+	text-decoration: none;
 }
 
 input[type=text] {
@@ -102,14 +118,33 @@ input[type=text] {
 	overflow: hidden;
 }
 
-input[type=text]:hover {
+input[type=text]:hover, button:hover {
 	border-color: #df2e2e;
 }
 
-.match, .map_id {
+.match_id, .map_id {
 	width: 180px;
 }
 
 .mod_id {
 	width: 120px;
 }
+
+@media screen and (min-width: 720px) {
+	#main {
+		margin: auto 10vw;
+	}
+
+	#left, #right {
+		display: block;
+	}
+
+	.map, .match {
+		display: inline-block;
+	}
+
+	.index {
+		display: inline-block;
+	}
+}
+

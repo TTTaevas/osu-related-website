@@ -5,18 +5,22 @@ function addMatch(n, position) {
 	let matches = document.getElementsByClassName("match")
 
 	for (let i = 0; i < n; i++) {
+		let parent = document.createElement("div")
+		parent.setAttribute("class", "match")
+
 		let new_match = document.createElement("input")
 		new_match.setAttribute("type", "text")
-		new_match.setAttribute("class", "match")
+		new_match.setAttribute("class", "match_id")
 		new_match.setAttribute("name", "matches")
 		new_match.setAttribute("placeholder", "Match ID")
 		new_match.setAttribute("onclick", "this.select()")
 		new_match.setAttribute("onblur", "sendId('matches', this.value)")
 
+		parent.appendChild(new_match)
 		if (position == undefined || (!matches || matches[position] == undefined)) {
-			div_matches.appendChild(new_match)
+			div_matches.appendChild(parent)
 		} else {
-			div_matches.insertBefore(new_match, matches[position])
+			div_matches.insertBefore(parent, matches[position])
 		}
 	}
 
@@ -79,27 +83,25 @@ function addMap(n, position) {
 
 function fixButtonsIndex(parent) {
 	let type = parent.id == "matches" ? "Match" : "Map"
-	let to_delete = [...parent.getElementsByClassName("insert")] // Transforms HTMLCollection to Array for forEach
-	to_delete.forEach((e) => parent.removeChild(e))
+	Array.from(parent.getElementsByClassName(type.toLowerCase())).forEach((e) => Array.from(e.getElementsByClassName("index")).forEach((i) => e.removeChild(i)))
 
 	let elements = parent.getElementsByClassName(type.toLowerCase())
 	for (let i = 0; i < elements.length; i++) {
-		let button_insert = document.createElement("button")
-		button_insert.innerHTML = "+"
-		button_insert.setAttribute("type", "button")
-		button_insert.setAttribute("class", "insert")
-		button_insert.setAttribute("onclick", `add${type}(1, ${i+1})`)
-
-		elements[i+1] ? parent.insertBefore(button_insert, elements[i+1]) : parent.appendChild(button_insert)
+		let index = document.createElement("div")
+		index.innerHTML = i + 1
+		index.setAttribute("class", "index")
+		index.setAttribute("onmouseover", "this.innerHTML = '+'"); index.setAttribute("onmouseout", `this.innerHTML = ${i + 1}`)
+		index.setAttribute("onclick", `add${type}(1, ${i+1})`)
+		elements[i].insertBefore(index, elements[i].firstChild)
 	}
 }
 
 function initForm() {
-	addMatch(1)
+	addMatch(8)
 	addMap(10)
 }
 
-// Send match IDs in form before form submission for lesser wait time
+// Send IDs in form before form submission for lesser wait time
 
 function sendId(type, id) {
 	if (!id || id.length < 2) return

@@ -5,7 +5,7 @@ exports.main = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
-	let token = await v2.getToken()
-	let beatmap = await v2.getBeatmap(token, req.body.id)
-	res.status(200).json({status: true, content: Boolean(beatmap)})
+	// let token = await v2.getToken()
+	// let beatmap = await v2.getBeatmap(token, req.body.id)
+	res.status(200).json({status: true, content: "okay"})
 }
