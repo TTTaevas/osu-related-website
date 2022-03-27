@@ -106,7 +106,7 @@ async function getBeatmap(token, diff_id) {
 	return response
 }
 
-async function getMatch(token, match_id, tournament) {
+async function getMatch(token, match_id) {
 	var response
 	try {
 		response = await request(
@@ -121,30 +121,50 @@ async function getMatch(token, match_id, tournament) {
 	let players = []
 
 	let return_object = {
-		name: response.match.name,
 		id: response.match.id,
-		url: `https://osu.ppy.sh/community/matches/${response.match.id}`,
+		name: response.match.name,
+		date: new Date(response.match.start_time),
+		games: games.map((e) => {return e.game})
 	}
 
-	if (tournament) { // Tournament History stuff
-		return_object.tournament = tournament
-		return_object.date = new Date(response.match.start_time)
-	} else {
-		let c_games = games.map((e) => {return e.game})
-		return_object = c_games
-	}
-
-	// The users object of the response include at least the referee, which we do not want
+	// Vanilla events are such trash objects, holy shit
 	for (let i = 0; i < games.length; i++) {
+		delete games[i].detail
+		delete games[i].timestamp
+		delete games[i].user_id // the fuck is that
+
+		games[i].game.beatmap = {
+			id: games[i].game.beatmap.id,
+			set_id: games[i].game.beatmap.beatmapset_id
+		}
+		
 		let scores = games[i].game.scores
 		for (let e = 0; e < scores.length; e++) {
-			if (!players.find((player) => {return player.id == scores[e].user_id}) && scores[e].score > 0) {
-				players.push(response.users.find((user) => {return user.id == scores[e].user_id}))
+			let acc_alt = games[i].game.scores[e].accuracy.toPrecision(4).substring(2)
+			games[i].game.scores[e] = {
+				id: games[i].game.scores[e].id, // null until ppy says otherwise
+				player_id: games[i].game.scores[e].user_id,
+				score: games[i].game.scores[e].score,
+				mods: games[i].game.scores[e].mods,
+				combo: games[i].game.scores[e].max_combo,
+				accuracy: games[i].game.scores[e].accuracy,
+				accuracy_alt: Number(`${acc_alt.slice(0, 2)}.${acc_alt.slice(2)}`), // acc but usable
+				statistics: games[i].game.scores[e].statistics,
+				match: games[i].game.scores[e].match,
+			}
+
+			// The users object of the response include at least the referee, which we do not want
+			if (!players.find((player) => {return player.id == scores[e].player_id}) && scores[e].score > 0) {
+				let player = response.users.find((user) => {return user.id == scores[e].player_id})
+				players.push({ 
+					id: player.id,
+					username: player.username
+				})
 			}
 		}
 	}
-
 	return_object.players = players
+
 	return return_object
 }
 

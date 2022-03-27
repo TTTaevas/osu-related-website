@@ -11,8 +11,10 @@ module.exports = async function insertMatches(history) {
 			if (!find) {
 				if (!token) {token = await v2.getToken()}
 				if (!token) {return "Error; no token, cannot insertMatches"}
-				let match = await v2.getMatch(token, match_id, history.tournaments.array[i].name)
+				let match = await v2.getMatch(token, match_id)
 				if (match) {
+					delete match.games // Storage in db is "limited"
+					match.tournament = history.tournaments.array[i].name
 					history.players.array = await playersArrHandler(match.players, history.players.array, match_id)
 					for (let o = 0; o < match.players.length; o++) {match.players[o] = match.players[o].id}
 					matches_arr.push(match)
