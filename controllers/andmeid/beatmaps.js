@@ -1,5 +1,5 @@
 const v2 = require("../../apis/osu-v2.js")
-const Root = require("./classes/Root.js")
+const Branch = require("./classes/Branch.js")
 
 class Beatmap {
 	constructor(b) {
@@ -18,15 +18,12 @@ class Beatmap {
 }
 
 exports.addBeatmap = addBeatmap
-async function addBeatmap(req, id, token, root) {
-	let info = {type: "beatmap", id}
-	root ? root.add(info) : root = new Root(req.auth.user, info)
+async function addBeatmap(req, id, token, branch) {
+	let info = {id, type: "beatmap"}
+	let new_branch = branch ? branch.add(info) : new Branch(info, req.auth.user)
 
 	let db_response = await req.andmeid.db.collection("beatmaps").findOne({id})
-	if (db_response) {
-		root.log()
-		return db_response
-	}
+	if (db_response) return db_response
 
 	if (!token) {token = await v2.getToken()}
 	let osu_response = await v2.getBeatmap(token, id)

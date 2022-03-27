@@ -1,7 +1,7 @@
 const v2 = require("../../apis/osu-v2.js")
-const Root = require("./classes/Root.js")
+const Branch = require("./classes/Branch.js")
 
-const { addBeatmap } = require("./beatmaps.js")
+const { addGames } = require("./games.js")
 
 class Match {
 	constructor(m) {
@@ -14,15 +14,12 @@ class Match {
 }
 
 exports.addMatch = addMatch
-async function addMatch(req, id, token, root) {
-	let info = {type: "match", id}
-	root ? root.add(info) : root = new Root(req.auth.user, info)
+async function addMatch(req, id, token, branch) {
+	let info = {id, type: "match"}
+	let new_branch = branch ? branch.add(info) : new Branch(info, req.auth.user)
 
 	let db_response = await req.andmeid.db.collection("matches").findOne({id})
-	if (db_response) {
-		root.log()
-		return db_response
-	}
+	if (db_response) return db_response
 
 	if (!token) {token = await v2.getToken()}
 	let osu_response = await v2.getMatch(token, id)
@@ -30,12 +27,9 @@ async function addMatch(req, id, token, root) {
 
 	let match = new Match(osu_response)
 	let insertion = await req.andmeid.db.collection("matches").insertOne(match)
-	
-	for (let i = 0; i < osu_response.games.length; i++) {
-		let beatmap_id = osu_response.games[i].beatmap.id
-		setTimeout(() => addBeatmap(req, beatmap_id, token, root), 200 * i)
-	}
 
+	addGames(req, osu_response.games, token, new_branch)
+	
 	return match
 }
 
