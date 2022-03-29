@@ -18,8 +18,7 @@ exports.update = async (req, res) => {
 		let updated = {
 			username: user_object.username,
 			country: user_object.country_code,
-			rank: user_object.statistics.global_rank,
-			user_object: user_object
+			rank: user_object.statistics.global_rank
 		}
 		let update = await req.auth.users.collection.updateOne({id: users[i].id}, {$set: updated})
 		if (update.modifiedCount) {count++}

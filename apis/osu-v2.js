@@ -79,17 +79,7 @@ async function getUser(token, user_id, mode) {
 		)
 	} catch(e) {if (e.status != 404) {console.log(e)}}
 
-	if (!response) {
-		response = {
-			country_code: "A",
-			id: user_id,
-			username: "RESTRICTED",
-			statistics: {
-				global_rank: Number.MAX_VALUE
-			}
-		}
-	}
-
+	if (!response) {return false}
 	return response
 }
 
@@ -102,7 +92,8 @@ async function getBeatmap(token, diff_id) {
 			{}
 		)
 	} catch(e) {if (e.status != 404) {console.log(e)}}
-
+	
+	if (!response) {return false}
 	return response
 }
 
@@ -133,10 +124,10 @@ async function getMatch(token, match_id) {
 		delete games[i].timestamp
 		delete games[i].user_id // the fuck is that
 
-		games[i].game.beatmap = {
+		games[i].game.beatmap = games[i].game.beatmap ? {
 			id: games[i].game.beatmap.id,
 			set_id: games[i].game.beatmap.beatmapset_id
-		}
+		} : {id: 0, set_id: 0} // map is not in object if deleted
 		
 		let scores = games[i].game.scores
 		for (let e = 0; e < scores.length; e++) {

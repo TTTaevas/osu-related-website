@@ -67,9 +67,9 @@ async function codeHandler(req) {
 				avatar: user_object.avatar_url,
 				country: user_object.country_code,
 				rank: user_object.statistics.global_rank,
-				discord: user_object.discord != null ? user_object.discord : "not specified",
-				timezone: "not specified",
-				user_object: user_object
+				discord: user_object.discord,
+				timezone: null,
+				login_count: 1
 			}
 			let insertion = await req.auth.users.collection.insertOne(user)
 			if (!insertion.insertedId) {
@@ -85,7 +85,8 @@ async function codeHandler(req) {
 				username: user_object.username,
 				country: user_object.country_code,
 				rank: user_object.statistics.global_rank,
-				user_object: user_object
+				discord: user_object.discord ? user_object.discord : userCheck.discord,
+				login_count: userCheck.login_count + 1 || 1
 			}
 			let update = await req.auth.users.collection.updateOne(filter, {$set: updated}) // Legit cannot bother to learn findOneAndUpdate()
 			update.modifiedCount ? console.log(`User logged in: ${user_object.id} | ${user_object.username}`) : console.warn(`/!\\ Couldn't update user: ${user_object.id} | ${user_object.username}`)

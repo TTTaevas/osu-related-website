@@ -10,11 +10,11 @@ module.exports = class Branch {
 			setTimeout(() => console.log(util.inspect(this, false, null, true)), 10000)
 		}
 		this.body = info
-		this.branches = []
 	}
 
 	add(info) {
 		let branch = new Branch(info)
+		if (!this.branches) {this.branches = []}
 		this.branches.push(branch)
 		return branch
 	}

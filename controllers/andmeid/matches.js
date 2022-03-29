@@ -1,6 +1,7 @@
 const v2 = require("../../apis/osu-v2.js")
 const Branch = require("./classes/Branch.js")
 
+const { addUser } = require("./users.js")
 const { addGames } = require("./games.js")
 
 class Match {
@@ -8,7 +9,7 @@ class Match {
 		this.id = m.id
 		this.name = m.name
 		this.date = m.date
-		this.games = m.players
+		this.players = m.players
 		this.games = m.games.map((g) => g.id)
 	}
 }
@@ -28,6 +29,7 @@ async function addMatch(req, id, token, branch) {
 	let match = new Match(osu_response)
 	let insertion = await req.andmeid.db.collection("matches").insertOne(match)
 
+	match.players.forEach((p) => addUser(req, p.id, token, new_branch))
 	addGames(req, osu_response.games, token, new_branch)
 	
 	return match

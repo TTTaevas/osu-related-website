@@ -1,6 +1,8 @@
 const v2 = require("../../apis/osu-v2.js")
 const Branch = require("./classes/Branch.js")
 
+const { addUser } = require("./users.js")
+
 class Beatmap {
 	constructor(b) {
 		this.id = b.id
@@ -31,6 +33,8 @@ async function addBeatmap(req, id, token, branch) {
 
 	let beatmap = new Beatmap(osu_response)
 	let insertion = await req.andmeid.db.collection("beatmaps").insertOne(beatmap)
+
+	addUser(req, beatmap.mapper_id, token, new_branch)
 
 	return beatmap
 }
