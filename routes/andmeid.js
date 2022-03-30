@@ -42,14 +42,23 @@ const uc = function(req, res, next, roles) {
 const home = require("../controllers/andmeid/home")
 router.get("/", home.main)
 
-// The admin requirement is temporary
+const admin = require("../controllers/andmeid/admin")
+router.get("/admin", (r,a,n)=>uc(r,a,n,["admin"]), admin.main)
+
 const matches = require("../controllers/andmeid/matches")
 router.get("/matches", matches.main)
 router.post("/matches", validator.id, (r,a,n)=>uc(r,a,n), matches.create)
 
+const users = require("../controllers/andmeid/users")
+router.get("/users", users.main)
+// router.post("/users", validator.id, (r,a,n)=>uc(r,a,n), users.create)
+
+const games = require("../controllers/andmeid/games")
+router.get("/games", games.main)
+
 const beatmaps = require("../controllers/andmeid/beatmaps")
 router.get("/beatmaps", beatmaps.main)
-router.post("/beatmaps", validator.id, (r,a,n)=>uc(r,a,n), beatmaps.create)
+// router.post("/beatmaps", validator.id, (r,a,n)=>uc(r,a,n), beatmaps.create)
 
 router.get("*", (req, res) => res.status(404).render("andmeid/error", {error: {code: 404, message: "The content you're looking for does not exist"}}))
 router.post("*", (req, res) => res.status(404).json({status: false, error: "The content you're looking for does not exist"}))

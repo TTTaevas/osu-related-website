@@ -62,7 +62,7 @@ function addMap(n, position) {
 					}
 
 				} else {new_element.value = "NM1"}
-			} else {new_element.setAttribute("onblur", "sendId('beatmaps', this.value)")}
+			} // else {new_element.setAttribute("onblur", "sendId('beatmaps', this.value)")}
 
 			new_map.appendChild(new_element)
 		})
