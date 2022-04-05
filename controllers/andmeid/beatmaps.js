@@ -40,7 +40,23 @@ async function addBeatmap(req, id, token, branch) {
 }
 
 exports.main = async (req, res) => {
-	res.status(200).render("andmeid/beatmaps", {user: req.auth.user})
+	let b_db = await req.andmeid.db.collection("beatmaps").find().toArray()
+	let beatmaps = await Promise.all(await b_db.map(async (b) => {
+		b.mapper = await req.auth.users.collection.findOne({id: b.mapper_id})
+
+		let games = await req.andmeid.db.collection("games").find({"beatmap.id": b.id}).toArray()
+		b.scores = await Promise.all(games.map((g) => g.scores.map(async (s) => {
+			s.player = await req.auth.users.collection.findOne({id: s.player_id})
+			return s
+		}))
+		.flat())
+		
+		return b
+	}))
+
+	beatmaps.sort((x, y) => x.scores.length - y.scores.length).reverse()
+	beatmaps.forEach((b) => b.scores.sort((x, y) => x.score - y.score).reverse())
+	res.status(200).render("andmeid/beatmaps", {user: req.auth.user, beatmaps})
 }
 
 exports.create = async (req, res) => {

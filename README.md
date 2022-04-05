@@ -2,6 +2,8 @@
 
 [taevas.xyz](https://taevas.xyz) is my personal website meant for multiple osu!-related projects
 
+It's not to be confused with [static.taevas.xyz](https://static.taevas.xyz), my collection of various static pages, which has [a repository on GitLab](https://gitlab.com/TTTaevas/static.taevas.xyz)
+
 ## HOW TO TEST
 
 Start by cloning the repository and doing the `npm i` command to install the node modules
