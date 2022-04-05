@@ -33,5 +33,24 @@ async function addUser(req, id, token, branch) {
 }
 
 exports.main = async (req, res) => {
-	res.status(200).render("andmeid/users", {user: req.auth.user})
+	let u_db = await req.auth.users.array()
+	let users = await Promise.all(await u_db.map(async (u) => {
+		u.mapped = await req.andmeid.db.collection("beatmaps").find({mapper_id: u.id}).toArray()
+		u.matches = await req.andmeid.db.collection("matches").find({players: {$elemMatch: {id: u.id}}}).toArray()
+		// u.matches = await Promise.all(u.matches.map(async (m) => {
+		// 	m.games = await Promise.all(m.games.map(async (g) => g = await req.andmeid.db.collection("games").findOne({id: g})))
+		// 	return m
+		// }))
+		// const util = require('util')
+		// if (u.mapped.length) console.log(util.inspect(u, false, null, true))
+		
+		return u
+	}))
+	
+	users.sort((x, y) => {
+		if (x.matches.length != y.matches.length) {return y.matches.length - x.matches.length}
+		if (x.mapped.length != y.mapped.length) {return y.mapped.length - x.mapped.length}
+		return x.username > y.username ? 1 : -1	
+	})
+	res.status(200).render("andmeid/users", {user: req.auth.user, users})
 }

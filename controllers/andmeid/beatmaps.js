@@ -54,8 +54,8 @@ exports.main = async (req, res) => {
 		return b
 	}))
 
-	beatmaps.sort((x, y) => x.scores.length - y.scores.length).reverse()
-	beatmaps.forEach((b) => b.scores.sort((x, y) => x.score - y.score).reverse())
+	beatmaps.sort((x, y) => y.scores.length - x.scores.length)
+	beatmaps.forEach((b) => b.scores.sort((x, y) => y.score - x.score))
 	res.status(200).render("andmeid/beatmaps", {user: req.auth.user, beatmaps})
 }
 

@@ -17,12 +17,14 @@
 					<%= b.artist %> - <%= b.title %> [<%= b.difficulty %>]
 				</a>
 				<a class="b_mapper" href="https://osu.ppy.sh/u/<%= b.mapper.id %>" target="_blank">
-					<img class="flag" src="https://osuflags.omkserver.nl/<%= b.mapper.country %>-32.png" alt="<%= b.mapper.country %>"> <%= b.mapper.username %>
+					<img class="flag" src="https://osuflags.omkserver.nl/<%= b.mapper.country %>-32.png" alt="<%= b.mapper.country %>">
+					<span class="username"><%= b.mapper.username %></span>
 				</a>
 				<% b.scores.forEach((s) => { %>
 					<div class="b_score">
 						<a class="s_player" href="https://osu.ppy.sh/u/<%= s.player.id %>" target="_blank">
-							<img class="flag" src="https://osuflags.omkserver.nl/<%= s.player.country %>-32.png" alt="<%= s.player.country %>"> <%= s.player.username %>
+							<img class="flag" src="https://osuflags.omkserver.nl/<%= s.player.country %>-32.png" alt="<%= s.player.country %>">
+							<span class="username"><%= s.player.username %></span>
 							<span class="s_score"><%= s.score %></span>
 							<div class="s_mods">
 								<% s.mods.forEach((m) => { %>
