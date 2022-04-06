@@ -2,7 +2,7 @@ const { check, validationResult } = require("express-validator")
 
 const id = [
 	check("id")
-	.isLength({min: 2, max: 9})
+	.isLength({min: 1, max: 16})
 	.isNumeric(),
 	(req, res, next) => {
 		const errors = validationResult(req)

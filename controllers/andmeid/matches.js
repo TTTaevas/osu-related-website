@@ -29,7 +29,7 @@ async function addMatch(req, id, token, branch) {
 	let match = new Match(osu_response)
 	let insertion = await req.andmeid.db.collection("matches").insertOne(match)
 
-	match.players.forEach((p) => addUser(req, p.id, token, new_branch))
+	match.players.forEach((p) => addUser(req, p.id, token, new_branch, true))
 	addGames(req, osu_response.games, token, new_branch)
 	
 	return match

@@ -15,7 +15,7 @@ class User { // login.js line 64 or so
 }
 
 exports.addUser = addUser
-async function addUser(req, id, token, branch) {
+async function addUser(req, id, token, branch, guarantee) {
 	let info = {id, type: "user"}
 	let new_branch = branch ? branch.add(info) : new Branch(info, req.auth.user)
 
@@ -27,9 +27,23 @@ async function addUser(req, id, token, branch) {
 	if (!osu_response) return false
 
 	let user = new User(osu_response)
-	let insertion = await req.auth.users.collection.insertOne(user)
-	
+	insertUser(req, user, token, new_branch, guarantee)
 	return user
+}
+
+async function insertUser(req, user, token, branch, guarantee) {
+	/*  Insert functions exist because it's fine to use Andmeid's API to easily use osu!api v2
+		But it's not fine to use Andmeid's API to fill its database with stuff the website doesn't use  */
+
+	if (!guarantee) { // guarantee allows to bypass checks, making the insertion stuff faster
+		let check = await Promise.all([
+			req.andmeid.db.collection("beatmaps").find({mapper_id: user.id}).toArray(),
+			req.andmeid.db.collection("matches").find({players: {$elemMatch: {id: user.id}}}).toArray()
+		])
+		if (check.every((c) => !c.length)) return
+	}
+	
+	req.auth.users.collection.insertOne(user)
 }
 
 exports.main = async (req, res) => {
@@ -37,13 +51,6 @@ exports.main = async (req, res) => {
 	let users = await Promise.all(await u_db.map(async (u) => {
 		u.mapped = await req.andmeid.db.collection("beatmaps").find({mapper_id: u.id}).toArray()
 		u.matches = await req.andmeid.db.collection("matches").find({players: {$elemMatch: {id: u.id}}}).toArray()
-		// u.matches = await Promise.all(u.matches.map(async (m) => {
-		// 	m.games = await Promise.all(m.games.map(async (g) => g = await req.andmeid.db.collection("games").findOne({id: g})))
-		// 	return m
-		// }))
-		// const util = require('util')
-		// if (u.mapped.length) console.log(util.inspect(u, false, null, true))
-		
 		return u
 	}))
 	
@@ -53,4 +60,9 @@ exports.main = async (req, res) => {
 		return x.username > y.username ? 1 : -1	
 	})
 	res.status(200).render("andmeid/users", {user: req.auth.user, users})
+}
+
+exports.find = async (req, res) => {
+	let user = await addUser(req, req.body.id)
+	return res.status(user ? 200 : 202).json({status: true, content: user})
 }

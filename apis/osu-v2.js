@@ -18,6 +18,7 @@ async function request(main, header_part, data) {
 	.catch((error) => {
 		let err = new Error("\n/!\\ An error happened while doing a request to osu!api v2")
 		if (error.response) {
+			if (error.response.status == 404) console.log("osu!api v2 ->", error.response.statusText, error.response.status, main)
 			err.type = "Request made and server responded"
 			err.public = "Invalid code!"
 			err.main = main

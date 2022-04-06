@@ -20,7 +20,7 @@ class Beatmap {
 }
 
 exports.addBeatmap = addBeatmap
-async function addBeatmap(req, id, token, branch) {
+async function addBeatmap(req, id, token, branch, guarantee) {
 	let info = {id, type: "beatmap"}
 	let new_branch = branch ? branch.add(info) : new Branch(info, req.auth.user)
 
@@ -32,11 +32,21 @@ async function addBeatmap(req, id, token, branch) {
 	if (!osu_response) return false
 
 	let beatmap = new Beatmap(osu_response)
-	let insertion = await req.andmeid.db.collection("beatmaps").insertOne(beatmap)
-
-	addUser(req, beatmap.mapper_id, token, new_branch)
-
+	insertBeatmap(req, beatmap, token, new_branch, guarantee)
 	return beatmap
+}
+
+async function insertBeatmap(req, beatmap, token, branch, guarantee) {
+	/*  Insert functions exist because it's fine to use Andmeid's API to easily use osu!api v2
+		But it's not fine to use Andmeid's API to fill its database with stuff the website doesn't use  */
+
+	if (!guarantee) { // guarantee allows to bypass checks, making the insertion stuff faster
+		let check = await req.andmeid.db.collection("games").find({beatmap: {$elemMatch: {id: beatmap.id}}}).toArray()
+		if (!check) return
+	}
+	
+	req.andmeid.db.collection("beatmaps").insertOne(beatmap)
+	addUser(req, beatmap.mapper_id, token, branch, true)
 }
 
 exports.main = async (req, res) => {
@@ -59,8 +69,7 @@ exports.main = async (req, res) => {
 	res.status(200).render("andmeid/beatmaps", {user: req.auth.user, beatmaps})
 }
 
-exports.create = async (req, res) => {
+exports.find = async (req, res) => {
 	let beatmap = await addBeatmap(req, req.body.id)
-	let s = beatmap ? 200 : 202
-	return res.status(s).json({status: true, content: beatmap})
+	return res.status(beatmap ? 200 : 202).json({status: true, content: beatmap})
 }

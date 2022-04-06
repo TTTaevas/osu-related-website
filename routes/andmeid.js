@@ -51,16 +51,16 @@ router.post("/matches", validator.id, (r,a,n)=>uc(r,a,n), matches.create)
 
 const users = require("../controllers/andmeid/users")
 router.get("/users", users.main)
-// router.post("/users", validator.id, (r,a,n)=>uc(r,a,n), users.create)
+router.post("/users", validator.id, users.find)
 
 const games = require("../controllers/andmeid/games")
 router.get("/games", games.main)
 
 const beatmaps = require("../controllers/andmeid/beatmaps")
 router.get("/beatmaps", beatmaps.main)
-// router.post("/beatmaps", validator.id, (r,a,n)=>uc(r,a,n), beatmaps.create)
+router.post("/beatmaps", validator.id, beatmaps.find)
 
 router.get("*", (req, res) => res.status(404).render("andmeid/error", {error: {code: 404, message: "The content you're looking for does not exist"}}))
-router.post("*", (req, res) => res.status(404).json({status: false, error: "The content you're looking for does not exist"}))
+router.post("*", (req, res) => res.status(404).json({status: false, error: "This route or content does not exist"}))
 
 module.exports = router

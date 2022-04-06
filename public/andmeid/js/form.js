@@ -14,7 +14,7 @@ function addMatch(n, position) {
 		new_match.setAttribute("name", "matches")
 		new_match.setAttribute("placeholder", "Match ID")
 		new_match.setAttribute("onclick", "this.select()")
-		new_match.setAttribute("onblur", "sendId('matches', this.value)")
+		new_match.setAttribute("onblur", "api('matches', this.value)")
 
 		parent.appendChild(new_match)
 		if (position == undefined || (!matches || matches[position] == undefined)) {
@@ -62,7 +62,7 @@ function addMap(n, position) {
 					}
 
 				} else {new_element.value = "NM1"}
-			} // else {new_element.setAttribute("onblur", "sendId('beatmaps', this.value)")}
+			}
 
 			new_map.appendChild(new_element)
 		})
@@ -99,19 +99,4 @@ function fixButtonsIndex(parent) {
 function initForm() {
 	addMatch(8)
 	addMap(10)
-}
-
-// Send IDs in form before form submission for lesser wait time
-
-function sendId(type, id) {
-	if (!id || id.length < 2) return
-	if (isNaN(id)) return
-
-	let xhr = new XMLHttpRequest()
-	xhr.open("POST", `/andmeid/${type}`)
-
-	xhr.setRequestHeader("Accept", "application/json")
-	xhr.setRequestHeader("Content-Type", "application/json")
-
-	xhr.send(`{"id": ${id}}`)
 }
