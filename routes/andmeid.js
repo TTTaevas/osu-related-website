@@ -47,7 +47,7 @@ router.get("/admin", (r,a,n)=>uc(r,a,n,["admin"]), admin.main)
 
 const matches = require("../controllers/andmeid/matches")
 router.get("/matches", matches.main)
-router.post("/matches", validator.id, (r,a,n)=>uc(r,a,n), matches.create)
+router.post("/matches", validator.id, matches.create)
 
 const users = require("../controllers/andmeid/users")
 router.get("/users", users.main)
@@ -55,6 +55,7 @@ router.post("/users", validator.id, users.find)
 
 const games = require("../controllers/andmeid/games")
 router.get("/games", games.main)
+router.post("/games", validator.id, games.find)
 
 const beatmaps = require("../controllers/andmeid/beatmaps")
 router.get("/beatmaps", beatmaps.main)

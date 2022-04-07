@@ -21,14 +21,25 @@ async function addGames(req, games, token, branch) {
 	let new_branch = branch ? branch.add(info) : new Branch(info, req.auth.user)
 
 	games = games.map((g) => new Game(g))
-	games = await Promise.all(await games.filter(async (game) => {
-		await !req.andmeid.db.collection("games").findOne({id: game.id})
-	}))
-	await req.andmeid.db.collection("games").insertMany(games)
+	let checks = await Promise.all(games.map((g) => req.andmeid.db.collection("games").findOne({id: g.id})))
+	games = games.filter((g, i) => !Boolean(checks[i]))
+	if (games.length) await req.andmeid.db.collection("games").insertMany(games) // Empty arrays are NOT supported lmfao
 
-	games.forEach((g) => addBeatmap(req, g.beatmap.id, token, new_branch))
+	games.forEach((g) => addBeatmap(req, g.beatmap.id, token, new_branch, true))
+}
+
+exports.findGame = findGame
+async function findGame(req, id, branch) {
+	let info = {id, type: "games"}
+	branch ? branch.add(info) : new Branch(info, req.auth.user)
+	return await req.andmeid.db.collection("games").findOne({id})
 }
 
 exports.main = async (req, res) => {
-	res.status(200).render("andmeid/games", {user: req.auth.user})
+	res.status(204).render("andmeid/games", {user: req.auth.user})
+}
+
+exports.find = async (req, res) => {
+	let game = await findGame(req, req.body.id)
+	return res.status(game ? 200 : 202).json({status: true, content: game})
 }
