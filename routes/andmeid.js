@@ -43,7 +43,8 @@ const home = require("../controllers/andmeid/home")
 router.get("/", home.main)
 
 const admin = require("../controllers/andmeid/admin")
-router.get("/admin", (r,a,n)=>uc(r,a,n,["admin"]), admin.main)
+router.get("/admin", admin.main) //(r,a,n)=>uc(r,a,n,["admin"]),
+// Admin is currently a cool test area, I don't mind allowing folks to visit it for the time being
 
 const matches = require("../controllers/andmeid/matches")
 router.get("/matches", matches.main)

@@ -8,5 +8,8 @@
 	</head>
 	<body>
 		<%- include("partials/header") %>
+		<div class="display">
+			<input type="text" class="id" onblur="api('users', this.value, {f: display, d: this.parentElement})">
+		</div>
 	</body>
 </html>
