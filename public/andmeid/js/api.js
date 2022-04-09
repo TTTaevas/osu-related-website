@@ -66,22 +66,26 @@ function display(type, data, host) {
 				arr.push(timezone)
 			}
 
-			// WIP, LITERALLY IMPOSSIBLE TO IMPLEMENT UNTIL FURTHER BACKEND WORK IS DONE
-
 			let played = document.createElement("div")
 			played.setAttribute("class", "display")
-			let trigger_played = document.createElement("button")
-			trigger_played.setAttribute("class", "trigger")
-			trigger_played.innerHTML = "Matches played"
-			played.appendChild(trigger_played)
+			let triggers_played = triggerTemplate(`matches played (${data.matches.length})`)
+			triggers_played.forEach((t) => played.appendChild(t))
+			data.matches.forEach((m) => {
+				let match = matchTemplate(m)
+				match.classList.add("invisible")
+				played.appendChild(match)
+			})
 			arr.push(played)
 
 			let mapped = document.createElement("div")
 			mapped.setAttribute("class", "display")
-			let trigger_mapped = document.createElement("button")
-			trigger_mapped.setAttribute("class", "trigger")
-			trigger_mapped.innerHTML = "Beatmaps mapped"
-			mapped.appendChild(trigger_mapped)
+			let triggers_mapped = triggerTemplate(`beatmaps mapped (${data.mapped.length})`)
+			triggers_mapped.forEach((t) => mapped.appendChild(t))
+			data.mapped.forEach((m) => {
+				let beatmap = matchTemplate(m)
+				beatmap.classList.add("invisible")
+				mapped.appendChild(beatmap)
+			})
 			arr.push(mapped)
 
 			break
@@ -96,3 +100,62 @@ function display(type, data, host) {
 	arr.forEach((e) => div.appendChild(e))
 	host.appendChild(div)
 }
+
+function triggerTemplate(text) {
+	let show = document.createElement("button")
+	show.setAttribute("class", "trigger")
+	show.setAttribute("onclick", "showSiblings(this)")
+	show.innerHTML = `Show ${text}`
+
+	let hide = document.createElement("button")
+	hide.setAttribute("class", "trigger invisible")
+	hide.setAttribute("onclick", "showSiblings(this)")
+	hide.innerHTML = `Hide ${text}`
+
+	return [show, hide]
+}
+
+function dateTemplate(text) { // Already assuming ISO string (YYYY-MM-DDTHH:mm:ss.sssZ)
+	let date = document.createElement("span")
+	date.setAttribute("class", "date")
+	date.innerHTML = `${text.substring(0, 10)} ${text.substring(11, 16)} UTC`
+
+	return date
+}
+
+function matchTemplate(data) {
+	let div = document.createElement("div")
+	div.setAttribute("class", "m")
+
+	let name = document.createElement("a")
+	name.setAttribute("class", "m_name")
+	name.setAttribute("href", `https://osu.ppy.sh/mp/${data.id}`)
+	name.setAttribute("target", "_blank")
+	name.innerHTML = data.name
+	div.appendChild(name)
+
+	div.appendChild(dateTemplate(data.date))
+
+	let games = document.createElement("div")
+	games.setAttribute("class", "display")
+	let triggers_games = triggerTemplate(`games played (${data.games.length})`)
+	// triggers_games[0].setAttribute("onmousedown", "dealWithTheGamesData()")
+	triggers_games.forEach((t) => games.appendChild(t))
+	data.games.forEach((g) => {
+		let game = document.createElement("div")
+		game.setAttribute("class", "g invisible")
+		game.setAttribute("game_id", g)
+		games.appendChild(game)
+	})
+	div.appendChild(games)
+
+	return div
+}
+
+function showSiblings(e) {
+	const siblings = [].slice.call(e.parentNode.children).filter((c) => c != e)
+	e.classList.toggle("invisible")
+	siblings.forEach((s) => s.classList.toggle("invisible"))
+}
+
+

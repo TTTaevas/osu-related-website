@@ -64,5 +64,9 @@ exports.main = async (req, res) => {
 
 exports.find = async (req, res) => {
 	let user = await addUser(req, req.body.id)
+	await Promise.all([
+		user.mapped = await req.andmeid.db.collection("beatmaps").find({mapper_id: user.id}).toArray(),
+		user.matches = await req.andmeid.db.collection("matches").find({players: {$elemMatch: {id: user.id}}}).toArray()
+	])
 	return res.status(user ? 200 : 202).json({status: true, content: user})
 }

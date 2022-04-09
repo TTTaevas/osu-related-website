@@ -35,6 +35,10 @@ a {
 	text-decoration: none;
 }
 
+.invisible {
+	display: none;
+}
+
 .link {
 	background-color: #171a24;
 	color: #c8620c;
