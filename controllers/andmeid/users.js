@@ -16,8 +16,7 @@ class User { // login.js line 64 or so
 
 exports.addUser = addUser
 async function addUser(req, id, token, branch, guarantee) {
-	let info = {id, type: "user"}
-	let new_branch = branch ? branch.add(info) : new Branch(info, req.auth.user)
+	if (branch) {branch = branch.add({id, type: "user"})}
 
 	let db_response = await req.auth.users.collection.findOne({id})
 	if (db_response) return db_response
@@ -27,7 +26,7 @@ async function addUser(req, id, token, branch, guarantee) {
 	if (!osu_response) return false
 
 	let user = new User(osu_response)
-	insertUser(req, user, token, new_branch, guarantee)
+	insertUser(req, user, token, branch, guarantee)
 	return user
 }
 

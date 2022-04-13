@@ -17,21 +17,19 @@ class Game {
 
 exports.addGames = addGames
 async function addGames(req, games, token, branch) {
-	let info = {ids: games.map((g) => g.id), type: "games"}
-	let new_branch = branch ? branch.add(info) : new Branch(info, req.auth.user)
+	if (branch) {branch = branch.add({ids: games.map((g) => g.id), type: "games"})}
 
 	games = games.map((g) => new Game(g))
 	let checks = await Promise.all(games.map((g) => req.andmeid.db.collection("games").findOne({id: g.id})))
 	games = games.filter((g, i) => !Boolean(checks[i]))
 	if (games.length) await req.andmeid.db.collection("games").insertMany(games) // Empty arrays are NOT supported lmfao
 
-	games.forEach((g) => addBeatmap(req, g.beatmap.id, token, new_branch, true))
+	games.forEach((g) => addBeatmap(req, g.beatmap.id, token, branch, true))
 }
 
 exports.findGame = findGame
 async function findGame(req, id, branch) {
-	let info = {id, type: "games"}
-	branch ? branch.add(info) : new Branch(info, req.auth.user)
+	if (branch) {branch = branch.add({id, type: "games"})}
 	return await req.andmeid.db.collection("games").findOne({id})
 }
 

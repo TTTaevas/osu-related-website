@@ -50,7 +50,7 @@ app.use(fileUpload())
 const rateLimit = require('express-rate-limit')
 const rateLimiter = rateLimit({
 	windowMs: 60 * 1000, // 1 minute
-	max: 40, // 40 requests per IP per minute
+	max: 100, // 100 requests per IP per minute
 	message: "You are currently being rate-limited, please try again soon",
 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers

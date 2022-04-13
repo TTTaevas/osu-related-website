@@ -21,8 +21,7 @@ class Beatmap {
 
 exports.addBeatmap = addBeatmap
 async function addBeatmap(req, id, token, branch, guarantee) {
-	let info = {id, type: "beatmap"}
-	let new_branch = branch ? branch.add(info) : new Branch(info, req.auth.user)
+	if (branch) {branch = branch.add({id, type: "beatmap"})}
 
 	let db_response = await req.andmeid.db.collection("beatmaps").findOne({id})
 	if (db_response) return db_response
@@ -32,7 +31,7 @@ async function addBeatmap(req, id, token, branch, guarantee) {
 	if (!osu_response) return false
 
 	let beatmap = new Beatmap(osu_response)
-	insertBeatmap(req, beatmap, token, new_branch, guarantee)
+	insertBeatmap(req, beatmap, token, branch, guarantee)
 	return beatmap
 }
 

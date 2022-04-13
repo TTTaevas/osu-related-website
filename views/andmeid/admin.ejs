@@ -9,7 +9,7 @@
 	<body>
 		<%- include("partials/header") %>
 		<div class="display">
-			<input type="text" class="id" onblur="api('users', this.value, {f: display, d: this.parentElement})">
+			<input type="text" class="id" onblur="api('users', this.value, {size: 'f', host: this.parentElement})">
 		</div>
 	</body>
 </html>
