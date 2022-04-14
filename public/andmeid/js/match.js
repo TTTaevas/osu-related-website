@@ -4,8 +4,8 @@ function m_required(data) {
 	match.setAttribute("m_id", data.id)
 
 	let name = document.createElement("a")
-	name.setAttribute("class", "name")
-	name.setAttribute("href", `https://taevas.xyz/andmeid/matches/${data.id}`)
+	name.classList.add("name")
+	name.setAttribute("href", `/andmeid/matches/${data.id}`)
 	name.setAttribute("target", "_blank")
 	name.innerHTML = data.name
 	match.appendChild(name)
@@ -13,13 +13,14 @@ function m_required(data) {
 	match.appendChild(dateTemplate(data.date))
 
 	let games = document.createElement("div")
-	games.setAttribute("class", "display")
+	games.classList.add("display")
 	let triggers_games = triggerTemplate(`games played (${data.games.length})`)
 	triggers_games[0].setAttribute("onmousedown", "replaceWithData('games', this.parentNode)")
 	triggers_games.forEach((t) => games.appendChild(t))
 	data.games.forEach((g) => {
 		let game = document.createElement("div")
-		game.setAttribute("class", "g invisible")
+		game.classList.add("g")
+		game.classList.add("invisible")
 		game.setAttribute("osu_id", g)
 		games.appendChild(game)
 	})

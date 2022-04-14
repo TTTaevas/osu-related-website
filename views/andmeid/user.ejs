@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Andmeid | User <%= id %></title>
+		<link rel="stylesheet" type="text/css" href="/andmeid/css/users.css">
+	</head>
+	<body onload="api('users', '<%= id %>', {size: 'f', host: document.getElementsByClassName('display')[0]})">
+		<%- include("partials/header") %>
+		<div class="display"></div>
+	</body>
+</html>

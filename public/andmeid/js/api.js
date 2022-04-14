@@ -29,24 +29,33 @@ function api(type, id, config) {
 function replaceWithData(type, host) {
 	let children = Array.from(host.children)
 	let maidens = children.map((c) => c.getAttribute("osu_id")).filter((m) => m)
-	maidens.forEach((m) => api(type, m, {size: "r", host, replace: true}))
+	maidens.forEach((m) => api(type, m, {size: "r", host, replace: "osu_id"}))
 }
 
 function display(type, d, c) {
 	if (!c) {c = {}}
 
 	var element
-	if (type == "u") {element = c.size == "f" ? u_full(d) : c.size == "s" ? u_small(d) : u_required(d)}
-	else if (type == "m") {element = m_required(d)}
-	else if (type == "g") {element = g_required(d)}
-	else if (type == "s") {element = s_required(d)}
-	else {
+	if (!d) {
 		element = document.createElement("p")
 		element.classList.add("unsuccessful")
-		element.innerHTML = "Couldn't find the requested data ><"
+		element.innerHTML = "The requested data does not seem to exist ><"
+	} else {
+		if (type == "u") {element = c.size == "f" ? u_full(d) : c.size == "s" ? u_small(d) : u_required(d)}
+		else if (type == "m") {element = m_required(d)}
+		else if (type == "g") {element = g_required(d)}
+		else if (type == "s") {element = s_required(d)}
+		else { // Unless the user wants to, type shouldn't ever be something else
+			element = document.createElement("p")
+			element.classList.add("unsuccessful")
+			element.innerHTML = "Some weird bug happened, sorry... ><'"
+		}
 	}
 
 	if (c.return) return element
-	if (c.replace) return c.host.replaceChild(element, c.host.querySelector(`div[osu_id="${d.id}"]`))
+	if (c.replace) {
+		if (c.replace == "osu_id") return c.host.replaceChild(element, c.host.querySelector(`div[osu_id="${d.id}"]`))
+		return c.host.replaceChild(element, c.host.lastElementChild)
+	}
 	c.host.appendChild(element)
 }

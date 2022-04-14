@@ -6,40 +6,14 @@
 		<title>Andmeid | Users</title>
 		<link rel="stylesheet" type="text/css" href="/andmeid/css/users.css">
 	</head>
-	<body>
+	<% if (user) { %>
+		<body onload="api('users', '<%= user.id %>', {size: 'f', host: document.getElementsByClassName('display')[0]})">
+	<% } else { %>
+		<body>
+	<% } %>
 		<%- include("partials/header") %>
-		<% if (user.id != 7276846) { %>
-			<div class="notification">Currently WIP! This does NOT properly work!</div>
-		<% } %>
-		<% users.forEach((u) => { %>
-			<div class="u">
-				<a class="u_player" href="https://osu.ppy.sh/u/<%= u.id %>" target="_blank">
-					<img class="flag" src="https://osuflags.omkserver.nl/<%= u.country %>-32.png" alt="<%= u.country %>">
-					<img class="pfp" src="https://a.ppy.sh/<%= u.id %>" alt="Could not load pfp :c">
-					<span class="username"><%= u.username %></span>
-					<% if (u.discord) { %>
-						<span class="discord"><%= u.discord %></span>
-					<% } %>
-					<% if (u.timezone) { %>
-						<span class="timezone"><%= u.timezone %></span>
-					<% } %>
-				</a>
-
-				<!-- mapped is entirely wip -->
-				<% u.mapped.forEach((b) => { %>
-					<span>mapped <a class="b_name" href="https://osu.ppy.sh/b/<%= b.id %>" target="_blank">
-						<%= b.artist %> - <%= b.title %> [<%= b.difficulty %>]
-					</a></span>
-				<% }) %>
-
-				<% u.matches.forEach((m) => { %>
-					<a class="m" href="https://osu.ppy.sh/mp/<%= m.id %>" target="_blank">
-						<span class="m_name"><%= m.name %></span>
-						<span class="m_date"><%= m.date.toISOString().substring(0, 10) %></span>
-						<span class="m_number_games"><%= m.games.length %> games played</span>
-					</a>
-				<% }) %>
-			</div>
-		<% }) %>
+		<div class="display"> <!-- the replace problem -->
+			<input type="text" class="id" value="<%= user ? user.id : '' %>" onblur="api('users', this.value, {size: 'f', host: this.parentElement, replace: 'lastChild'})">
+		</div>
 	</body>
 </html>

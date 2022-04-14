@@ -52,6 +52,7 @@ router.post("/matches", validator.id, matches.create)
 
 const users = require("../controllers/andmeid/users")
 router.get("/users", users.main)
+router.get("/users/:id", users.specific)
 router.post("/users", validator.id, users.find)
 
 const games = require("../controllers/andmeid/games")

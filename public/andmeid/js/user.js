@@ -14,7 +14,7 @@ function u_required(data) {
 
 	let name = document.createElement("a")
 	name.classList.add("name")
-	name.setAttribute("href", `https://taevas.xyz/andmeid/users/${data.id}`)
+	name.setAttribute("href", `/andmeid/users/${data.id}`)
 	name.setAttribute("target", "_blank")
 	name.innerHTML = data.username
 	user.appendChild(name)

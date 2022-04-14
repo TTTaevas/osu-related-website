@@ -46,19 +46,11 @@ async function insertUser(req, user, token, branch, guarantee) {
 }
 
 exports.main = async (req, res) => {
-	let u_db = await req.auth.users.array()
-	let users = await Promise.all(await u_db.map(async (u) => {
-		u.mapped = await req.andmeid.db.collection("beatmaps").find({mapper_id: u.id}).toArray()
-		u.matches = await req.andmeid.db.collection("matches").find({players: {$elemMatch: {id: u.id}}}).toArray()
-		return u
-	}))
-	
-	users.sort((x, y) => {
-		if (x.matches.length != y.matches.length) {return y.matches.length - x.matches.length}
-		if (x.mapped.length != y.mapped.length) {return y.mapped.length - x.mapped.length}
-		return x.username > y.username ? 1 : -1	
-	})
-	res.status(200).render("andmeid/users", {user: req.auth.user, users})
+	res.status(200).render("andmeid/users", {user: req.auth.user})
+}
+
+exports.specific = async (req, res) => {
+	res.status(200).render("andmeid/user", {user: req.auth.user, id: req.params.id})
 }
 
 exports.find = async (req, res) => {
