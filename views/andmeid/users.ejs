@@ -7,13 +7,14 @@
 		<link rel="stylesheet" type="text/css" href="/andmeid/css/users.css">
 	</head>
 	<% if (user) { %>
-		<body onload="api('users', '<%= user.id %>', {size: 'f', host: document.getElementsByClassName('display')[0]})">
+		<body onload="api('users', '<%= user.id %>', {size: 'f', host: document.getElementsByClassName('display')[0], replace: 'lastChild'})">
 	<% } else { %>
 		<body>
 	<% } %>
 		<%- include("partials/header") %>
-		<div class="display"> <!-- the replace problem -->
+		<div class="display">
 			<input type="text" class="id" value="<%= user ? user.id : '' %>" onblur="api('users', this.value, {size: 'f', host: this.parentElement, replace: 'lastChild'})">
+			<div class="invisible">This is a placeholder~</div>
 		</div>
 	</body>
 </html>

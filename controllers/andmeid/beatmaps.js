@@ -49,23 +49,11 @@ async function insertBeatmap(req, beatmap, token, branch, guarantee) {
 }
 
 exports.main = async (req, res) => {
-	let b_db = await req.andmeid.db.collection("beatmaps").find().toArray()
-	let beatmaps = await Promise.all(await b_db.map(async (b) => {
-		b.mapper = await req.auth.users.collection.findOne({id: b.mapper_id})
+	res.status(200).render("andmeid/main", {user: req.auth.user, type: "beatmaps"})
+}
 
-		let games = await req.andmeid.db.collection("games").find({"beatmap.id": b.id}).toArray()
-		b.scores = await Promise.all(games.map((g) => g.scores.map(async (s) => {
-			s.player = await req.auth.users.collection.findOne({id: s.player_id})
-			return s
-		}))
-		.flat())
-		
-		return b
-	}))
-
-	beatmaps.sort((x, y) => y.scores.length - x.scores.length)
-	beatmaps.forEach((b) => b.scores.sort((x, y) => y.score - x.score))
-	res.status(200).render("andmeid/beatmaps", {user: req.auth.user, beatmaps})
+exports.specific = async (req, res) => {
+	res.status(200).render("andmeid/specific", {user: req.auth.user, type: "beatmaps", id: req.params.id})
 }
 
 exports.find = async (req, res) => {

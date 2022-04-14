@@ -3,10 +3,7 @@ opened_requests = []
 function api(type, id, config) {
 	if (!id) return console.error(`No valid ID is provided: ${id}`)
 	if (isNaN(id)) return console.error(`The ID is invalid: ${id}`)
-	if (opened_requests.indexOf(id) > -1) {
-		console.info(`No request made for /${type}/${id} as a similar request is currently ongoing`)
-		return null
-	}
+	if (opened_requests.indexOf(id) > -1) return null
 
 	let xhr = new XMLHttpRequest()
 	xhr.open("POST", `/andmeid/${type}`)

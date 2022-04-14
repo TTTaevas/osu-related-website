@@ -34,7 +34,11 @@ async function findGame(req, id, branch) {
 }
 
 exports.main = async (req, res) => {
-	res.status(204).render("andmeid/games", {user: req.auth.user})
+	res.status(200).render("andmeid/main", {user: req.auth.user, type: "games"})
+}
+
+exports.specific = async (req, res) => {
+	res.status(200).render("andmeid/specific", {user: req.auth.user, type: "games", id: req.params.id})
 }
 
 exports.find = async (req, res) => {

@@ -48,6 +48,7 @@ router.get("/admin", admin.main) //(r,a,n)=>uc(r,a,n,["admin"]),
 
 const matches = require("../controllers/andmeid/matches")
 router.get("/matches", matches.main)
+router.get("/matches/:id", matches.specific)
 router.post("/matches", validator.id, matches.create)
 
 const users = require("../controllers/andmeid/users")
@@ -57,10 +58,12 @@ router.post("/users", validator.id, users.find)
 
 const games = require("../controllers/andmeid/games")
 router.get("/games", games.main)
+router.get("/games/:id", games.specific)
 router.post("/games", validator.id, games.find)
 
 const beatmaps = require("../controllers/andmeid/beatmaps")
 router.get("/beatmaps", beatmaps.main)
+router.get("/beatmaps/:id", beatmaps.specific)
 router.post("/beatmaps", validator.id, beatmaps.find)
 
 router.get("*", (req, res) => res.status(404).render("andmeid/error", {error: {code: 404, message: "The content you're looking for does not exist"}}))

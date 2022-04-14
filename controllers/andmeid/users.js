@@ -45,12 +45,12 @@ async function insertUser(req, user, token, branch, guarantee) {
 	req.auth.users.collection.insertOne(user)
 }
 
-exports.main = async (req, res) => {
+exports.main = async (req, res) => { // Not using the `main.ejs` format because `users.ejs` format loads logged-in user
 	res.status(200).render("andmeid/users", {user: req.auth.user})
 }
 
 exports.specific = async (req, res) => {
-	res.status(200).render("andmeid/user", {user: req.auth.user, id: req.params.id})
+	res.status(200).render("andmeid/specific", {user: req.auth.user, type: "users", id: req.params.id})
 }
 
 exports.find = async (req, res) => {

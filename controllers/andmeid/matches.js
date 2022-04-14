@@ -36,7 +36,11 @@ async function addMatch(req, id, token, branch) {
 }
 
 exports.main = async (req, res) => {
-	res.status(200).render("andmeid/matches", {user: req.auth.user})
+	res.status(200).render("andmeid/main", {user: req.auth.user, type: "matches"})
+}
+
+exports.specific = async (req, res) => {
+	res.status(200).render("andmeid/specific", {user: req.auth.user, type: "matches", id: req.params.id})
 }
 
 exports.create = async (req, res) => {

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Andmeid | <%= `${type[0].toUpperCase()}${type.slice(1)}` %></title>
+		<link rel="stylesheet" type="text/css" href="/andmeid/css/games.css">
+	</head>
+	<body>
+		<%- include("partials/header") %>
+		<div class="display">
+			<input type="text" class="id" onblur="api('<%= type %>', this.value, {size: 'f', host: this.parentElement, replace: 'lastChild'})">
+			<div class="invisible">This is a placeholder~</div>
+		</div>
+	</body>
+</html>
