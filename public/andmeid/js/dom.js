@@ -26,6 +26,17 @@ function dateTemplate(text) { // Already assuming ISO string (YYYY-MM-DDTHH:mm:s
 	return date
 }
 
+function tableTemplate(rows) {
+	let table = document.createElement("table")
+	let tbody = document.createElement("tbody")
+	for (let i = 0; i < rows; i++) {
+		let row = document.createElement("tr")
+		tbody.appendChild(row)
+	}
+	table.appendChild(tbody)
+	return table
+}
+
 function getDataFromHTML(type, id, size) {
 	var result
 	let sizes = ["f", "s", "r"] // x, y (x > y)

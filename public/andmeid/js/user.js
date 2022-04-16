@@ -8,7 +8,7 @@ function u_required(data) {
 
 	let flag = document.createElement("img")
 	flag.classList.add("flag")
-	flag.setAttribute("src", `https://osuflags.omkserver.nl/${data.country}-32.png`)
+	flag.setAttribute("src", `https://osuflags.omkserver.nl/${data.country}-40.png`)
 	flag.setAttribute("alt", data.country)
 	user.appendChild(flag)
 
@@ -26,27 +26,62 @@ function u_small(data) {
 	let user = u_required(data)
 	user.setAttribute("size", "s")
 
+	let card = tableTemplate(2)
+	card.classList.add("card")
+
+	let pfp_holder = document.createElement("td")
+	pfp_holder.setAttribute("rowspan", "2")
 	let pfp = document.createElement("img")
 	pfp.classList.add("pfp")
 	pfp.setAttribute("src", `https://a.ppy.sh/${data.id}`)
-	pfp.setAttribute("alt", "Could not load pfp :c")
-	user.appendChild(pfp)
+	pfp_holder.appendChild(pfp)
+	card.firstChild.firstChild.appendChild(pfp_holder)
+
+	let times = user.children.length
+	for (let i = 0; i < times; i++) {
+		let holder = document.createElement("td")
+		holder.appendChild(user.children[0])
+		card.firstChild.children[i].appendChild(holder)
+	}
+	user.appendChild(card)
 
 	let details = document.createElement("div")
 	details.classList.add("details")
 
 	if (data.discord) {
+		let container_discord = document.createElement("div")
+		container_discord.classList.add("container")
+
+		let image_discord = document.createElement("img")
+		image_discord.classList.add("icon")
+		image_discord.setAttribute("src", "/andmeid/images/discord.svg")
+		container_discord.appendChild(image_discord)
+
 		let discord = document.createElement("span")
 		discord.classList.add("discord")
+		discord.classList.add("copy")
+		discord.setAttribute("onclick", "navigator.clipboard.writeText(this.innerHTML)")
 		discord.innerHTML = data.discord
-		details.appendChild(discord)
+		container_discord.appendChild(discord)
+
+		details.appendChild(container_discord)
 	}
 
 	if (data.timezone) {
+		let container_timezone = document.createElement("div")
+		container_timezone.classList.add("container")
+
+		let image_timezone = document.createElement("img")
+		image_timezone.classList.add("icon")
+		image_timezone.setAttribute("src", "/andmeid/images/clock.svg")
+		container_timezone.appendChild(image_timezone)
+
 		let timezone = document.createElement("span")
 		timezone.classList.add("timezone")
 		timezone.innerHTML = data.timezone
-		details.appendChild(timezone)
+		container_timezone.appendChild(timezone)
+
+		details.appendChild(container_timezone)
 	}
 
 	user.appendChild(details)
@@ -57,14 +92,17 @@ function u_full(data) {
 	let user = u_small(data)
 	user.setAttribute("size", "f")
 
-	let sections = [{d: "matches", t: "matches"}, {d: "mapped", t: "beatmaps"}]
+	let sections = [
+		{subject: "matches", action: "played", api: "matches"},
+		{subject: "beatmaps", action: "mapped", api: "mapped"}
+	]
 	sections.forEach((s) => {
 		let element = document.createElement("div")
 		element.classList.add("display")
-		let triggers_element = triggerTemplate(`${s.t} played (${data[s.d].length})`)
+		let triggers_element = triggerTemplate(`${s.subject} ${s.action} (${data[s.api].length})`)
 		triggers_element.forEach((t) => element.appendChild(t))
-		data[s.d].forEach((x) => {
-			let child = display(s.t[0], x, {return: true})
+		data[s.api].forEach((x) => {
+			let child = display(s.subject[0], x, {return: true})
 			child.classList.add("invisible")
 			element.appendChild(child)
 		})

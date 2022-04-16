@@ -152,3 +152,16 @@ input[type=text]:hover, button:hover {
 	}
 }
 
+/* OTHER */
+
+.display > div {
+	background-color: #0e101a;
+}
+
+.copy {
+	cursor: pointer;
+}
+.copy:active {
+	background-color: #c8620c;
+	color: #FFF;
+}

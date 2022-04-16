@@ -3,8 +3,8 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Andmeid | <%= `${type[0].toUpperCase()}${type.slice(1)} ${id}` %></title>
-		<link rel="stylesheet" type="text/css" href="/andmeid/css/users.css">
+		<% let title = type == "matches" ? "Match" : `${type[0].toUpperCase()}${type.slice(1, -1)}` %>
+		<title>Andmeid | <%= `${title} ${id}` %></title>
 	</head>
 	<body onload="api('<%= type %>', '<%= id %>', {size: 'f', host: document.getElementsByClassName('display')[0]})">
 		<%- include("partials/header") %>

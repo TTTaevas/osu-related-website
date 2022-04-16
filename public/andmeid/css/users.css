@@ -1,0 +1,60 @@
+.u[size="f"] {
+	width: fit-content;
+	margin: auto;
+	padding: 20px 100px;
+	border: 5px solid;
+	border-radius: 20px;
+	box-shadow: 10px 10px #000;
+}
+
+@media screen and (max-width: 720px) {
+	.u[size="f"] {
+		padding: 10px;
+	}
+}
+
+.u .card {
+	display: inline-block;
+	border-radius: 25px;
+}
+
+.u .pfp {
+	height: 80px;
+	width: 80px;
+	border-radius: 25%;
+	margin-right: 5px;
+	float: left;
+}
+
+.u .flag {
+	float: left;
+	height: 40px;
+	width: 40px;
+}
+.u[size="r"] .flag {
+	height: 32px;
+	width: 32px;
+}
+
+.u .name {
+	font-weight: bold;
+	white-space: nowrap;
+}
+
+.u .details {
+	display: grid;
+}
+
+.u .icon {
+	height: 20px;
+	margin-right: 6px;
+	vertical-align: text-top;
+}
+
+.u .discord {
+	color: #5865F2;
+}
+
+.u .timezone {
+	color: #FFF;
+}
