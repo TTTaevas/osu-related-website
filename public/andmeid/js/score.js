@@ -18,3 +18,15 @@ function s_required(data) {
 
 	return score
 }
+
+function s_small(data) {
+	let score = s_required(data)
+	score.setAttribute("size", "s")
+	return score
+}
+
+function s_full(data) {
+	let score = s_small(data)
+	score.setAttribute("size", "f")
+	return score
+}

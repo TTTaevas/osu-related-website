@@ -14,8 +14,11 @@ function m_required(data) {
 
 	let games = document.createElement("div")
 	games.classList.add("display")
+
 	let triggers_games = triggerTemplate(`games played (${data.games.length})`)
-	triggers_games[0].setAttribute("onmousedown", "replaceWithData('games', this.parentNode)")
+	let attribute = triggers_games[0].getAttribute("onclick")
+	attribute = attribute ? `${attribute}; replaceWithData('games', this.parentNode)` : "replaceWithData('games', this.parentNode)"
+	triggers_games[0].setAttribute("onclick", attribute)
 	triggers_games.forEach((t) => games.appendChild(t))
 	data.games.forEach((g) => {
 		let game = document.createElement("div")
@@ -26,5 +29,17 @@ function m_required(data) {
 	})
 	match.appendChild(games)
 
+	return match
+}
+
+function m_small(data) {
+	let match = m_required(data)
+	match.setAttribute("size", "s")
+	return match
+}
+
+function m_full(data) {
+	let match = m_small(data)
+	match.setAttribute("size", "f")
 	return match
 }

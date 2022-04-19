@@ -6,12 +6,15 @@ function showSiblings(e) {
 
 function triggerTemplate(text) {
 	let show = document.createElement("button")
-	show.setAttribute("class", "trigger")
+	show.classList.add("trigger")
+	show.classList.add("show")
 	show.setAttribute("onclick", "showSiblings(this)")
 	show.innerHTML = `Show ${text}`
 
 	let hide = document.createElement("button")
-	hide.setAttribute("class", "trigger invisible")
+	hide.classList.add("trigger")
+	hide.classList.add("hide")
+	hide.classList.add("invisible")
 	hide.setAttribute("onclick", "showSiblings(this)")
 	hide.innerHTML = `Hide ${text}`
 

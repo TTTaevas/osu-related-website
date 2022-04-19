@@ -26,6 +26,13 @@ function api(type, id, config) {
 function replaceWithData(type, host) {
 	let children = Array.from(host.children)
 	let maidens = children.map((c) => c.getAttribute("osu_id")).filter((m) => m)
+	if (maidens.length) {
+		let buttons = Array.from(host.getElementsByTagName("button"))
+		buttons.forEach((b) => {
+			b.setAttribute("disabled", "true")
+			setTimeout(() => b.removeAttribute("disabled"), 2000)
+		})
+	}
 	maidens.forEach((m) => api(type, m, {size: "r", host, replace: "osu_id"}))
 }
 
@@ -39,9 +46,10 @@ function display(type, d, c) {
 		element.innerHTML = "The requested data does not seem to exist ><"
 	} else {
 		if (type == "u") {element = c.size == "f" ? u_full(d) : c.size == "s" ? u_small(d) : u_required(d)}
-		else if (type == "m") {element = m_required(d)}
-		else if (type == "g") {element = g_required(d)}
-		else if (type == "s") {element = s_required(d)}
+		else if (type == "m") {element = c.size == "f" ? m_full(d) : c.size == "s" ? m_small(d) : m_required(d)}
+		else if (type == "b") {element = c.size == "f" ? b_full(d) : c.size == "s" ? b_small(d) : b_required(d)}
+		else if (type == "g") {element = c.size == "f" ? g_full(d) : c.size == "s" ? g_small(d) : g_required(d)}
+		else if (type == "s") {element = c.size == "f" ? s_full(d) : c.size == "s" ? s_small(d) : s_required(d)}
 		else { // Unless the user wants to, type shouldn't ever be something else
 			element = document.createElement("p")
 			element.classList.add("unsuccessful")

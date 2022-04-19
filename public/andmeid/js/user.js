@@ -102,7 +102,7 @@ function u_full(data) {
 		let triggers_element = triggerTemplate(`${s.subject} ${s.action} (${data[s.api].length})`)
 		triggers_element.forEach((t) => element.appendChild(t))
 		data[s.api].forEach((x) => {
-			let child = display(s.subject[0], x, {return: true})
+			let child = display(s.subject[0], x, {return: true, size: "f"})
 			child.classList.add("invisible")
 			element.appendChild(child)
 		})

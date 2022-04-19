@@ -96,6 +96,9 @@ input, button {
 	font-weight: bold;
 	outline: none;
 }
+input:disabled, button:disabled {
+	border-color: #6a6a6a;
+}
 
 button {
 	background-color: #171a24;
@@ -150,18 +153,4 @@ input[type=text]:hover, button:hover {
 	.index {
 		display: inline-block;
 	}
-}
-
-/* OTHER */
-
-.display > div {
-	background-color: #0e101a;
-}
-
-.copy {
-	cursor: pointer;
-}
-.copy:active {
-	background-color: #c8620c;
-	color: #FFF;
 }

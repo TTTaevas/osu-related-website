@@ -9,3 +9,16 @@ function g_required(data) {
 
 	return game
 }
+
+function g_small(data) {
+	let game = g_required(data)
+	game.setAttribute("size", "s")
+	return game
+}
+
+function g_full(data) {
+	let game = g_small(data)
+	game.setAttribute("size", "f")
+	return game
+}
+

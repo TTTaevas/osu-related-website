@@ -1,21 +1,7 @@
-.u[size="f"] {
-	width: fit-content;
-	margin: auto;
-	padding: 20px 100px;
-	border: 5px solid;
-	border-radius: 20px;
-	box-shadow: 10px 10px #000;
-}
-
-@media screen and (max-width: 720px) {
-	.u[size="f"] {
-		padding: 10px;
-	}
-}
-
 .u .card {
 	display: inline-block;
 	border-radius: 25px;
+	transition: 0.5s;
 }
 
 .u .pfp {
