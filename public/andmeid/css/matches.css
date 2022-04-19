@@ -1,0 +1,11 @@
+.m {
+	display: grid;
+	margin: 5px 0 10px;
+}
+
+.m > .details {
+	font-size: 16px;
+}
+.m > .details * {
+	margin: 0 4px;
+}

@@ -13,13 +13,17 @@
 }
 
 .u .flag {
-	float: left;
 	height: 40px;
 	width: 40px;
 }
-.u[size="r"] .flag {
+.u[size="r"] > .flag {
 	height: 32px;
 	width: 32px;
+	vertical-align: bottom;
+	margin-right: 5px;
+}
+.u[size="f"] > .card .flag {
+	float: left;
 }
 
 .u .name {
@@ -27,7 +31,7 @@
 	white-space: nowrap;
 }
 
-.u .details {
+.u > .details {
 	display: grid;
 }
 

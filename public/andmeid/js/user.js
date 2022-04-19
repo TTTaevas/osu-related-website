@@ -92,23 +92,32 @@ function u_full(data) {
 	let user = u_small(data)
 	user.setAttribute("size", "f")
 
-	let sections = [
-		{subject: "matches", action: "played", api: "matches"},
-		{subject: "beatmaps", action: "mapped", api: "mapped"}
-	]
-	sections.forEach((s) => {
-		let element = document.createElement("div")
-		element.classList.add("display")
-		let triggers_element = triggerTemplate(`${s.subject} ${s.action} (${data[s.api].length})`)
-		triggers_element.forEach((t) => element.appendChild(t))
-		data[s.api].forEach((x) => {
-			let child = display(s.subject[0], x, {return: true, size: "f"})
-			child.classList.add("invisible")
-			element.appendChild(child)
-		})
-		user.appendChild(element)
-	})
+	let displays = document.createElement("div")
+	displays.classList.add("displays")
 
+	let matches = document.createElement("div")
+	matches.classList.add("display")
+	let m_triggers = triggerTemplate(`matches played (${data.matches.length})`)
+	m_triggers.forEach((t) => matches.appendChild(t))
+	data.matches.forEach((m) => {
+		let child = display("m", m, {return: true, size: "f"})
+		child.classList.add("invisible")
+		matches.appendChild(child)
+	})
+	displays.appendChild(matches)
+
+	let beatmaps = document.createElement("div")
+	beatmaps.classList.add("display")
+	let b_triggers = triggerTemplate(`beatmaps mapped (${data.mapped.length})`)
+	b_triggers.forEach((t) => beatmaps.appendChild(t))
+	data.mapped.forEach((b) => {
+		let child = display("b", b, {return: true, size: "r"})
+		child.classList.add("invisible")
+		beatmaps.appendChild(child)
+	})
+	displays.appendChild(beatmaps)
+
+	user.appendChild(displays)
 	return user
 }
 

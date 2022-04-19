@@ -25,22 +25,24 @@ function api(type, id, config) {
 
 function replaceWithData(type, host) {
 	let children = Array.from(host.children)
-	let maidens = children.map((c) => c.getAttribute("osu_id")).filter((m) => m)
-	if (maidens.length) {
+	let maidens = children.filter((c) => c.getAttribute("osu_id"))
+
+	if (maidens.length) { // Disables hide/show buttons roughly while data is added
 		let buttons = Array.from(host.getElementsByTagName("button"))
 		buttons.forEach((b) => {
 			b.setAttribute("disabled", "true")
 			setTimeout(() => b.removeAttribute("disabled"), 2000)
 		})
 	}
-	maidens.forEach((m) => api(type, m, {size: "r", host, replace: "osu_id"}))
+
+	maidens.forEach((m) => api(type, m.getAttribute("osu_id"), {size: m.getAttribute("size") || "r", host, replace: "osu_id"}))
 }
 
 function display(type, d, c) {
 	if (!c) {c = {}}
 
 	var element
-	if (!d) {
+	if (d === false) { // don't do (!d), id 0 is a thing, especially for deleted beatmaps
 		element = document.createElement("p")
 		element.classList.add("unsuccessful")
 		element.innerHTML = "The requested data does not seem to exist ><"
@@ -50,7 +52,7 @@ function display(type, d, c) {
 		else if (type == "b") {element = c.size == "f" ? b_full(d) : c.size == "s" ? b_small(d) : b_required(d)}
 		else if (type == "g") {element = c.size == "f" ? g_full(d) : c.size == "s" ? g_small(d) : g_required(d)}
 		else if (type == "s") {element = c.size == "f" ? s_full(d) : c.size == "s" ? s_small(d) : s_required(d)}
-		else { // Unless the user wants to, type shouldn't ever be something else
+		else { // Unless the user forces through console, type shouldn't ever be something else
 			element = document.createElement("p")
 			element.classList.add("unsuccessful")
 			element.innerHTML = "Some weird bug happened, sorry... ><'"

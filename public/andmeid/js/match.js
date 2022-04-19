@@ -2,6 +2,7 @@ function m_required(data) {
 	let match = document.createElement("div")
 	match.classList.add("m")
 	match.setAttribute("m_id", data.id)
+	match.setAttribute("size", "r")
 
 	let name = document.createElement("a")
 	name.classList.add("name")
@@ -10,7 +11,14 @@ function m_required(data) {
 	name.innerHTML = data.name
 	match.appendChild(name)
 
-	match.appendChild(dateTemplate(data.date))
+	let details = document.createElement("div")
+	details.classList.add("details")
+	details.appendChild(dateTemplate(data.date))
+	let count = document.createElement("span")
+	count.classList.add("count")
+	count.innerHTML = `(${data.players.length} player${data.players.length > 1 ? "s" : ""})`
+	details.appendChild(count)
+	match.appendChild(details)
 
 	let games = document.createElement("div")
 	games.classList.add("display")
@@ -20,13 +28,7 @@ function m_required(data) {
 	attribute = attribute ? `${attribute}; replaceWithData('games', this.parentNode)` : "replaceWithData('games', this.parentNode)"
 	triggers_games[0].setAttribute("onclick", attribute)
 	triggers_games.forEach((t) => games.appendChild(t))
-	data.games.forEach((g) => {
-		let game = document.createElement("div")
-		game.classList.add("g")
-		game.classList.add("invisible")
-		game.setAttribute("osu_id", g)
-		games.appendChild(game)
-	})
+	data.games.forEach((g) => {games.appendChild(osuIDTemplate("g", g, "s"))})
 	match.appendChild(games)
 
 	return match

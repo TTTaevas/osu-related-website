@@ -37,7 +37,18 @@ function tableTemplate(rows) {
 		tbody.appendChild(row)
 	}
 	table.appendChild(tbody)
+
 	return table
+}
+
+function osuIDTemplate(type, id, size) {
+	let element = document.createElement("div")
+	element.classList.add(type)
+	element.classList.add("invisible")
+	element.setAttribute("osu_id", id)
+	element.setAttribute("size", size)
+
+	return element
 }
 
 function getDataFromHTML(type, id, size) {

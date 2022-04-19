@@ -1,0 +1,10 @@
+.b {
+	margin: 5px auto 10px;
+}
+
+.b .name {
+	display: inline-flex;
+}
+.b .name > * {
+	margin: 0 5px;
+}
