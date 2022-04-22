@@ -20,7 +20,7 @@ function b_required(data) {
 	title.innerHTML = data.title
 
 	song.appendChild(artist)
-	song.innerHTML += " - " // User cannot highlight CSS ::after 
+	song.innerHTML += " - "
 	song.appendChild(title)
 	name.appendChild(song)
 
@@ -43,5 +43,8 @@ function b_small(data) {
 function b_full(data) {
 	let beatmap = b_small(data)
 	beatmap.setAttribute("size", "f")
+
+	data.scores.sort((a, b) => b.score - a.score)
+	data.scores.forEach((s) => display("s", s, {host: beatmap}))
 	return beatmap
 }

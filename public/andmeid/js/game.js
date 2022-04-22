@@ -6,6 +6,7 @@ function g_required(data) {
 
 	game.appendChild(dateTemplate(data.date))
 
+	data.scores.sort((a, b) => b.score - a.score)
 	data.scores.forEach((s) => display("s", s, {host: game}))
 
 	return game

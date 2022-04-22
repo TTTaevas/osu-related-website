@@ -12,7 +12,7 @@
 	<% } %>
 		<%- include("partials/header") %>
 		<div class="display">
-			<input type="text" class="id" value="<%= user ? user.id : '' %>" onblur="api('users', this.value, {size: 'f', host: this.parentElement, replace: 'lastChild'})">
+			<input type="text" class="id" value="<%= user ? user.id : '' %>" onblur="api('users', this.value, {size: 'f', replace: document.getElementsByClassName('display')[0].lastElementChild})">
 			<div class="invisible">This is a placeholder~</div>
 		</div>
 	</body>

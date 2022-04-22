@@ -35,7 +35,11 @@ function replaceWithData(type, host) {
 		})
 	}
 
-	maidens.forEach((m) => api(type, m.getAttribute("osu_id"), {size: m.getAttribute("size") || "r", host, replace: "osu_id"}))
+	maidens.forEach((m) => {
+		let id = m.getAttribute("osu_id")
+		let size = m.getAttribute("size") || "r"
+		api(type, id, {size, replace: host.querySelector(`div[osu_id="${id}"]`)})
+	})
 }
 
 function display(type, d, c) {
@@ -60,9 +64,6 @@ function display(type, d, c) {
 	}
 
 	if (c.return) return element
-	if (c.replace) {
-		if (c.replace == "osu_id") return c.host.replaceChild(element, c.host.querySelector(`div[osu_id="${d.id}"]`))
-		return c.host.replaceChild(element, c.host.lastElementChild)
-	}
-	c.host.appendChild(element)
+	if (c.replace) return c.replace.parentNode.replaceChild(element, c.replace)
+	if (c.host) return c.host.appendChild(element)
 }

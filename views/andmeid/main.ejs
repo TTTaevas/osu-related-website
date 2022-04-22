@@ -8,7 +8,7 @@
 	<body>
 		<%- include("partials/header") %>
 		<div class="display">
-			<input type="text" class="id" onblur="api('<%= type %>', this.value, {size: 'f', host: this.parentElement, replace: 'lastChild'})">
+			<input type="text" class="id" onblur="api('<%= type %>', this.value, {size: 'f', replace: document.getElementsByClassName('display')[0].lastElementChild})">
 			<div class="invisible">This is a placeholder~</div>
 		</div>
 	</body>

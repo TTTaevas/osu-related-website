@@ -133,9 +133,11 @@ async function getMatch(token, match_id) {
 		let scores = games[i].game.scores
 		for (let e = 0; e < scores.length; e++) {
 			let acc_alt = games[i].game.scores[e].accuracy.toPrecision(4).substring(2)
+			games[i].game.scores[e].match.id = response.match.id
 			games[i].game.scores[e] = {
 				id: games[i].game.scores[e].id, // null until ppy says otherwise
 				player_id: games[i].game.scores[e].user_id,
+				beatmap: games[i].game.beatmap,
 				score: games[i].game.scores[e].score,
 				mods: games[i].game.scores[e].mods,
 				combo: games[i].game.scores[e].max_combo,

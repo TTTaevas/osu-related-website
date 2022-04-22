@@ -40,7 +40,7 @@ async function insertBeatmap(req, beatmap, token, branch, guarantee) {
 		But it's not fine to use Andmeid's API to fill its database with stuff the website doesn't use  */
 
 	if (!guarantee) { // guarantee allows to bypass checks, making the insertion stuff faster
-		let check = await req.andmeid.db.collection("games").find({beatmap: {$elemMatch: {id: beatmap.id}}}).toArray()
+		let check = await req.andmeid.db.collection("games").find({beatmap: {id: beatmap.id, set_id: beatmap.set_id}}).toArray()
 		if (!check) return
 	}
 	
@@ -58,5 +58,7 @@ exports.specific = async (req, res) => {
 
 exports.find = async (req, res) => {
 	let beatmap = await addBeatmap(req, req.body.id)
+	let games = await req.andmeid.db.collection("games").find({beatmap: {id: beatmap.id, set_id: beatmap.set_id}}).toArray()
+	beatmap.scores = games.map((g) => g.scores).flat()
 	return res.status(beatmap ? 200 : 202).json({status: true, content: beatmap})
 }
