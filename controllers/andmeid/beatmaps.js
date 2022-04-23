@@ -36,12 +36,9 @@ async function addBeatmap(req, id, token, branch, guarantee) {
 }
 
 async function insertBeatmap(req, beatmap, token, branch, guarantee) {
-	/*  Insert functions exist because it's fine to use Andmeid's API to easily use osu!api v2
-		But it's not fine to use Andmeid's API to fill its database with stuff the website doesn't use  */
-
 	if (!guarantee) { // guarantee allows to bypass checks, making the insertion stuff faster
 		let check = await req.andmeid.db.collection("games").find({beatmap: {id: beatmap.id, set_id: beatmap.set_id}}).toArray()
-		if (!check) return
+		if (!check.length) return
 	}
 	
 	req.andmeid.db.collection("beatmaps").insertOne(beatmap)
