@@ -6,13 +6,34 @@
 		<title>Andmeid</title>
 		<link rel="stylesheet" type="text/css" href="/andmeid/css/home.css">
 	</head>
-	<body onload="initForm()">
+	<body>
 		<%- include("partials/header") %>
 		<% if (user.id != 7276846) { %>
 			<div class="notification">Currently WIP! This does NOT properly work!</div>
 		<% } %>
 		<div id="main">
-			<!--<%- include("partials/form") %>-->
+			<div id="sheet">
+				<script type="text/javascript" src="/andmeid/js/sheet.js"></script>
+
+				<div class="matches explanation">
+					temp
+				</div>
+				<textarea class="matches paste" onpaste="setTimeout(() => sheetIDs('matches', this), 100)"></textarea>
+
+				<div class="beatmaps explanation">
+					temp 2
+				</div>
+				<textarea class="beatmaps paste" onpaste="setTimeout(() => sheetIDs('beatmaps', this), 100)"></textarea>
+
+				<div id="lists">
+					<div class="list" id="matches_list">
+						<h2>Matches</h2>
+					</div>
+					<div class="list" id="beatmaps_list">
+						<h2>Beatmaps</h2>
+					</div>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>

@@ -11,6 +11,13 @@ function m_required(data) {
 	name.innerHTML = data.name
 	match.appendChild(name)
 
+	return match
+}
+
+function m_small(data) {
+	let match = m_required(data)
+	match.setAttribute("size", "s")
+
 	let details = document.createElement("div")
 	details.classList.add("details")
 	details.appendChild(dateTemplate(data.date))
@@ -30,13 +37,7 @@ function m_required(data) {
 	triggers_games.forEach((t) => games.appendChild(t))
 	data.games.forEach((g) => {games.appendChild(osuIDTemplate("g", g, "s"))})
 	match.appendChild(games)
-
-	return match
-}
-
-function m_small(data) {
-	let match = m_required(data)
-	match.setAttribute("size", "s")
+	
 	return match
 }
 

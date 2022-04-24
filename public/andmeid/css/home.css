@@ -1,1 +1,12 @@
+#lists {
+	display: flex;
+}
 
+.list {
+	background-color: #0e101a;
+	width: 30%;
+	margin: 0 auto;
+	border: 5px solid;
+	border-radius: 20px;
+	box-shadow: 10px 10px #000;
+}

@@ -27,14 +27,6 @@ function replaceWithData(type, host) {
 	let children = Array.from(host.children)
 	let maidens = children.filter((c) => c.getAttribute("osu_id"))
 
-	if (maidens.length) { // Disables hide/show buttons roughly while data is added
-		let buttons = Array.from(host.getElementsByTagName("button"))
-		buttons.forEach((b) => {
-			b.setAttribute("disabled", "true")
-			setTimeout(() => b.removeAttribute("disabled"), 2000)
-		})
-	}
-
 	maidens.forEach((m) => {
 		let id = m.getAttribute("osu_id")
 		let size = m.getAttribute("size") || "r"
@@ -64,6 +56,10 @@ function display(type, d, c) {
 	}
 
 	if (c.return) return element
-	if (c.replace) return c.replace.parentNode.replaceChild(element, c.replace)
+	if (c.replace) {
+		let hide_button = c.replace.parentNode.getElementsByClassName("hide") // make element invisible if hide button is unavailable
+		if (hide_button[0] && hide_button[0].classList.contains("invisible")) element.classList.add("invisible")
+		return c.replace.parentNode.replaceChild(element, c.replace)
+	}
 	if (c.host) return c.host.appendChild(element)
 }
