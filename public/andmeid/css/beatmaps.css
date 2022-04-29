@@ -3,7 +3,7 @@
 }
 
 .b .name {
-	display: inline-flex;
+	display: inline;
 }
 .b .name > * {
 	margin: 0 5px;

@@ -6,7 +6,7 @@
 		<title>Andmeid | Users</title>
 	</head>
 	<% if (user) { %>
-		<body onload="api('users', '<%= user.id %>', {size: 'f', host: document.getElementsByClassName('display')[0], replace: 'lastChild'})">
+		<body onload="api('users', '<%= user.id %>', {size: 'f', replace: document.getElementsByClassName('display')[0].lastElementChild})">
 	<% } else { %>
 		<body>
 	<% } %>

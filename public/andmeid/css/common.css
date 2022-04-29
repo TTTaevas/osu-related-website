@@ -1,3 +1,10 @@
+h2 {
+	padding: 5px 30px;
+	margin: 15px auto;
+	border-bottom: 3px solid;
+	width: fit-content;
+}
+
 *[size="f"] {
 	width: fit-content;
 	margin: auto;
@@ -35,4 +42,18 @@
 
 .trigger {
 	border-radius: 0;
+}
+
+textarea {
+	background-color: #0e101a;
+	border: 5px solid #c8620c;
+	color: #FFF;
+	overflow: hidden;
+	padding: 5px;
+	width: 90%;
+	height: 10vw;
+	outline: none;
+}
+textarea:focus {
+	box-shadow: 5px 5px #000;
 }

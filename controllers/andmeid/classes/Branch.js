@@ -7,15 +7,17 @@ module.exports = class Branch {
 				id: user.id,
 				username: user.username
 			} : false
-			setTimeout(() => console.log(util.inspect(this, false, null, true)), 10000)
+			
+			setTimeout(() => {
+				if (this.branches) console.log(util.inspect(this, false, null, true))
+			}, 10000)
 		}
 		this.body = info
 	}
 
 	add(info) {
 		let branch = new Branch(info)
-		if (!this.branches) {this.branches = []}
-		this.branches.push(branch)
+		this.branches ? this.branches.push(branch) : this.branches = [branch]
 		return branch
 	}
 }

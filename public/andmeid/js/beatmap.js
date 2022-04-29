@@ -9,6 +9,8 @@ function b_required(data) {
 	name.setAttribute("href", `/andmeid/beatmaps/${data.id}`)
 	name.setAttribute("target", "_blank")
 
+	// FIRST ROW
+
 	let song = document.createElement("div")
 	song.classList.add("song")
 
@@ -24,11 +26,23 @@ function b_required(data) {
 	song.appendChild(title)
 	name.appendChild(song)
 
+	// SECOND ROW
+
+	let not_song = document.createElement("div")
+	not_song.classList.add("not_song")
+
 	let difficulty = document.createElement("span")
 	difficulty.classList.add("difficulty")
 	difficulty.innerHTML = `[${data.difficulty}]`
+	let length = document.createElement("span")
+	length.classList.add("length")
+	length.innerHTML = `${data.total_length} (${data.drain_length})`
 
-	name.appendChild(difficulty)
+	not_song.appendChild(difficulty)
+	not_song.innerHTML += " | "
+	not_song.appendChild(length)
+	name.appendChild(not_song)
+
 	beatmap.appendChild(name)
 
 	return beatmap

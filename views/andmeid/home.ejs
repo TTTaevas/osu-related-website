@@ -15,15 +15,25 @@
 			<div id="sheet">
 				<script type="text/javascript" src="/andmeid/js/sheet.js"></script>
 
-				<div class="matches explanation">
-					temp
-				</div>
-				<textarea class="matches paste" onpaste="setTimeout(() => sheetIDs('matches', this), 100)"></textarea>
+				<div id="sheet_fields">
+					<div class="sheet_field" id="matches">
+						<div class="explanation">
+							<img src="/andmeid/images/example_matches.jpg" alt="Image of a ref sheet">
+							<div class="text">
+								<p>First, copy from one of the tournament's sheets (like a referee sheet) all of the IDs/MP links of the round's matches</p>
+								<p>Then, you just need to paste that in the field below!</p>
+							</div>
+						</div>
+						<textarea class="paste" placeholder="Paste here!" onpaste="setTimeout(() => sheetIDs('matches', this), 100)"></textarea>
+					</div>
 
-				<div class="beatmaps explanation">
-					temp 2
+					<div class="sheet_field" id="beatmaps">
+						<div class="explanation">
+							temp
+						</div>
+						<textarea class="paste" placeholder="Paste here!" onpaste="setTimeout(() => sheetIDs('beatmaps', this), 100)"></textarea>
+					</div>
 				</div>
-				<textarea class="beatmaps paste" onpaste="setTimeout(() => sheetIDs('beatmaps', this), 100)"></textarea>
 
 				<div id="lists">
 					<div class="list" id="matches_list">

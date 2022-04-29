@@ -1,12 +1,34 @@
-#lists {
+@media screen and (min-width: 1080px) {
+	#sheet_fields {
+		display: flex;
+	}
+}
+
+.sheet_field {
+	background-color: #000517;
+	border: 5px solid;
+	margin: 20px auto;
+	width: fit-content;
+}
+.sheet_field * {
+	margin: 10px;
+}
+
+.explanation {
 	display: flex;
+	width: fit-content;
+	margin: auto;
+}
+.explanation * {
+	max-width: 200px;
+	margin: 10px;
 }
 
 .list {
 	background-color: #0e101a;
-	width: 30%;
-	margin: 0 auto;
+	margin: 10px auto;
 	border: 5px solid;
 	border-radius: 20px;
 	box-shadow: 10px 10px #000;
+	max-width: 80%;
 }
